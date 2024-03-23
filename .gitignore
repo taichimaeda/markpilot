@@ -1,0 +1,10 @@
+# Pnpm
+node_modules/
+dist/
+
+# Parcel
+.parcel-cache/
+
+# Obsidian
+data.json
+
