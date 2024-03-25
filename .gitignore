@@ -1,10 +1,10 @@
 # Pnpm
 node_modules/
-dist/
+main.js
+main.js.map
 
 # Parcel
 .parcel-cache/
 
 # Obsidian
 data.json
-

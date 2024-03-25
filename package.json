@@ -1,13 +1,14 @@
 {
   "name": "obsidian-copilot",
   "version": "1.0.0",
-  "main": "dist/main.js",
+  "main": "main.js",
   "source": "src/main.ts",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "format": "prettier src --check",
     "lint": "eslint src --max-warnings 0",
-    "build": "parcel build",
+    "watch": "parcel watch --dist-dir .",
+    "build": "parcel build --dist-dir .",
     "test": "echo \"Error: no test specified\"",
     "version": "node scripts/version.js"
   },
