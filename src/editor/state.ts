@@ -7,27 +7,25 @@ export const setCompletionEffect = StateEffect.define<{
 export const unsetCompletionEffect = StateEffect.define();
 
 interface CompletionState {
-  completion: string | undefined;
+  completion: string;
 }
 
-export const completionStateField = StateField.define<CompletionState>({
+export const completionStateField = StateField.define<
+  CompletionState | undefined
+>({
   create(state) {
-    return { completion: "" };
+    return undefined;
   },
   update(value, transaction) {
-    if (transaction.effects.length !== 1) {
-      throw new Error("Unexpected number of effects");
+    for (const effect of transaction.effects) {
+      if (effect.is(setCompletionEffect)) {
+        return { completion: effect.value.completion };
+      }
+      if (effect.is(unsetCompletionEffect)) {
+        return undefined;
+      }
     }
 
-    const effect = transaction.effects[0];
-
-    if (effect.is(setCompletionEffect)) {
-      return { completion: effect.value.completion };
-    }
-    if (effect.is(unsetCompletionEffect)) {
-      return { completion: undefined };
-    }
-
-    throw new Error("Unexpected effect");
+    return value;
   },
 });

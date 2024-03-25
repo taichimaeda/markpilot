@@ -13,13 +13,17 @@ import {
 
 export function triggerCompletionOnTab(
   fetcher: CompletionFetcher,
-  force: CompletionForce,
+  force: CompletionForce
 ) {
   let latestCompletionId = 0;
   let latestCompletionTime = 0;
 
   function run(view: EditorView) {
     const { state } = view;
+
+    if (state.selection.ranges.length > 1 || !state.selection.main.empty) {
+      return false;
+    }
 
     // If there is no completion displayed, do nothing.
     const field = state.field(completionStateField);
@@ -33,11 +37,18 @@ export function triggerCompletionOnTab(
     });
 
     // Insert completion text to the current cursor position.
+    const head = state.selection.main.head;
+    const newHead = head + field.completion.length;
+
     view.dispatch({
+      selection: {
+        head: newHead,
+        anchor: newHead,
+      },
       changes: [
         state.changes({
-          from: state.selection.main.head,
-          to: state.selection.main.head,
+          from: head,
+          to: head,
           insert: field.completion,
         }),
       ],
@@ -74,6 +85,10 @@ export function triggerCompletionOnTab(
 export function dismissCompletionOnEscape(cancel: CompletionCancel) {
   function run(view: EditorView) {
     const { state } = view;
+
+    if (state.selection.ranges.length > 1 || !state.selection.main.empty) {
+      return false;
+    }
 
     // If there is no completion displayed, do nothing.
     const field = state.field(completionStateField);

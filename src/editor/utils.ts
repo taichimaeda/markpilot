@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export function debounceAsyncFunc<T>(
   func: (...args: any[]) => Promise<T>,
-  wait: number,
+  wait: number
 ): {
   debounced: (...args: any[]) => Promise<T>;
   cancel: () => void;
@@ -22,7 +22,7 @@ export function debounceAsyncFunc<T>(
       const timer = setTimeout(() => func(...args).then(resolve), wait);
       previous.cancel = () => {
         clearTimeout(timer);
-        reject();
+        reject({ reason: "Cancelled" });
       };
       previous.force = () => {
         clearTimeout(timer);

@@ -32,7 +32,7 @@ class CompletionRenderPluginValue implements PluginValue {
     const { state } = update;
 
     const field = state.field(completionStateField);
-    if (field.completion === undefined) {
+    if (field === undefined) {
       return Decoration.none;
     }
 
@@ -51,5 +51,5 @@ const completionRenderPluginSpec: PluginSpec<CompletionRenderPluginValue> = {
 
 export const completionRenderPlugin = ViewPlugin.fromClass(
   CompletionRenderPluginValue,
-  completionRenderPluginSpec,
+  completionRenderPluginSpec
 );
