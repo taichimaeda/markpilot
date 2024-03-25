@@ -21,6 +21,10 @@ class CompletionWidget extends WidgetType {
     span.textContent = this.completion;
     return span;
   }
+
+  get lineBreaks() {
+    return this.completion.split("\n").length - 1;
+  }
 }
 
 class CompletionRenderPluginValue implements PluginValue {
