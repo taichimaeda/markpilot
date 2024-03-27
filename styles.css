@@ -1,0 +1,8 @@
+/* Hide Unicode math symbols displayed by Rehype's KaTex plugin */
+.katex-html {
+  display: none;
+}
+
+.katex-html {
+  
+}

@@ -8,16 +8,20 @@
     "allowJs": true,
     "noImplicitAny": true,
     "moduleResolution": "node",
+    "importHelpers": true,
     "isolatedModules": true,
-    "strictNullChecks": true,
+	  "strictNullChecks": true,
     "lib": [
       "DOM",
       "ES5",
       "ES6",
       "ES7"
-    ]
+    ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react"
   },
   "include": [
-    "**/*.ts"
-  ]
+    "**/*.ts",
+    "**/*.tsx"
+   ],
 }

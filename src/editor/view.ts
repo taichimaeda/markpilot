@@ -16,10 +16,10 @@ class CompletionWidget extends WidgetType {
   }
 
   toDOM(view: EditorView) {
-    const span = document.createElement("span");
-    span.style.opacity = "0.5";
-    span.textContent = this.completion;
-    return span;
+    const spanEl = document.createElement("span");
+    spanEl.style.opacity = "0.5";
+    spanEl.textContent = this.completion;
+    return spanEl;
   }
 
   get lineBreaks() {
@@ -29,8 +29,6 @@ class CompletionWidget extends WidgetType {
 
 class CompletionRenderPluginValue implements PluginValue {
   public decorations: DecorationSet = Decoration.none;
-
-  constructor(view: EditorView) {}
 
   update(update: ViewUpdate) {
     const { state } = update;

@@ -1,22 +1,10 @@
 import { Prec } from "@codemirror/state";
 import { EditorView, keymap } from "@codemirror/view";
-import {
-  CompletionCancel,
-  CompletionFetcher,
-  CompletionForce,
-} from "./extension";
-import {
-  completionStateField,
-  setCompletionEffect,
-  unsetCompletionEffect,
-} from "./state";
+import { CompletionCancel, CompletionForce } from "./extension";
+import { completionStateField, unsetCompletionEffect } from "./state";
 
-export function triggerCompletionOnTab(
-  fetcher: CompletionFetcher,
-  force: CompletionForce
-) {
-  let latestCompletionId = 0;
-  let latestCompletionTime = 0;
+export function triggerCompletionOnTab(force: CompletionForce) {
+  let lastCompletionTime = 0;
 
   function run(view: EditorView) {
     const { state } = view;
@@ -55,26 +43,13 @@ export function triggerCompletionOnTab(
     });
 
     // If the completion is triggered within 500ms, force the previous one.
+    const previousCompletionTime = lastCompletionTime;
     const currentCompletionTime = Date.now();
-    if (currentCompletionTime - latestCompletionTime < 500) {
+    lastCompletionTime = Date.now();
+    if (currentCompletionTime - previousCompletionTime < 500) {
       force();
       return true;
     }
-    latestCompletionTime = Date.now();
-
-    // Re-fetch the next completion in a callback.
-    (async function () {
-      const currentCompletionId = ++latestCompletionId;
-      const completion = await fetcher(state);
-      // If there is a newer completion request, ignore the current one.
-      if (currentCompletionId !== latestCompletionId) {
-        return;
-      }
-
-      view.dispatch({
-        effects: [setCompletionEffect.of({ completion })],
-      });
-    })();
 
     return true;
   }

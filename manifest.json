@@ -1,9 +1,11 @@
 {
-	"id": "GitHub Copilot (Unofficial)",
-	"name": "GitHub Copilot (Unofficial)",
-	"version": "1.0.0",
-	"minAppVersion": "0.15.0",
-	"description": "GitHub Copilot is an AI pair programmer that helps you write code faster. This plugin adds support for Copilot in Obsidian.",
-	"author": "Taichi Maeda",
-	"isDesktopOnly": true
+  "id": "obsidian-copilot",
+  "name": "Obsidian Copilot",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "",
+  "author": "Taichi Maeda",
+  "authorUrl": "https://obsidian.md",
+  "fundingUrl": "https://obsidian.md/pricing",
+  "isDesktopOnly": true
 }

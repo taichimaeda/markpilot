@@ -1,10 +1,22 @@
-# Pnpm
-node_modules/
+# vscode
+.vscode 
+
+# Intellij
+*.iml
+.idea
+
+# npm
+node_modules
+
+# Don't include the compiled main.js file in the repo.
+# They should be uploaded to GitHub releases instead.
 main.js
-main.js.map
 
-# Parcel
-.parcel-cache/
+# Exclude sourcemaps
+*.map
 
-# Obsidian
+# obsidian
 data.json
+
+# Exclude macOS Finder (System Explorer) View States
+.DS_Store
