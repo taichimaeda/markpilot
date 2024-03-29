@@ -8,39 +8,39 @@ import {
   ViewUpdate,
   WidgetType,
 } from "@codemirror/view";
-import { completionStateField } from "./state";
+import { completionsStateField } from "./state";
 
-class CompletionWidget extends WidgetType {
-  constructor(private readonly completion: string) {
+class CompletionsWidget extends WidgetType {
+  constructor(private readonly completions: string) {
     super();
   }
 
   toDOM(view: EditorView) {
     const spanEl = document.createElement("span");
     spanEl.style.opacity = "0.5";
-    spanEl.textContent = this.completion;
+    spanEl.textContent = this.completions;
     return spanEl;
   }
 
   get lineBreaks() {
-    return this.completion.split("\n").length - 1;
+    return this.completions.split("\n").length - 1;
   }
 }
 
-class CompletionRenderPluginValue implements PluginValue {
+class CompletionsRenderPluginValue implements PluginValue {
   public decorations: DecorationSet = Decoration.none;
 
   update(update: ViewUpdate) {
     const { state } = update;
 
-    const field = state.field(completionStateField);
+    const field = state.field(completionsStateField);
     if (field === undefined) {
       this.decorations = Decoration.none;
       return;
     }
 
     const decoration = Decoration.widget({
-      widget: new CompletionWidget(field.completion),
+      widget: new CompletionsWidget(field.completions),
       side: 1,
     });
     this.decorations = Decoration.set([
@@ -49,11 +49,11 @@ class CompletionRenderPluginValue implements PluginValue {
   }
 }
 
-const completionRenderPluginSpec: PluginSpec<CompletionRenderPluginValue> = {
-  decorations: (value: CompletionRenderPluginValue) => value.decorations,
+const completionsRenderPluginSpec: PluginSpec<CompletionsRenderPluginValue> = {
+  decorations: (value: CompletionsRenderPluginValue) => value.decorations,
 };
 
-export const completionRenderPlugin = ViewPlugin.fromClass(
-  CompletionRenderPluginValue,
-  completionRenderPluginSpec
+export const completionsRenderPlugin = ViewPlugin.fromClass(
+  CompletionsRenderPluginValue,
+  completionsRenderPluginSpec
 );

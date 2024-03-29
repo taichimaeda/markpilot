@@ -14,7 +14,7 @@ export function ChatItem({ message }: { message: ChatMessage }) {
           255,
           255,
           255,
-          ${message.role === "user" ? 0.05 : 0}
+          ${message.role === "user" ? 0.025 : 0}
         );
         border-bottom: 1px solid gray;
         &:last-of-type {

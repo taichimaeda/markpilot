@@ -2,7 +2,7 @@ import { Notice, Plugin } from "obsidian";
 import { RedisCache } from "./api/cache";
 import { APIClient, OpenAIClient } from "./api/openai";
 import { CHAT_VIEW_TYPE, ChatView } from "./chat/view";
-import { inlineCompletionExtension } from "./editor/extension";
+import { inlineCompletionsExtension } from "./editor/extension";
 import {
   DEFAULT_SETTINGS,
   MarkpilotSettings,
@@ -31,7 +31,7 @@ export default class Markpilot extends Plugin {
         return this.client.fetchCompletions(language, prefix, suffix);
       }
     };
-    this.registerEditorExtension(inlineCompletionExtension(fetcher, this));
+    this.registerEditorExtension(inlineCompletionsExtension(fetcher, this));
     this.registerView(CHAT_VIEW_TYPE, (leaf) => new ChatView(leaf, this));
     if (this.settings.chat.enabled) {
       this.activateView();
@@ -103,8 +103,68 @@ export default class Markpilot extends Plugin {
           response: "",
         };
         this.saveSettings();
-        this.deactivateView();
-        this.activateView();
+        this.reloadView();
+        new Notice("Chat history cleared.");
+        return true;
+      },
+    });
+    this.addCommand({
+      id: "markpilot-enable-cache",
+      name: "Enable cache",
+      checkCallback: (checking: boolean) => {
+        if (checking) {
+          return true;
+        }
+        this.settings.cache.enabled = true;
+        this.saveSettings();
+        new Notice("Cache enabled.");
+        return true;
+      },
+    });
+    this.addCommand({
+      id: "markpilot-disable-cache",
+      name: "Disable cache",
+      checkCallback: (checking: boolean) => {
+        if (checking) {
+          return true;
+        }
+        this.settings.cache.enabled = false;
+        this.saveSettings();
+        this.client.reload();
+        new Notice("Cache disabled.");
+        return true;
+      },
+    });
+    this.addCommand({
+      id: "markpilot-start-redis-server",
+      name: "Start Redis server",
+      checkCallback: (checking: boolean) => {
+        if (checking) {
+          return this.settings.cache.enabled;
+        }
+        this.client.initialize();
+        return true;
+      },
+    });
+    this.addCommand({
+      id: "markpilot-stop-redis-server",
+      name: "Stop Redis server",
+      checkCallback: (checking: boolean) => {
+        if (checking) {
+          return this.settings.cache.enabled;
+        }
+        this.client.destroy();
+        return true;
+      },
+    });
+    this.addCommand({
+      id: "markpilot-restart-redis-server",
+      name: "Restart Redis server",
+      checkCallback: (checking: boolean) => {
+        if (checking) {
+          return this.settings.cache.enabled;
+        }
+        this.client.reload();
         return true;
       },
     });
@@ -120,6 +180,11 @@ export default class Markpilot extends Plugin {
 
   async saveSettings() {
     await this.saveData(this.settings);
+  }
+
+  async reloadView() {
+    await this.deactivateView();
+    await this.activateView();
   }
 
   async activateView() {

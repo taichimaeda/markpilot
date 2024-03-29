@@ -44,6 +44,7 @@ export interface ChatHistory {
 }
 
 export interface APIClient {
+  reload(): Promise<void>;
   initialize(): Promise<void>;
   destroy(): Promise<void>;
   fetchChat(messages: ChatMessage[]): AsyncGenerator<string | undefined>;
@@ -58,6 +59,11 @@ export class OpenAIClient implements APIClient {
   private openai: OpenAI | undefined;
 
   constructor(private plugin: Markpilot) {}
+
+  async reload() {
+    await this.destroy();
+    await this.initialize();
+  }
 
   async initialize() {
     const apiKey = this.plugin.settings.apiKey ?? "";

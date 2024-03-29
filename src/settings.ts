@@ -88,16 +88,15 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         text.setValue(settings.apiKey ?? "").onChange(async (value) => {
           settings.apiKey = value;
           await plugin.saveSettings();
-          await plugin.client.destroy();
-          await plugin.client.initialize();
+          await plugin.client.reload();
         })
       );
 
     containerEl.createEl("h2", { text: "Inline completions" });
 
     new Setting(containerEl)
-      .setName("Enable inline completion")
-      .setDesc("Turn this on to enable inline completion.")
+      .setName("Enable inline completions")
+      .setDesc("Turn this on to enable inline completions.")
       .addToggle((toggle) =>
         toggle
           .setValue(settings.completions.enabled)
@@ -261,8 +260,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           settings.cache.enabled = value;
           await plugin.saveSettings();
           this.display(); // Re-render settings tab
-          await plugin.client.destroy();
-          await plugin.client.initialize();
+          await plugin.client.reload();
         })
       );
     new Setting(containerEl)
@@ -275,8 +273,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             settings.cache.redisPort =
               parseInt(value) || DEFAULT_SETTINGS.cache.redisPort;
             await plugin.saveSettings();
-            await plugin.client.destroy();
-            await plugin.client.initialize();
+            await plugin.client.reload();
           })
       );
     new Setting(containerEl)
@@ -291,8 +288,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           }
           settings.cache.redisPath = value;
           await plugin.saveSettings();
-          await plugin.client.destroy();
-          await plugin.client.initialize();
+          await plugin.client.reload();
         })
       );
   }

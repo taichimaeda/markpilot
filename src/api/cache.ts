@@ -1,17 +1,23 @@
 import * as child_process from "child_process";
 import { createHash } from "crypto";
+import { Notice } from "obsidian";
 import { createClient, RedisClientType } from "redis";
 import Markpilot from "src/main";
 import { APIClient, ChatMessage } from "./openai";
 
 export class RedisCache implements APIClient {
   private redis: RedisClientType;
-  private process: child_process.ChildProcess;
+  private process: child_process.ChildProcess | undefined;
 
   constructor(
     private client: APIClient,
     private plugin: Markpilot
   ) {}
+
+  async reload() {
+    await this.destroy();
+    await this.initialize();
+  }
 
   async initialize() {
     const { settings } = this.plugin;
@@ -21,7 +27,15 @@ export class RedisCache implements APIClient {
 
     const port = settings.cache.redisPort.toString();
     const path = settings.cache.redisPath;
-    this.process = child_process.spawn(path, ["--port", port]);
+
+    const { status } = child_process.spawnSync("lsof", ["-i", "tcp:17777"]);
+    if (status !== 0) {
+      new Notice("Starting Redis server.");
+      this.process = child_process.spawn(path, ["--port", port, "--save", ""]);
+    } else {
+      new Notice("Redis server already running.");
+    }
+
     this.redis = createClient({ url: `redis://127.0.0.1:${port}` });
     this.redis.on("error", (error) =>
       console.log("Redis client error: ", error)
@@ -38,7 +52,10 @@ export class RedisCache implements APIClient {
 
     await this.client.destroy();
     await this.redis.disconnect();
-    this.process.kill();
+
+    if (this.process !== undefined) {
+      this.process.kill("SIGINT");
+    }
   }
 
   fetchChat(messages: ChatMessage[]) {

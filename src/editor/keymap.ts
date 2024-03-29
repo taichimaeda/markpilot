@@ -1,14 +1,14 @@
 import { Prec } from "@codemirror/state";
 import { EditorView, keymap } from "@codemirror/view";
 import Markpilot from "src/main";
-import { CompletionCancel, CompletionForce } from "./extension";
-import { completionStateField, unsetCompletionEffect } from "./state";
+import { CompletionsCancel, CompletionsForce } from "./extension";
+import { completionsStateField, unsetCompletionsEffect } from "./state";
 
-export function acceptCompletionOnKeydown(
-  force: CompletionForce,
+export function acceptCompletionsOnKeydown(
+  force: CompletionsForce,
   plugin: Markpilot
 ) {
-  let lastCompletionTime = 0;
+  let lastCompletionsTime = 0;
 
   function run(view: EditorView) {
     const { state } = view;
@@ -17,20 +17,20 @@ export function acceptCompletionOnKeydown(
       return false;
     }
 
-    // If there is no completion displayed, do nothing.
-    const field = state.field(completionStateField);
+    // If there are no completions displayed, do nothing.
+    const field = state.field(completionsStateField);
     if (field === undefined) {
       return false;
     }
 
-    // Hide the current completion first.
+    // Hide the current completions first.
     view.dispatch({
-      effects: [unsetCompletionEffect.of(null)],
+      effects: [unsetCompletionsEffect.of(null)],
     });
 
-    // Insert completion text to the current cursor position.
+    // Insert completions to the current cursor position.
     const head = state.selection.main.head;
-    const newHead = head + field.completion.length;
+    const newHead = head + field.completions.length;
 
     view.dispatch({
       selection: {
@@ -41,16 +41,16 @@ export function acceptCompletionOnKeydown(
         state.changes({
           from: head,
           to: head,
-          insert: field.completion,
+          insert: field.completions,
         }),
       ],
     });
 
-    // If the completion is triggered within 500ms, force the previous one.
-    const previousCompletionTime = lastCompletionTime;
-    const currentCompletionTime = Date.now();
-    lastCompletionTime = Date.now();
-    if (currentCompletionTime - previousCompletionTime < 500) {
+    // If the completions are triggered within 500ms, force the previous one.
+    const previousCompletionsTime = lastCompletionsTime;
+    const currentCompletionsTime = Date.now();
+    lastCompletionsTime = Date.now();
+    if (currentCompletionsTime - previousCompletionsTime < 500) {
       force();
       return true;
     }
@@ -62,8 +62,8 @@ export function acceptCompletionOnKeydown(
   return Prec.highest(keymap.of([{ key, run }]));
 }
 
-export function rejectCompletionOnKeydown(
-  cancel: CompletionCancel,
+export function rejectCompletionsOnKeydown(
+  cancel: CompletionsCancel,
   plugin: Markpilot
 ) {
   function run(view: EditorView) {
@@ -73,15 +73,15 @@ export function rejectCompletionOnKeydown(
       return false;
     }
 
-    // If there is no completion displayed, do nothing.
-    const field = state.field(completionStateField);
+    // If there are no completions displayed, do nothing.
+    const field = state.field(completionsStateField);
     if (field === undefined) {
       return false;
     }
 
     cancel();
     view.dispatch({
-      effects: [unsetCompletionEffect.of(null)],
+      effects: [unsetCompletionsEffect.of(null)],
     });
     return true;
   }
