@@ -1,5 +1,6 @@
-import { Plugin } from "obsidian";
-import { OpenAIClient } from "./api/client";
+import { Notice, Plugin } from "obsidian";
+import { RedisCache } from "./api/cache";
+import { APIClient, OpenAIClient } from "./api/openai";
 import { CHAT_VIEW_TYPE, ChatView } from "./chat/view";
 import { inlineCompletionExtension } from "./editor/extension";
 import {
@@ -10,13 +11,16 @@ import {
 
 export default class Markpilot extends Plugin {
   settings: MarkpilotSettings;
-  client: OpenAIClient;
+  client: APIClient;
 
   async onload() {
     await this.loadSettings();
     this.addSettingTab(new MarkpilotSettingTab(this.app, this));
 
-    this.client = new OpenAIClient(this);
+    const client = new OpenAIClient(this);
+    const cache = new RedisCache(client, this);
+    this.client = cache;
+    this.client.initialize();
 
     const fetcher = async (
       language: string,
@@ -42,6 +46,7 @@ export default class Markpilot extends Plugin {
         }
         this.settings.completions.enabled = true;
         this.saveSettings();
+        new Notice("Inline completions enabled.");
         return true;
       },
     });
@@ -54,12 +59,13 @@ export default class Markpilot extends Plugin {
         }
         this.settings.completions.enabled = false;
         this.saveSettings();
+        new Notice("Inline completions disabled.");
         return true;
       },
     });
     this.addCommand({
-      id: "markpilot-enable-chat",
-      name: "Enable chat",
+      id: "markpilot-enable-chat-view",
+      name: "Enable chat view",
       checkCallback: (checking: boolean) => {
         if (checking) {
           return true;
@@ -67,12 +73,13 @@ export default class Markpilot extends Plugin {
         this.settings.chat.enabled = true;
         this.saveSettings();
         this.activateView();
+        new Notice("Chat view enabled.");
         return true;
       },
     });
     this.addCommand({
-      id: "markpilot-disable-chat",
-      name: "Disable chat",
+      id: "markpilot-disable-chat-view",
+      name: "Disable chat view",
       checkCallback: (checking: boolean) => {
         if (checking) {
           return true;
@@ -80,6 +87,7 @@ export default class Markpilot extends Plugin {
         this.settings.chat.enabled = false;
         this.saveSettings();
         this.deactivateView();
+        new Notice("Chat view disabled.");
         return true;
       },
     });
@@ -100,6 +108,10 @@ export default class Markpilot extends Plugin {
         return true;
       },
     });
+  }
+
+  onunload() {
+    this.client.destroy();
   }
 
   async loadSettings() {

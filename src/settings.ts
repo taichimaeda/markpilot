@@ -1,12 +1,13 @@
-import { App, PluginSettingTab, Setting } from "obsidian";
+import { App, Notice, PluginSettingTab, Setting } from "obsidian";
 import {
   CHAT_COMPLETIONS_MODELS,
   ChatCompletionsModel,
   ChatHistory,
   COMPLETIONS_MODELS,
   CompletionsModel,
-} from "./api/client";
+} from "./api/openai";
 
+import { spawnSync } from "child_process";
 import Markpilot from "./main";
 
 export interface MarkpilotSettings {
@@ -26,6 +27,11 @@ export interface MarkpilotSettings {
     maxTokens: number;
     temperature: number;
     history: ChatHistory;
+  };
+  cache: {
+    enabled: boolean;
+    redisPort: number;
+    redisPath: string;
   };
 }
 
@@ -49,6 +55,11 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
       messages: [],
       response: "",
     },
+  },
+  cache: {
+    enabled: false,
+    redisPort: 17777,
+    redisPath: "/opt/homebrew/bin/redis-server",
   },
 };
 
@@ -77,6 +88,8 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         text.setValue(settings.apiKey ?? "").onChange(async (value) => {
           settings.apiKey = value;
           await plugin.saveSettings();
+          await plugin.client.destroy();
+          await plugin.client.initialize();
         })
       );
 
@@ -234,6 +247,53 @@ export class MarkpilotSettingTab extends PluginSettingTab {
               parseFloat(value) || DEFAULT_SETTINGS.chat.temperature;
             await plugin.saveSettings();
           })
+      );
+
+    containerEl.createEl("h2", { text: "Cache" });
+
+    new Setting(containerEl)
+      .setName("Enable caching")
+      .setDesc(
+        "Turn this on to enable caching using Redis server. This feature is supported on MacOS only."
+      )
+      .addToggle((toggle) =>
+        toggle.setValue(settings.cache.enabled).onChange(async (value) => {
+          settings.cache.enabled = value;
+          await plugin.saveSettings();
+          this.display(); // Re-render settings tab
+          await plugin.client.destroy();
+          await plugin.client.initialize();
+        })
+      );
+    new Setting(containerEl)
+      .setName("Redis port")
+      .setDesc("Set the port for Redis server.")
+      .addText((text) =>
+        text
+          .setValue(settings.cache.redisPort.toString())
+          .onChange(async (value) => {
+            settings.cache.redisPort =
+              parseInt(value) || DEFAULT_SETTINGS.cache.redisPort;
+            await plugin.saveSettings();
+            await plugin.client.destroy();
+            await plugin.client.initialize();
+          })
+      );
+    new Setting(containerEl)
+      .setName("Redis path")
+      .setDesc("Set the executable path for Redis server.")
+      .addText((text) =>
+        text.setValue(settings.cache.redisPath).onChange(async (value) => {
+          const { status } = spawnSync("command", ["-v", value]);
+          if (status !== 0) {
+            new Notice("Invalid Redis path");
+            return;
+          }
+          settings.cache.redisPath = value;
+          await plugin.saveSettings();
+          await plugin.client.destroy();
+          await plugin.client.initialize();
+        })
       );
   }
 }

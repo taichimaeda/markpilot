@@ -43,30 +43,38 @@ export interface ChatHistory {
   response: string;
 }
 
-export class OpenAIClient {
-  private openai: OpenAI;
+export interface APIClient {
+  initialize(): Promise<void>;
+  destroy(): Promise<void>;
+  fetchChat(messages: ChatMessage[]): AsyncGenerator<string | undefined>;
+  fetchCompletions(
+    language: string,
+    prefix: string,
+    suffix: string
+  ): Promise<string | undefined>;
+}
 
-  constructor(private plugin: Markpilot) {
+export class OpenAIClient implements APIClient {
+  private openai: OpenAI | undefined;
+
+  constructor(private plugin: Markpilot) {}
+
+  async initialize() {
     const apiKey = this.plugin.settings.apiKey ?? "";
     this.openai = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
   }
 
-  protected get client() {
-    const apiKey = this.plugin.settings.apiKey;
-    if (apiKey === undefined) {
-      return undefined;
-    }
-    this.openai.apiKey = apiKey;
-    return this.openai;
+  async destroy() {
+    this.openai = undefined;
   }
 
   async *fetchChat(messages: ChatMessage[]) {
-    if (this.client === undefined) {
+    if (this.openai === undefined) {
       return;
     }
 
     const { settings } = this.plugin;
-    const stream = await this.client.chat.completions.create({
+    const stream = await this.openai.chat.completions.create({
       messages: [
         // {
         //   role: "system",
@@ -89,13 +97,13 @@ export class OpenAIClient {
   }
 
   async fetchCompletions(language: string, prefix: string, suffix: string) {
-    if (this.client === undefined) {
+    if (this.openai === undefined) {
       return;
     }
 
     const { settings } = this.plugin;
-    const completions = await this.client.completions.create({
-      prompt: `Continue the following ${language} code:\n\n${prefix}`,
+    const completions = await this.openai.completions.create({
+      prompt: `Continue the following code written in ${language} language:\n\n${prefix}`,
       suffix,
       model: settings.completions.model,
       max_tokens: settings.completions.maxTokens,

@@ -3,7 +3,7 @@ import { Bot, Copy, User } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
-import { ChatMessage } from "src/api/client";
+import { ChatMessage } from "src/api/openai";
 
 export function ChatItem({ message }: { message: ChatMessage }) {
   return (

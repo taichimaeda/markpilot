@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import { useEffect, useState } from "react";
-import { ChatHistory, ChatRole } from "src/api/client";
+import { ChatHistory, ChatRole } from "src/api/openai";
 import Markpilot from "src/main";
 import { ChatInput } from "./components/ChatBox";
 import { ChatItem } from "./components/ChatItem";
