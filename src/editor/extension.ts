@@ -21,7 +21,11 @@ export function inlineCompletionsExtension(
   fetcher: CompletionsFetcher,
   plugin: Markpilot
 ) {
-  const { debounced, cancel, force } = debounceAsyncFunc(fetcher, 500);
+  const { settings } = plugin;
+  const { debounced, cancel, force } = debounceAsyncFunc(
+    fetcher,
+    settings.completions.waitTime
+  );
 
   return [
     completionsStateField,

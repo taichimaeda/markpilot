@@ -17,6 +17,7 @@ export interface MarkpilotSettings {
     model: CompletionsModel;
     maxTokens: number;
     temperature: number;
+    waitTime: number;
     windowSize: number;
     acceptKey: string;
     rejectKey: string;
@@ -42,6 +43,7 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
     model: "gpt-3.5-turbo-instruct",
     maxTokens: 64,
     temperature: 1,
+    waitTime: 500,
     windowSize: 512,
     acceptKey: "Enter",
     rejectKey: "Escape",
@@ -143,6 +145,22 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           .onChange(async (value) => {
             settings.completions.temperature =
               parseFloat(value) || DEFAULT_SETTINGS.completions.temperature;
+            await plugin.saveSettings();
+          })
+      );
+
+    new Setting(containerEl)
+      .setDisabled(!settings.completions.enabled)
+      .setName("Wait time")
+      .setDesc(
+        "Time in miliseconds which it will wait for before fetching inline completions from the server."
+      )
+      .addText((text) =>
+        text
+          .setValue(settings.completions.waitTime.toString())
+          .onChange(async (value) => {
+            settings.completions.waitTime =
+              parseInt(value) || DEFAULT_SETTINGS.completions.waitTime;
             await plugin.saveSettings();
           })
       );

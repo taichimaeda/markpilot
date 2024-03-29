@@ -69,8 +69,21 @@ export class RedisCache implements APIClient {
       return;
     }
 
+    // Extra whitespaces should not affect the completions.
+    const compactPrefix = prefix.replace(/\s\s+/g, " ");
+    const compactSuffix = suffix.replace(/\s\s+/g, " ");
+
+    // Use half the window size
+    // because some characters may have overflowed due to extra whitespaces.
+    const windowSize = settings.completions.windowSize / 2;
+    const truncatedPrefix = compactPrefix.slice(
+      compactPrefix.length - windowSize / 2,
+      compactPrefix.length
+    );
+    const truncatedSuffix = compactSuffix.slice(0, windowSize / 2);
+
     const hash = createHash("sha256")
-      .update(`${language}#${prefix}#${suffix}`, "utf8")
+      .update(`${language} ${truncatedPrefix} ${truncatedSuffix} `, "utf8")
       .digest("hex");
 
     if (await this.redis.exists(hash)) {
