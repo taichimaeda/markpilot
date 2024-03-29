@@ -1,11 +1,12 @@
 import { EditorState } from "@codemirror/state";
 import { EditorView, ViewUpdate } from "@codemirror/view";
 import { Notice } from "obsidian";
+import Markpilot from "src/main";
 import { CompletionFetcher } from "./extension";
 import { LanguageAlias, languagesAliases } from "./languages";
 import { setCompletionEffect, unsetCompletionEffect } from "./state";
 
-function showCompletion(fetcher: CompletionFetcher) {
+function showCompletion(fetcher: CompletionFetcher, plugin: Markpilot) {
   let lastHead = -1;
   let latestCompletionId = 0;
 
@@ -40,7 +41,7 @@ function showCompletion(fetcher: CompletionFetcher) {
     const currentCompletionId = ++latestCompletionId;
 
     // Get the completion context with code blocks taken into account.
-    const { language, prefix, suffix } = getCompletionContext(state);
+    const { language, prefix, suffix } = getCompletionContext(state, plugin);
     // Fetch completion from the server.
     const completion = await fetcher(language, prefix, suffix).catch(
       (error) => {
@@ -68,17 +69,17 @@ function showCompletion(fetcher: CompletionFetcher) {
 // This is a bare-bone implementation
 // because I was unable to find a parser that outputs an AST
 // with the information indicating where each node spans.
-function getCompletionContext(state: EditorState) {
+function getCompletionContext(state: EditorState, plugin: Markpilot) {
   const head = state.selection.main.head;
   const length = state.doc.length;
   const prefix = state.sliceDoc(0, head);
   const suffix = state.sliceDoc(head, length);
 
-  const limit = 1000;
+  const windowSize = plugin.settings.completions.windowSize;
   const context = {
     language: "markdown",
-    prefix: prefix.slice(prefix.length - limit, prefix.length),
-    suffix: suffix.slice(0, limit),
+    prefix: prefix.slice(prefix.length - windowSize / 2, prefix.length),
+    suffix: suffix.slice(0, windowSize / 2),
   };
 
   // Pattern for the code block delimiter e.g. ```python or ```
@@ -131,5 +132,7 @@ function getCompletionContext(state: EditorState) {
   return context;
 }
 
-export const showCompletionOnUpdate = (fetcher: CompletionFetcher) =>
-  EditorView.updateListener.of(showCompletion(fetcher));
+export const showCompletionOnUpdate = (
+  fetcher: CompletionFetcher,
+  plugin: Markpilot
+) => EditorView.updateListener.of(showCompletion(fetcher, plugin));

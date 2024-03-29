@@ -18,15 +18,17 @@ export function App({ plugin }: { plugin: Markpilot }) {
     response: "",
   });
 
+  const { settings } = plugin;
+
   useEffect(() => {
-    if (plugin.settings.chatHistory.messages.length > 1) {
-      setHistory(plugin.settings.chatHistory);
+    if (settings.chat.history.messages.length > 1) {
+      setHistory(settings.chat.history);
     }
     setTurn("user");
   }, []);
 
   useEffect(() => {
-    plugin.settings.chatHistory = history;
+    settings.chat.history = history;
     plugin.saveSettings();
   }, [history]);
 

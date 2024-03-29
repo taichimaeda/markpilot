@@ -1,5 +1,6 @@
+import Markpilot from "src/main";
 import { debounceAsyncFunc } from "../utils";
-import { dismissCompletionOnEscape, triggerCompletionOnTab } from "./keymap";
+import { acceptCompletionOnKeydown, rejectCompletionOnKeydown } from "./keymap";
 import { showCompletionOnUpdate } from "./listener";
 import { completionStateField } from "./state";
 import { completionRenderPlugin } from "./view";
@@ -13,14 +14,17 @@ export type CompletionFetcher = (
 export type CompletionCancel = () => void;
 export type CompletionForce = () => void;
 
-export function inlineCompletionExtension(fetcher: CompletionFetcher) {
+export function inlineCompletionExtension(
+  fetcher: CompletionFetcher,
+  plugin: Markpilot
+) {
   const { debounced, cancel, force } = debounceAsyncFunc(fetcher, 500);
 
   return [
     completionStateField,
     completionRenderPlugin,
-    showCompletionOnUpdate(debounced),
-    triggerCompletionOnTab(force),
-    dismissCompletionOnEscape(cancel),
+    showCompletionOnUpdate(debounced, plugin),
+    acceptCompletionOnKeydown(force, plugin),
+    rejectCompletionOnKeydown(cancel, plugin),
   ];
 }

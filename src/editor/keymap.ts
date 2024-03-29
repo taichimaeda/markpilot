@@ -1,9 +1,13 @@
 import { Prec } from "@codemirror/state";
 import { EditorView, keymap } from "@codemirror/view";
+import Markpilot from "src/main";
 import { CompletionCancel, CompletionForce } from "./extension";
 import { completionStateField, unsetCompletionEffect } from "./state";
 
-export function triggerCompletionOnTab(force: CompletionForce) {
+export function acceptCompletionOnKeydown(
+  force: CompletionForce,
+  plugin: Markpilot
+) {
   let lastCompletionTime = 0;
 
   function run(view: EditorView) {
@@ -54,10 +58,14 @@ export function triggerCompletionOnTab(force: CompletionForce) {
     return true;
   }
 
-  return Prec.highest(keymap.of([{ key: "Tab", run }]));
+  const key = plugin.settings.completions.acceptKey;
+  return Prec.highest(keymap.of([{ key, run }]));
 }
 
-export function dismissCompletionOnEscape(cancel: CompletionCancel) {
+export function rejectCompletionOnKeydown(
+  cancel: CompletionCancel,
+  plugin: Markpilot
+) {
   function run(view: EditorView) {
     const { state } = view;
 
@@ -78,5 +86,6 @@ export function dismissCompletionOnEscape(cancel: CompletionCancel) {
     return true;
   }
 
-  return Prec.highest(keymap.of([{ key: "Escape", run }]));
+  const key = plugin.settings.completions.rejectKey;
+  return Prec.highest(keymap.of([{ key, run }]));
 }

@@ -1,6 +1,36 @@
 import OpenAI from "openai";
 import Markpilot from "src/main";
 
+export const COMPLETIONS_MODELS = [
+  "gpt-3.5-turbo-instruct",
+  "davinci-002",
+  "babbage-002",
+] as const;
+
+export const CHAT_COMPLETIONS_MODELS = [
+  "gpt-4-0125-preview",
+  "gpt-4-turbo-preview",
+  "gpt-4-1106-preview",
+  "gpt-4-vision-preview",
+  "gpt-4",
+  "gpt-4-0314",
+  "gpt-4-0613",
+  "gpt-4-32k",
+  "gpt-4-32k-0314",
+  "gpt-4-32k-0613",
+  "gpt-3.5-turbo",
+  "gpt-3.5-turbo-16k",
+  "gpt-3.5-turbo-0301",
+  "gpt-3.5-turbo-0613",
+  "gpt-3.5-turbo-1106",
+  "gpt-3.5-turbo-0125",
+  "gpt-3.5-turbo-16k-0613",
+] as const;
+
+export type CompletionsModel = (typeof COMPLETIONS_MODELS)[number];
+
+export type ChatCompletionsModel = (typeof CHAT_COMPLETIONS_MODELS)[number];
+
 export type ChatRole = "system" | "assistant" | "user";
 
 export interface ChatMessage {
@@ -35,6 +65,7 @@ export class OpenAIClient {
       return;
     }
 
+    const { settings } = this.plugin;
     const stream = await this.client.chat.completions.create({
       messages: [
         // {
@@ -43,12 +74,12 @@ export class OpenAIClient {
         // },
         ...messages,
       ],
-      model: "gpt-3.5-turbo",
-      stream: true,
-      max_tokens: 4096,
-      temperature: 0.1,
+      model: settings.chat.model,
+      max_tokens: settings.chat.maxTokens,
+      temperature: settings.chat.temperature,
       top_p: 1,
       n: 1,
+      stream: true,
     });
 
     for await (const chunk of stream) {
@@ -62,12 +93,13 @@ export class OpenAIClient {
       return;
     }
 
+    const { settings } = this.plugin;
     const completions = await this.client.completions.create({
       prompt: `Continue the following ${language} code:\n\n${prefix}`,
       suffix,
-      model: "gpt-3.5-turbo-instruct",
-      max_tokens: 100,
-      temperature: 0,
+      model: settings.completions.model,
+      max_tokens: settings.completions.maxTokens,
+      temperature: settings.completions.temperature,
       top_p: 1,
       n: 1,
       stop: ["\n\n\n"],

@@ -1,25 +1,12 @@
 import { Plugin } from "obsidian";
-import { ChatHistory, OpenAIClient } from "./api/client";
+import { OpenAIClient } from "./api/client";
 import { CHAT_VIEW_TYPE, ChatView } from "./chat/view";
 import { inlineCompletionExtension } from "./editor/extension";
-import { MarkpilotSettingTab } from "./settings";
-
-interface MarkpilotSettings {
-  apiKey: string | undefined;
-  chatHistory: ChatHistory;
-  enableCompletion: boolean;
-  enableChat: boolean;
-}
-
-const DEFAULT_SETTINGS: MarkpilotSettings = {
-  apiKey: undefined,
-  chatHistory: {
-    messages: [],
-    response: "",
-  },
-  enableCompletion: true,
-  enableChat: true,
-};
+import {
+  DEFAULT_SETTINGS,
+  MarkpilotSettings,
+  MarkpilotSettingTab,
+} from "./settings";
 
 export default class Markpilot extends Plugin {
   settings: MarkpilotSettings;
@@ -36,13 +23,13 @@ export default class Markpilot extends Plugin {
       prefix: string,
       suffix: string
     ) => {
-      if (this.settings.enableCompletion) {
+      if (this.settings.completions.enabled) {
         return this.client.fetchCompletions(language, prefix, suffix);
       }
     };
-    this.registerEditorExtension(inlineCompletionExtension(fetcher));
+    this.registerEditorExtension(inlineCompletionExtension(fetcher, this));
     this.registerView(CHAT_VIEW_TYPE, (leaf) => new ChatView(leaf, this));
-    if (this.settings.enableChat) {
+    if (this.settings.chat.enabled) {
       this.activateView();
     }
 
@@ -53,7 +40,7 @@ export default class Markpilot extends Plugin {
         if (checking) {
           return true;
         }
-        this.settings.enableCompletion = true;
+        this.settings.completions.enabled = true;
         this.saveSettings();
         return true;
       },
@@ -65,7 +52,7 @@ export default class Markpilot extends Plugin {
         if (checking) {
           return true;
         }
-        this.settings.enableCompletion = false;
+        this.settings.completions.enabled = false;
         this.saveSettings();
         return true;
       },
@@ -77,7 +64,7 @@ export default class Markpilot extends Plugin {
         if (checking) {
           return true;
         }
-        this.settings.enableChat = true;
+        this.settings.chat.enabled = true;
         this.saveSettings();
         this.activateView();
         return true;
@@ -90,7 +77,7 @@ export default class Markpilot extends Plugin {
         if (checking) {
           return true;
         }
-        this.settings.enableChat = false;
+        this.settings.chat.enabled = false;
         this.saveSettings();
         this.deactivateView();
         return true;
@@ -103,7 +90,7 @@ export default class Markpilot extends Plugin {
         if (checking) {
           return true;
         }
-        this.settings.chatHistory = {
+        this.settings.chat.history = {
           messages: [],
           response: "",
         };
