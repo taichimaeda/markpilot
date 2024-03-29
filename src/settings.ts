@@ -1,11 +1,11 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 
-import ObsidianCopilot from "./main";
+import Markpilot from "./main";
 
-export class ObsidianCopilotSettingTab extends PluginSettingTab {
+export class MarkpilotSettingTab extends PluginSettingTab {
   constructor(
     app: App,
-    private plugin: ObsidianCopilot
+    private plugin: Markpilot
   ) {
     super(app, plugin);
   }
@@ -14,7 +14,7 @@ export class ObsidianCopilotSettingTab extends PluginSettingTab {
     const { containerEl } = this;
 
     containerEl.empty();
-    containerEl.createEl("h2", { text: "Obsidian Copilot" });
+    containerEl.createEl("h2", { text: "Markpilot" });
 
     const { plugin } = this;
     const { settings } = plugin;

@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import { useEffect, useState } from "react";
 import { ChatHistory, ChatRole } from "src/api/client";
-import ObsidianCopilot from "src/main";
+import Markpilot from "src/main";
 import { ChatInput } from "./components/ChatBox";
 import { ChatItem } from "./components/ChatItem";
 
@@ -11,7 +11,7 @@ Welcome, I'm your Copilot and I'm here to help you get things done faster. You c
 I'm powered by AI, so surprises and mistakes are possible. Make sure to verify any generated code or suggestions, and share feedback so that we can learn and improve. Check out the Copilot documentation to learn more.
 `;
 
-export function App({ plugin }: { plugin: ObsidianCopilot }) {
+export function App({ plugin }: { plugin: Markpilot }) {
   const [turn, setTurn] = useState<ChatRole>("system");
   const [history, setHistory] = useState<ChatHistory>({
     messages: [{ role: "system", content: systemPrompt }],

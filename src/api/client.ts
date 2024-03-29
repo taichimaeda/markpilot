@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import ObsidianCopilot from "src/main";
+import Markpilot from "src/main";
 
 export type ChatRole = "system" | "assistant" | "user";
 
@@ -16,7 +16,7 @@ export interface ChatHistory {
 export class OpenAIClient {
   private openai: OpenAI;
 
-  constructor(private plugin: ObsidianCopilot) {
+  constructor(private plugin: Markpilot) {
     const apiKey = this.plugin.settings.apiKey ?? "";
     this.openai = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
   }

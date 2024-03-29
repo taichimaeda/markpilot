@@ -63,7 +63,7 @@ function ChatItemHeader({ message }: { message: ChatMessage }) {
             font-weight: bold;
           `}
         >
-          {message.role === "user" ? "You" : "Obsidian Copilot"}
+          {message.role === "user" ? "You" : "Markpilot"}
         </span>
       </div>
       <button

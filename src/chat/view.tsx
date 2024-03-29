@@ -1,17 +1,17 @@
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
-import ObsidianCopilot from "src/main";
+import Markpilot from "src/main";
 import { App } from "./App";
 
-export const CHAT_VIEW_TYPE = "obsidian-copilot-chat-view";
+export const CHAT_VIEW_TYPE = "markpilot-chat-view";
 
 export class ChatView extends ItemView {
   private root: Root;
 
   constructor(
     leaf: WorkspaceLeaf,
-    private plugin: ObsidianCopilot
+    private plugin: Markpilot
   ) {
     super(leaf);
   }
@@ -21,7 +21,7 @@ export class ChatView extends ItemView {
   }
 
   getDisplayText() {
-    return "Obsidian Copilot";
+    return "Markpilot";
   }
 
   getIcon() {

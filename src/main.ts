@@ -2,16 +2,16 @@ import { Plugin } from "obsidian";
 import { ChatHistory, OpenAIClient } from "./api/client";
 import { CHAT_VIEW_TYPE, ChatView } from "./chat/view";
 import { inlineCompletionExtension } from "./editor/extension";
-import { ObsidianCopilotSettingTab } from "./settings";
+import { MarkpilotSettingTab } from "./settings";
 
-interface ObsidianCopilotSettings {
+interface MarkpilotSettings {
   apiKey: string | undefined;
   chatHistory: ChatHistory;
   enableCompletion: boolean;
   enableChat: boolean;
 }
 
-const DEFAULT_SETTINGS: ObsidianCopilotSettings = {
+const DEFAULT_SETTINGS: MarkpilotSettings = {
   apiKey: undefined,
   chatHistory: {
     messages: [],
@@ -21,13 +21,13 @@ const DEFAULT_SETTINGS: ObsidianCopilotSettings = {
   enableChat: true,
 };
 
-export default class ObsidianCopilot extends Plugin {
-  settings: ObsidianCopilotSettings;
+export default class Markpilot extends Plugin {
+  settings: MarkpilotSettings;
   client: OpenAIClient;
 
   async onload() {
     await this.loadSettings();
-    this.addSettingTab(new ObsidianCopilotSettingTab(this.app, this));
+    this.addSettingTab(new MarkpilotSettingTab(this.app, this));
 
     this.client = new OpenAIClient(this);
 
@@ -47,7 +47,7 @@ export default class ObsidianCopilot extends Plugin {
     }
 
     this.addCommand({
-      id: "obsidian-copilot-enable-completions",
+      id: "markpilot-enable-completions",
       name: "Enable inline completions",
       checkCallback: (checking: boolean) => {
         if (checking) {
@@ -59,7 +59,7 @@ export default class ObsidianCopilot extends Plugin {
       },
     });
     this.addCommand({
-      id: "obsidian-copilot-disable-completions",
+      id: "markpilot-disable-completions",
       name: "Disable inline completions",
       checkCallback: (checking: boolean) => {
         if (checking) {
@@ -71,7 +71,7 @@ export default class ObsidianCopilot extends Plugin {
       },
     });
     this.addCommand({
-      id: "obsidian-copilot-enable-chat",
+      id: "markpilot-enable-chat",
       name: "Enable chat",
       checkCallback: (checking: boolean) => {
         if (checking) {
@@ -84,7 +84,7 @@ export default class ObsidianCopilot extends Plugin {
       },
     });
     this.addCommand({
-      id: "obsidian-copilot-disable-chat",
+      id: "markpilot-disable-chat",
       name: "Disable chat",
       checkCallback: (checking: boolean) => {
         if (checking) {
@@ -97,7 +97,7 @@ export default class ObsidianCopilot extends Plugin {
       },
     });
     this.addCommand({
-      id: "obsidian-copilot-clear-chat-history",
+      id: "markpilot-clear-chat-history",
       name: "Clear chat history",
       checkCallback: (checking: boolean) => {
         if (checking) {
