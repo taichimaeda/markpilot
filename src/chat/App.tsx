@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import { useEffect, useState } from "react";
-import { Message, Role } from "src/api/client";
+import { ChatHistory, ChatRole } from "src/api/client";
 import ObsidianCopilot from "src/main";
 import { ChatInput } from "./components/ChatBox";
 import { ChatItem } from "./components/ChatItem";
@@ -11,22 +11,24 @@ Welcome, I'm your Copilot and I'm here to help you get things done faster. You c
 I'm powered by AI, so surprises and mistakes are possible. Make sure to verify any generated code or suggestions, and share feedback so that we can learn and improve. Check out the Copilot documentation to learn more.
 `;
 
-interface History {
-  messages: Message[];
-  response: string;
-}
-
 export function App({ plugin }: { plugin: ObsidianCopilot }) {
-  const [turn, setTurn] = useState<Role>("user");
-  const [history, setHistory] = useState<History>({
-    messages: [
-      {
-        role: "system",
-        content: systemPrompt,
-      },
-    ],
+  const [turn, setTurn] = useState<ChatRole>("system");
+  const [history, setHistory] = useState<ChatHistory>({
+    messages: [{ role: "system", content: systemPrompt }],
     response: "",
   });
+
+  useEffect(() => {
+    if (plugin.settings.chatHistory.messages.length > 1) {
+      setHistory(plugin.settings.chatHistory);
+    }
+    setTurn("user");
+  }, []);
+
+  useEffect(() => {
+    plugin.settings.chatHistory = history;
+    plugin.saveSettings();
+  }, [history]);
 
   useEffect(() => {
     if (turn === "assistant") {

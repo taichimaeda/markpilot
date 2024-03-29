@@ -1,11 +1,16 @@
 import OpenAI from "openai";
 import ObsidianCopilot from "src/main";
 
-export type Role = "system" | "assistant" | "user";
+export type ChatRole = "system" | "assistant" | "user";
 
-export interface Message {
-  role: Role;
+export interface ChatMessage {
+  role: ChatRole;
   content: string;
+}
+
+export interface ChatHistory {
+  messages: ChatMessage[];
+  response: string;
 }
 
 export class OpenAIClient {
@@ -25,7 +30,7 @@ export class OpenAIClient {
     return this.openai;
   }
 
-  async *fetchChat(messages: Message[]) {
+  async *fetchChat(messages: ChatMessage[]) {
     if (this.client === undefined) {
       return;
     }

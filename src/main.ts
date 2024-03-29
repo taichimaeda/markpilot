@@ -1,17 +1,22 @@
 import { Plugin } from "obsidian";
-import { OpenAIClient } from "./api/client";
+import { ChatHistory, OpenAIClient } from "./api/client";
 import { CHAT_VIEW_TYPE, ChatView } from "./chat/view";
 import { inlineCompletionExtension } from "./editor/extension";
 import { ObsidianCopilotSettingTab } from "./settings";
 
 interface ObsidianCopilotSettings {
   apiKey: string | undefined;
+  chatHistory: ChatHistory;
   enableCompletion: boolean;
   enableChat: boolean;
 }
 
 const DEFAULT_SETTINGS: ObsidianCopilotSettings = {
   apiKey: undefined,
+  chatHistory: {
+    messages: [],
+    response: "",
+  },
   enableCompletion: true,
   enableChat: true,
 };
@@ -40,6 +45,74 @@ export default class ObsidianCopilot extends Plugin {
     if (this.settings.enableChat) {
       this.activateView();
     }
+
+    this.addCommand({
+      id: "obsidian-copilot-enable-completions",
+      name: "Enable inline completions",
+      checkCallback: (checking: boolean) => {
+        if (checking) {
+          return true;
+        }
+        this.settings.enableCompletion = true;
+        this.saveSettings();
+        return true;
+      },
+    });
+    this.addCommand({
+      id: "obsidian-copilot-disable-completions",
+      name: "Disable inline completions",
+      checkCallback: (checking: boolean) => {
+        if (checking) {
+          return true;
+        }
+        this.settings.enableCompletion = false;
+        this.saveSettings();
+        return true;
+      },
+    });
+    this.addCommand({
+      id: "obsidian-copilot-enable-chat",
+      name: "Enable chat",
+      checkCallback: (checking: boolean) => {
+        if (checking) {
+          return true;
+        }
+        this.settings.enableChat = true;
+        this.saveSettings();
+        this.activateView();
+        return true;
+      },
+    });
+    this.addCommand({
+      id: "obsidian-copilot-disable-chat",
+      name: "Disable chat",
+      checkCallback: (checking: boolean) => {
+        if (checking) {
+          return true;
+        }
+        this.settings.enableChat = false;
+        this.saveSettings();
+        this.deactivateView();
+        return true;
+      },
+    });
+    this.addCommand({
+      id: "obsidian-copilot-clear-chat-history",
+      name: "Clear chat history",
+      checkCallback: (checking: boolean) => {
+        if (checking) {
+          return true;
+        }
+        this.settings.chatHistory = {
+          messages: [],
+          response: "",
+        };
+        this.saveSettings();
+        this.deactivateView();
+        this.activateView();
+        return true;
+      },
+    });
   }
 
   async loadSettings() {

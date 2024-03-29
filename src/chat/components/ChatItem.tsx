@@ -3,9 +3,9 @@ import { Bot, Copy, User } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
-import { Message } from "src/api/client";
+import { ChatMessage } from "src/api/client";
 
-export function ChatItem({ message }: { message: Message }) {
+export function ChatItem({ message }: { message: ChatMessage }) {
   return (
     <div
       css={css`
@@ -28,7 +28,7 @@ export function ChatItem({ message }: { message: Message }) {
   );
 }
 
-function ChatItemHeader({ message }: { message: Message }) {
+function ChatItemHeader({ message }: { message: ChatMessage }) {
   return (
     <div
       css={css`
@@ -94,7 +94,7 @@ function ChatItemHeader({ message }: { message: Message }) {
   );
 }
 
-function ChatItemBody({ message }: { message: Message }) {
+function ChatItemBody({ message }: { message: ChatMessage }) {
   return (
     <div
       css={css`
