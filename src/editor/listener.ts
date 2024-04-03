@@ -1,10 +1,10 @@
-import { EditorState } from "@codemirror/state";
-import { EditorView, ViewUpdate } from "@codemirror/view";
-import { Notice } from "obsidian";
-import Markpilot from "src/main";
-import { CompletionsFetcher } from "./extension";
-import { LanguageAlias, languagesAliases } from "./languages";
-import { setCompletionsEffect, unsetCompletionsEffect } from "./state";
+import { EditorState } from '@codemirror/state';
+import { EditorView, ViewUpdate } from '@codemirror/view';
+import { Notice } from 'obsidian';
+import Markpilot from 'src/main';
+import { CompletionsFetcher } from './extension';
+import { LanguageAlias, languagesAliases } from './languages';
+import { setCompletionsEffect, unsetCompletionsEffect } from './state';
 
 function showCompletions(fetcher: CompletionsFetcher, plugin: Markpilot) {
   let lastHead = -1;
@@ -45,9 +45,9 @@ function showCompletions(fetcher: CompletionsFetcher, plugin: Markpilot) {
     // Fetch completions from the server.
     const completions = await fetcher(language, prefix, suffix).catch(
       (error) => {
-        new Notice("Failed to fetch completions: ", error);
+        new Notice('Failed to fetch completions: ', error);
         return undefined;
-      }
+      },
     );
     // if fetch has failed, ignore and return.
     if (completions === undefined) {
@@ -77,7 +77,7 @@ function getCompletionsContext(state: EditorState, plugin: Markpilot) {
 
   const windowSize = plugin.settings.completions.windowSize;
   const context = {
-    language: "markdown",
+    language: 'markdown',
     prefix: prefix.slice(prefix.length - windowSize / 2, prefix.length),
     suffix: suffix.slice(0, windowSize / 2),
   };
@@ -86,7 +86,7 @@ function getCompletionsContext(state: EditorState, plugin: Markpilot) {
   let pattern;
 
   let prefixChars = 0;
-  const prefixLines = prefix.split("\n").reverse();
+  const prefixLines = prefix.split('\n').reverse();
 
   for (const [i, line] of prefixLines.entries()) {
     // Check if the line starts with a code block pattern.
@@ -96,7 +96,7 @@ function getCompletionsContext(state: EditorState, plugin: Markpilot) {
 
       // Check if the line ends with a language identifier.
       const language = line.slice(pattern.length).trim();
-      if (language === "") {
+      if (language === '') {
         // Return default context as closing code block pattern is detected.
         return context;
       } else {
@@ -105,7 +105,7 @@ function getCompletionsContext(state: EditorState, plugin: Markpilot) {
           languagesAliases[language as LanguageAlias] || language.toLowerCase();
         context.prefix = prefix.slice(
           prefix.length - prefixChars,
-          prefix.length
+          prefix.length,
         );
         break;
       }
@@ -117,7 +117,7 @@ function getCompletionsContext(state: EditorState, plugin: Markpilot) {
   }
 
   let suffixChars = 0;
-  const suffixLines = suffix.split("\n");
+  const suffixLines = suffix.split('\n');
 
   for (const line of suffixLines) {
     // Check if the line ends with the code block pattern detected above.
@@ -134,5 +134,5 @@ function getCompletionsContext(state: EditorState, plugin: Markpilot) {
 
 export const showCompletionsOnUpdate = (
   fetcher: CompletionsFetcher,
-  plugin: Markpilot
+  plugin: Markpilot,
 ) => EditorView.updateListener.of(showCompletions(fetcher, plugin));

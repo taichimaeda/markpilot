@@ -1,13 +1,13 @@
-import { Notice, Plugin } from "obsidian";
-import { MemoryCache } from "./api/cache";
-import { APIClient, OpenAIClient } from "./api/openai";
-import { CHAT_VIEW_TYPE, ChatView } from "./chat/view";
-import { inlineCompletionsExtension } from "./editor/extension";
+import { Notice, Plugin } from 'obsidian';
+import { MemoryCache } from './api/cache';
+import { APIClient, OpenAIClient } from './api/openai';
+import { CHAT_VIEW_TYPE, ChatView } from './chat/view';
+import { inlineCompletionsExtension } from './editor/extension';
 import {
   DEFAULT_SETTINGS,
   MarkpilotSettings,
   MarkpilotSettingTab,
-} from "./settings";
+} from './settings';
 
 export default class Markpilot extends Plugin {
   settings: MarkpilotSettings;
@@ -24,7 +24,7 @@ export default class Markpilot extends Plugin {
     const fetcher = async (
       language: string,
       prefix: string,
-      suffix: string
+      suffix: string,
     ) => {
       if (this.settings.completions.enabled) {
         return this.client.fetchCompletions(language, prefix, suffix);
@@ -37,34 +37,34 @@ export default class Markpilot extends Plugin {
     }
 
     this.addCommand({
-      id: "markpilot-enable-completions",
-      name: "Enable inline completions",
+      id: 'markpilot-enable-completions',
+      name: 'Enable inline completions',
       checkCallback: (checking: boolean) => {
         if (checking) {
           return true;
         }
         this.settings.completions.enabled = true;
         this.saveSettings();
-        new Notice("Inline completions enabled.");
+        new Notice('Inline completions enabled.');
         return true;
       },
     });
     this.addCommand({
-      id: "markpilot-disable-completions",
-      name: "Disable inline completions",
+      id: 'markpilot-disable-completions',
+      name: 'Disable inline completions',
       checkCallback: (checking: boolean) => {
         if (checking) {
           return true;
         }
         this.settings.completions.enabled = false;
         this.saveSettings();
-        new Notice("Inline completions disabled.");
+        new Notice('Inline completions disabled.');
         return true;
       },
     });
     this.addCommand({
-      id: "markpilot-enable-chat-view",
-      name: "Enable chat view",
+      id: 'markpilot-enable-chat-view',
+      name: 'Enable chat view',
       checkCallback: (checking: boolean) => {
         if (checking) {
           return true;
@@ -72,13 +72,13 @@ export default class Markpilot extends Plugin {
         this.settings.chat.enabled = true;
         this.saveSettings();
         this.activateView();
-        new Notice("Chat view enabled.");
+        new Notice('Chat view enabled.');
         return true;
       },
     });
     this.addCommand({
-      id: "markpilot-disable-chat-view",
-      name: "Disable chat view",
+      id: 'markpilot-disable-chat-view',
+      name: 'Disable chat view',
       checkCallback: (checking: boolean) => {
         if (checking) {
           return true;
@@ -86,50 +86,50 @@ export default class Markpilot extends Plugin {
         this.settings.chat.enabled = false;
         this.saveSettings();
         this.deactivateView();
-        new Notice("Chat view disabled.");
+        new Notice('Chat view disabled.');
         return true;
       },
     });
     this.addCommand({
-      id: "markpilot-clear-chat-history",
-      name: "Clear chat history",
+      id: 'markpilot-clear-chat-history',
+      name: 'Clear chat history',
       checkCallback: (checking: boolean) => {
         if (checking) {
           return true;
         }
         this.settings.chat.history = {
           messages: [],
-          response: "",
+          response: '',
         };
         this.saveSettings();
         this.reloadView();
-        new Notice("Chat history cleared.");
+        new Notice('Chat history cleared.');
         return true;
       },
     });
     this.addCommand({
-      id: "markpilot-enable-cache",
-      name: "Enable cache",
+      id: 'markpilot-enable-cache',
+      name: 'Enable cache',
       checkCallback: (checking: boolean) => {
         if (checking) {
           return true;
         }
         this.settings.cache.enabled = true;
         this.saveSettings();
-        new Notice("Cache enabled.");
+        new Notice('Cache enabled.');
         return true;
       },
     });
     this.addCommand({
-      id: "markpilot-disable-cache",
-      name: "Disable cache",
+      id: 'markpilot-disable-cache',
+      name: 'Disable cache',
       checkCallback: (checking: boolean) => {
         if (checking) {
           return true;
         }
         this.settings.cache.enabled = false;
         this.saveSettings();
-        new Notice("Cache disabled.");
+        new Notice('Cache disabled.');
         return true;
       },
     });

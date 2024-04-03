@@ -1,12 +1,12 @@
-import { Prec } from "@codemirror/state";
-import { EditorView, keymap } from "@codemirror/view";
-import Markpilot from "src/main";
-import { CompletionsCancel, CompletionsForce } from "./extension";
-import { completionsStateField, unsetCompletionsEffect } from "./state";
+import { Prec } from '@codemirror/state';
+import { EditorView, keymap } from '@codemirror/view';
+import Markpilot from 'src/main';
+import { CompletionsCancel, CompletionsForce } from './extension';
+import { completionsStateField, unsetCompletionsEffect } from './state';
 
 export function acceptCompletionsOnKeydown(
   force: CompletionsForce,
-  plugin: Markpilot
+  plugin: Markpilot,
 ) {
   let lastCompletionsTime = 0;
 
@@ -64,7 +64,7 @@ export function acceptCompletionsOnKeydown(
 
 export function rejectCompletionsOnKeydown(
   cancel: CompletionsCancel,
-  plugin: Markpilot
+  plugin: Markpilot,
 ) {
   function run(view: EditorView) {
     const { state } = view;

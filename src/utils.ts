@@ -12,7 +12,7 @@ export function uuid(): string {
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export function debounceAsyncFunc<T>(
   func: (...args: any[]) => Promise<T>,
-  wait: number
+  wait: number,
 ): {
   debounced: (...args: any[]) => Promise<T | undefined>;
   cancel: () => void;

@@ -1,15 +1,15 @@
-import Chart from "chart.js/auto";
-import { App, PluginSettingTab, Setting } from "obsidian";
+import Chart from 'chart.js/auto';
+import { App, PluginSettingTab, Setting } from 'obsidian';
 import {
   CHAT_COMPLETIONS_MODELS,
   ChatCompletionsModel,
   ChatHistory,
   COMPLETIONS_MODELS,
   CompletionsModel,
-} from "./api/openai";
+} from './api/openai';
 
-import Markpilot from "./main";
-import { getDaysInCurrentMonth } from "./utils";
+import Markpilot from './main';
+import { getDaysInCurrentMonth } from './utils';
 
 export interface MarkpilotSettings {
   apiKey: string | undefined;
@@ -42,22 +42,22 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
   apiKey: undefined,
   completions: {
     enabled: true,
-    model: "gpt-3.5-turbo-instruct",
+    model: 'gpt-3.5-turbo-instruct',
     maxTokens: 64,
     temperature: 1,
     waitTime: 500,
     windowSize: 512,
-    acceptKey: "Enter",
-    rejectKey: "Escape",
+    acceptKey: 'Enter',
+    rejectKey: 'Escape',
   },
   chat: {
     enabled: true,
-    model: "gpt-3.5-turbo-0125",
+    model: 'gpt-3.5-turbo-0125',
     maxTokens: 1024,
     temperature: 0.1,
     history: {
       messages: [],
-      response: "",
+      response: '',
     },
   },
   cache: {
@@ -71,7 +71,7 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
 export class MarkpilotSettingTab extends PluginSettingTab {
   constructor(
     app: App,
-    private plugin: Markpilot
+    private plugin: Markpilot,
   ) {
     super(app, plugin);
   }
@@ -84,23 +84,23 @@ export class MarkpilotSettingTab extends PluginSettingTab {
     const { plugin } = this;
     const { settings } = plugin;
 
-    containerEl.createEl("h2", { text: "OpenAI" });
+    containerEl.createEl('h2', { text: 'OpenAI' });
 
     new Setting(containerEl)
-      .setName("OpenAI API Key")
-      .setDesc("Enter your OpenAI API key to enable features.")
+      .setName('OpenAI API Key')
+      .setDesc('Enter your OpenAI API key to enable features.')
       .addText((text) =>
-        text.setValue(settings.apiKey ?? "").onChange(async (value) => {
+        text.setValue(settings.apiKey ?? '').onChange(async (value) => {
           settings.apiKey = value;
           await plugin.saveSettings();
-        })
+        }),
       );
 
-    containerEl.createEl("h2", { text: "Inline completions" });
+    containerEl.createEl('h2', { text: 'Inline completions' });
 
     new Setting(containerEl)
-      .setName("Enable inline completions")
-      .setDesc("Turn this on to enable inline completions.")
+      .setName('Enable inline completions')
+      .setDesc('Turn this on to enable inline completions.')
       .addToggle((toggle) =>
         toggle
           .setValue(settings.completions.enabled)
@@ -108,12 +108,12 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             settings.completions.enabled = value;
             await plugin.saveSettings();
             this.display(); // Re-render settings tab
-          })
+          }),
       );
     new Setting(containerEl)
       .setDisabled(!settings.completions.enabled)
-      .setName("Model")
-      .setDesc("Select the model for inline completions.")
+      .setName('Model')
+      .setDesc('Select the model for inline completions.')
       .addDropdown((dropdown) => {
         for (const option of COMPLETIONS_MODELS) {
           dropdown.addOption(option, option);
@@ -126,8 +126,8 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       });
     new Setting(containerEl)
       .setDisabled(!settings.completions.enabled)
-      .setName("Max tokens")
-      .setDesc("Set the max tokens for inline completions.")
+      .setName('Max tokens')
+      .setDesc('Set the max tokens for inline completions.')
       .addText((text) =>
         text
           .setValue(settings.completions.maxTokens.toString())
@@ -135,12 +135,12 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             settings.completions.maxTokens =
               parseInt(value) || DEFAULT_SETTINGS.completions.maxTokens;
             await plugin.saveSettings();
-          })
+          }),
       );
     new Setting(containerEl)
       .setDisabled(!settings.completions.enabled)
-      .setName("Temperature")
-      .setDesc("Set the temperature for inline completions.")
+      .setName('Temperature')
+      .setDesc('Set the temperature for inline completions.')
       .addText((text) =>
         text
           .setValue(settings.completions.temperature.toString())
@@ -148,14 +148,14 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             settings.completions.temperature =
               parseFloat(value) || DEFAULT_SETTINGS.completions.temperature;
             await plugin.saveSettings();
-          })
+          }),
       );
 
     new Setting(containerEl)
       .setDisabled(!settings.completions.enabled)
-      .setName("Wait time")
+      .setName('Wait time')
       .setDesc(
-        "Time in miliseconds which it will wait for before fetching inline completions from the server."
+        'Time in miliseconds which it will wait for before fetching inline completions from the server.',
       )
       .addText((text) =>
         text
@@ -164,13 +164,13 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             settings.completions.waitTime =
               parseInt(value) || DEFAULT_SETTINGS.completions.waitTime;
             await plugin.saveSettings();
-          })
+          }),
       );
     new Setting(containerEl)
       .setDisabled(!settings.completions.enabled)
-      .setName("Window size")
+      .setName('Window size')
       .setDesc(
-        "Set the window size for inline completions. The window size the number of characters around the cursor used to obtain inline completions"
+        'Set the window size for inline completions. The window size the number of characters around the cursor used to obtain inline completions',
       )
       .addText((text) =>
         text
@@ -179,13 +179,13 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             settings.completions.windowSize =
               parseInt(value) || DEFAULT_SETTINGS.completions.windowSize;
             await plugin.saveSettings();
-          })
+          }),
       );
     new Setting(containerEl)
       .setDisabled(!settings.completions.enabled)
-      .setName("Accept key")
+      .setName('Accept key')
       .setDesc(
-        "Set the key to accept inline completions. The list of available keys can be found at: https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values"
+        'Set the key to accept inline completions. The list of available keys can be found at: https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values',
       )
       .addText((text) =>
         text
@@ -193,13 +193,13 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           .onChange(async (value) => {
             settings.completions.acceptKey = value;
             await plugin.saveSettings();
-          })
+          }),
       );
     new Setting(containerEl)
       .setDisabled(!settings.completions.enabled)
-      .setName("Reject key")
+      .setName('Reject key')
       .setDesc(
-        "Set the key to reject inline completions. The list of available keys can be found at: https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values"
+        'Set the key to reject inline completions. The list of available keys can be found at: https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values',
       )
       .addText((text) =>
         text
@@ -207,14 +207,14 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           .onChange(async (value) => {
             settings.completions.rejectKey = value;
             await plugin.saveSettings();
-          })
+          }),
       );
 
-    containerEl.createEl("h2", { text: "Chat view" });
+    containerEl.createEl('h2', { text: 'Chat view' });
 
     new Setting(containerEl)
-      .setName("Enable chat view")
-      .setDesc("Turn this on to enable chat view.")
+      .setName('Enable chat view')
+      .setDesc('Turn this on to enable chat view.')
       .addToggle((toggle) =>
         toggle.setValue(settings.chat.enabled).onChange(async (value) => {
           settings.chat.enabled = value;
@@ -225,12 +225,12 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             plugin.deactivateView();
           }
           this.display(); // Re-render settings tab
-        })
+        }),
       );
     new Setting(containerEl)
       .setDisabled(!settings.chat.enabled)
-      .setName("Model")
-      .setDesc("Select the model for GPT.")
+      .setName('Model')
+      .setDesc('Select the model for GPT.')
       .addDropdown((dropdown) => {
         for (const option of CHAT_COMPLETIONS_MODELS) {
           dropdown.addOption(option, option);
@@ -243,8 +243,8 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       });
     new Setting(containerEl)
       .setDisabled(!settings.chat.enabled)
-      .setName("Max tokens")
-      .setDesc("Set the max tokens for chat view.")
+      .setName('Max tokens')
+      .setDesc('Set the max tokens for chat view.')
       .addText((text) =>
         text
           .setValue(settings.chat.maxTokens.toString())
@@ -252,12 +252,12 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             settings.chat.maxTokens =
               parseInt(value) || DEFAULT_SETTINGS.chat.maxTokens;
             await plugin.saveSettings();
-          })
+          }),
       );
     new Setting(containerEl)
       .setDisabled(!settings.chat.enabled)
-      .setName("Temperature")
-      .setDesc("Set the temperature for chat view.")
+      .setName('Temperature')
+      .setDesc('Set the temperature for chat view.')
       .addText((text) =>
         text
           .setValue(settings.chat.temperature.toString())
@@ -265,45 +265,45 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             settings.chat.temperature =
               parseFloat(value) || DEFAULT_SETTINGS.chat.temperature;
             await plugin.saveSettings();
-          })
+          }),
       );
 
-    containerEl.createEl("h2", { text: "Cache" });
+    containerEl.createEl('h2', { text: 'Cache' });
 
     new Setting(containerEl)
-      .setName("Enable caching")
+      .setName('Enable caching')
       .setDesc(
-        "Turn this on to enable memory caching. The cached data will be invalided on startup."
+        'Turn this on to enable memory caching. The cached data will be invalided on startup.',
       )
       .addToggle((toggle) =>
         toggle.setValue(settings.cache.enabled).onChange(async (value) => {
           settings.cache.enabled = value;
           await plugin.saveSettings();
           this.display(); // Re-render settings tab
-        })
+        }),
       );
 
-    containerEl.createEl("h2", { text: "Usage" });
+    containerEl.createEl('h2', { text: 'Usage' });
 
     new Setting(containerEl)
-      .setName("Costs")
+      .setName('Costs')
       .setDesc(
-        "Below you can find the estimated usage of OpenAI API for inline completions and chat view this month"
+        'Below you can find the estimated usage of OpenAI API for inline completions and chat view this month',
       );
 
     const dates = getDaysInCurrentMonth();
     const data = dates.map((date) => ({ date, cost: 0 }));
     for (const [day, cost] of Object.entries(settings.usage.costs)) {
-      const target = new Date(day + "T00:00:00").toDateString();
+      const target = new Date(day + 'T00:00:00').toDateString();
       const index = dates.findIndex((date) => date.toDateString() === target);
       if (index !== -1) {
         data[index].cost = cost;
       }
     }
     const backgroundColor =
-      getComputedStyle(containerEl).getPropertyValue("--color-accent");
-    new Chart(containerEl.createEl("canvas"), {
-      type: "bar",
+      getComputedStyle(containerEl).getPropertyValue('--color-accent');
+    new Chart(containerEl.createEl('canvas'), {
+      type: 'bar',
       options: {
         plugins: {
           tooltip: {
@@ -315,7 +315,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         labels: data.map((row) => row.date.toDateString()),
         datasets: [
           {
-            label: "OpenAI API",
+            label: 'OpenAI API',
             data: data.map((row) => row.cost),
             backgroundColor,
           },

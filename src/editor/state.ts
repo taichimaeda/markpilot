@@ -1,4 +1,4 @@
-import { StateEffect, StateField } from "@codemirror/state";
+import { StateEffect, StateField } from '@codemirror/state';
 
 export const setCompletionsEffect = StateEffect.define<{
   completions: string;

@@ -7,8 +7,8 @@ import {
   ViewPlugin,
   ViewUpdate,
   WidgetType,
-} from "@codemirror/view";
-import { completionsStateField } from "./state";
+} from '@codemirror/view';
+import { completionsStateField } from './state';
 
 class CompletionsWidget extends WidgetType {
   constructor(private readonly completions: string) {
@@ -16,14 +16,14 @@ class CompletionsWidget extends WidgetType {
   }
 
   toDOM(view: EditorView) {
-    const spanEl = document.createElement("span");
-    spanEl.style.opacity = "0.5";
+    const spanEl = document.createElement('span');
+    spanEl.style.opacity = '0.5';
     spanEl.textContent = this.completions;
     return spanEl;
   }
 
   get lineBreaks() {
-    return this.completions.split("\n").length - 1;
+    return this.completions.split('\n').length - 1;
   }
 }
 
@@ -55,5 +55,5 @@ const completionsRenderPluginSpec: PluginSpec<CompletionsRenderPluginValue> = {
 
 export const completionsRenderPlugin = ViewPlugin.fromClass(
   CompletionsRenderPluginValue,
-  completionsRenderPluginSpec
+  completionsRenderPluginSpec,
 );

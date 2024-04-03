@@ -1,6 +1,6 @@
-import { css } from "@emotion/react";
-import { SendHorizontal } from "lucide-react";
-import { useState } from "react";
+import { css } from '@emotion/react';
+import { SendHorizontal } from 'lucide-react';
+import { useState } from 'react';
 
 export function ChatInput({
   disabled,
@@ -9,9 +9,9 @@ export function ChatInput({
   disabled: boolean;
   submit: (text: string) => void;
 }) {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
 
-  const numLines = value.split("\n").length;
+  const numLines = value.split('\n').length;
   const numRows = Math.min(10, numLines);
 
   return (
@@ -28,9 +28,9 @@ export function ChatInput({
         onChange={(event) => setValue(event.target.value)}
         onKeyDown={(event) => {
           // Press Enter to submit, Shift+Enter for newline
-          if (event.key === "Enter" && !event.shiftKey) {
+          if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
-            setValue("");
+            setValue('');
             submit(value);
           }
         }}

@@ -1,9 +1,9 @@
-import { css } from "@emotion/react";
-import { Bot, Copy, User } from "lucide-react";
-import ReactMarkdown from "react-markdown";
-import rehypeKatex from "rehype-katex";
-import remarkMath from "remark-math";
-import { ChatMessage } from "src/api/openai";
+import { css } from '@emotion/react';
+import { Bot, Copy, User } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
+import { ChatMessage } from 'src/api/openai';
 
 export function ChatItem({ message }: { message: ChatMessage }) {
   return (
@@ -14,7 +14,7 @@ export function ChatItem({ message }: { message: ChatMessage }) {
           255,
           255,
           255,
-          ${message.role === "user" ? 0.025 : 0}
+          ${message.role === 'user' ? 0.025 : 0}
         );
         border-bottom: 1px solid gray;
         &:last-of-type {
@@ -54,7 +54,7 @@ function ChatItemHeader({ message }: { message: ChatMessage }) {
             border-radius: 50%;
           `}
         >
-          {message.role === "user" ? <User size={16} /> : <Bot size={16} />}
+          {message.role === 'user' ? <User size={16} /> : <Bot size={16} />}
         </div>
         <span
           css={css`
@@ -63,7 +63,7 @@ function ChatItemHeader({ message }: { message: ChatMessage }) {
             font-weight: bold;
           `}
         >
-          {message.role === "user" ? "You" : "Markpilot"}
+          {message.role === 'user' ? 'You' : 'Markpilot'}
         </span>
       </div>
       <button
