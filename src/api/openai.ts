@@ -44,9 +44,6 @@ export interface ChatHistory {
 }
 
 export interface APIClient {
-  reload(): Promise<void>;
-  initialize(): Promise<void>;
-  destroy(): Promise<void>;
   fetchChat(messages: ChatMessage[]): AsyncGenerator<string | undefined>;
   fetchCompletions(
     language: string,
@@ -58,20 +55,9 @@ export interface APIClient {
 export class OpenAIClient implements APIClient {
   private openai: OpenAI | undefined;
 
-  constructor(private plugin: Markpilot) {}
-
-  async reload() {
-    await this.destroy();
-    await this.initialize();
-  }
-
-  async initialize() {
+  constructor(private plugin: Markpilot) {
     const apiKey = this.plugin.settings.apiKey ?? "";
     this.openai = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
-  }
-
-  async destroy() {
-    this.openai = undefined;
   }
 
   async *fetchChat(messages: ChatMessage[]) {

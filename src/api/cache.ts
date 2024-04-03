@@ -1,62 +1,14 @@
-import * as child_process from "child_process";
 import { createHash } from "crypto";
-import { Notice } from "obsidian";
-import { createClient, RedisClientType } from "redis";
 import Markpilot from "src/main";
 import { APIClient, ChatMessage } from "./openai";
 
-export class RedisCache implements APIClient {
-  private redis: RedisClientType;
-  private process: child_process.ChildProcess | undefined;
+export class MemoryCache implements APIClient {
+  private store: Map<string, string> = new Map();
 
   constructor(
     private client: APIClient,
     private plugin: Markpilot
   ) {}
-
-  async reload() {
-    await this.destroy();
-    await this.initialize();
-  }
-
-  async initialize() {
-    const { settings } = this.plugin;
-    if (!settings.cache.enabled) {
-      return;
-    }
-
-    const port = settings.cache.redisPort.toString();
-    const path = settings.cache.redisPath;
-
-    const { status } = child_process.spawnSync("lsof", ["-i", "tcp:17777"]);
-    if (status !== 0) {
-      new Notice("Starting Redis server.");
-      this.process = child_process.spawn(path, ["--port", port, "--save", ""]);
-    } else {
-      new Notice("Redis server already running.");
-    }
-
-    this.redis = createClient({ url: `redis://127.0.0.1:${port}` });
-    this.redis.on("error", (error) =>
-      console.log("Redis client error: ", error)
-    );
-    await this.redis.connect();
-    await this.client.initialize();
-  }
-
-  async destroy() {
-    const { settings } = this.plugin;
-    if (!settings.cache.enabled) {
-      return;
-    }
-
-    await this.client.destroy();
-    await this.redis.disconnect();
-
-    if (this.process !== undefined) {
-      this.process.kill("SIGINT");
-    }
-  }
 
   fetchChat(messages: ChatMessage[]) {
     // No caching for chats.
@@ -86,8 +38,8 @@ export class RedisCache implements APIClient {
       .update(`${language} ${truncatedPrefix} ${truncatedSuffix} `, "utf8")
       .digest("hex");
 
-    if (await this.redis.exists(hash)) {
-      const cache = await this.redis.get(hash);
+    if (await this.store.has(hash)) {
+      const cache = await this.store.get(hash);
       return cache as string;
     }
 
@@ -99,7 +51,7 @@ export class RedisCache implements APIClient {
     if (completions === undefined) {
       return undefined;
     }
-    await this.redis.set(hash, completions);
+    await this.store.set(hash, completions);
     return completions;
   }
 }

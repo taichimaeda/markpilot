@@ -1,5 +1,5 @@
 import { Notice, Plugin } from "obsidian";
-import { RedisCache } from "./api/cache";
+import { MemoryCache } from "./api/cache";
 import { APIClient, OpenAIClient } from "./api/openai";
 import { CHAT_VIEW_TYPE, ChatView } from "./chat/view";
 import { inlineCompletionsExtension } from "./editor/extension";
@@ -18,9 +18,8 @@ export default class Markpilot extends Plugin {
     this.addSettingTab(new MarkpilotSettingTab(this.app, this));
 
     const client = new OpenAIClient(this);
-    const cache = new RedisCache(client, this);
+    const cache = new MemoryCache(client, this);
     this.client = cache;
-    this.client.initialize();
 
     const fetcher = async (
       language: string,
@@ -130,48 +129,10 @@ export default class Markpilot extends Plugin {
         }
         this.settings.cache.enabled = false;
         this.saveSettings();
-        this.client.reload();
         new Notice("Cache disabled.");
         return true;
       },
     });
-    this.addCommand({
-      id: "markpilot-start-redis-server",
-      name: "Start Redis server",
-      checkCallback: (checking: boolean) => {
-        if (checking) {
-          return this.settings.cache.enabled;
-        }
-        this.client.initialize();
-        return true;
-      },
-    });
-    this.addCommand({
-      id: "markpilot-stop-redis-server",
-      name: "Stop Redis server",
-      checkCallback: (checking: boolean) => {
-        if (checking) {
-          return this.settings.cache.enabled;
-        }
-        this.client.destroy();
-        return true;
-      },
-    });
-    this.addCommand({
-      id: "markpilot-restart-redis-server",
-      name: "Restart Redis server",
-      checkCallback: (checking: boolean) => {
-        if (checking) {
-          return this.settings.cache.enabled;
-        }
-        this.client.reload();
-        return true;
-      },
-    });
-  }
-
-  onunload() {
-    this.client.destroy();
   }
 
   async loadSettings() {
