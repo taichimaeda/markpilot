@@ -33,13 +33,14 @@
     "@codemirror/state": "^6.4.1",
     "@codemirror/view": "^6.26.0",
     "@emotion/react": "^11.11.4",
+    "chart.js": "^4.4.2",
+    "js-tiktoken": "^1.0.10",
     "lucide-react": "^0.363.0",
     "obsidian": "latest",
     "openai": "^4.30.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^9.0.1",
-    "redis": "^4.6.13",
     "rehype-katex": "^7.0.0",
     "remark-math": "^6.0.0"
   }

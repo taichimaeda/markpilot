@@ -1,3 +1,4 @@
+import Chart from "chart.js/auto";
 import { App, PluginSettingTab, Setting } from "obsidian";
 import {
   CHAT_COMPLETIONS_MODELS,
@@ -8,6 +9,7 @@ import {
 } from "./api/openai";
 
 import Markpilot from "./main";
+import { getDaysInCurrentMonth } from "./utils";
 
 export interface MarkpilotSettings {
   apiKey: string | undefined;
@@ -31,6 +33,9 @@ export interface MarkpilotSettings {
   cache: {
     enabled: boolean;
   };
+  usage: {
+    costs: Record<string, number>;
+  };
 }
 
 export const DEFAULT_SETTINGS: MarkpilotSettings = {
@@ -47,7 +52,7 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
   },
   chat: {
     enabled: true,
-    model: "gpt-3.5-turbo",
+    model: "gpt-3.5-turbo-0125",
     maxTokens: 1024,
     temperature: 0.1,
     history: {
@@ -57,6 +62,9 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
   },
   cache: {
     enabled: false,
+  },
+  usage: {
+    costs: {},
   },
 };
 
@@ -274,5 +282,45 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           this.display(); // Re-render settings tab
         })
       );
+
+    containerEl.createEl("h2", { text: "Usage" });
+
+    new Setting(containerEl)
+      .setName("Costs")
+      .setDesc(
+        "Below you can find the estimated usage of OpenAI API for inline completions and chat view this month"
+      );
+
+    const dates = getDaysInCurrentMonth();
+    const data = dates.map((date) => ({ date, cost: 0 }));
+    for (const [day, cost] of Object.entries(settings.usage.costs)) {
+      const target = new Date(day + "T00:00:00").toDateString();
+      const index = dates.findIndex((date) => date.toDateString() === target);
+      if (index !== -1) {
+        data[index].cost = cost;
+      }
+    }
+    const backgroundColor =
+      getComputedStyle(containerEl).getPropertyValue("--color-accent");
+    new Chart(containerEl.createEl("canvas"), {
+      type: "bar",
+      options: {
+        plugins: {
+          tooltip: {
+            callbacks: { label: (item) => `$${item.parsed.y}` },
+          },
+        },
+      },
+      data: {
+        labels: data.map((row) => row.date.toDateString()),
+        datasets: [
+          {
+            label: "OpenAI API",
+            data: data.map((row) => row.cost),
+            backgroundColor,
+          },
+        ],
+      },
+    });
   }
 }

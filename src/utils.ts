@@ -46,3 +46,14 @@ export function debounceAsyncFunc<T>(
     force: () => previous.force(),
   };
 }
+
+export function getDaysInCurrentMonth(): Date[] {
+  const today = new Date();
+  const date = new Date(today.getFullYear(), today.getMonth(), 1);
+  const dates = [];
+  while (date.getMonth() === today.getMonth()) {
+    dates.push(new Date(date));
+    date.setDate(date.getDate() + 1);
+  }
+  return dates;
+}
