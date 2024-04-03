@@ -316,7 +316,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         datasets: [
           {
             label: 'OpenAI API',
-            data: data.map((row) => row.cost),
+            data: data.map((row) => new Number(row.cost.toFixed(5))),
             backgroundColor,
           },
         ],
