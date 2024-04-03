@@ -27,8 +27,12 @@ export function ChatInput({
         value={value}
         onChange={(event) => setValue(event.target.value)}
         onKeyDown={(event) => {
-          // Press Enter to submit, Shift+Enter for newline
-          if (event.key === 'Enter' && !event.shiftKey) {
+          if (
+            value.trim() !== '' &&
+            event.key === 'Enter' &&
+            !event.shiftKey && // Allow newline with shift key
+            !event.nativeEvent.isComposing // Prevent submitting on IME
+          ) {
             event.preventDefault();
             setValue('');
             submit(value);
