@@ -1,4 +1,4 @@
-# Markpilot
+# 🤖 Markpilot: AI-powered inline completions and chat view for Obsidian
 
 ![workflow](https://github.com/taichimaeda/markpilot/actions/workflows/ci.yaml/badge.svg)
 ![semver](https://img.shields.io/badge/semver-1.0.0-blue)
