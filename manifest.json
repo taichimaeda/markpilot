@@ -1,9 +1,9 @@
 {
 	"id": "markpilot",
 	"name": "Markpilot",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"minAppVersion": "0.15.0",
-	"description": "Obsidian plugin for AI-powered inline completions and chat view",
+	"description": "Inline completions and chat view powered by OpenAI",
 	"author": "Taichi Maeda",
 	"authorUrl": "https://taichimaeda.github.io",
 	"isDesktopOnly": true

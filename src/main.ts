@@ -42,7 +42,7 @@ export default class Markpilot extends Plugin {
     }
 
     this.addCommand({
-      id: 'markpilot-enable-completions',
+      id: 'enable-completions',
       name: 'Enable inline completions',
       checkCallback: (checking: boolean) => {
         if (checking) {
@@ -55,7 +55,7 @@ export default class Markpilot extends Plugin {
       },
     });
     this.addCommand({
-      id: 'markpilot-disable-completions',
+      id: 'disable-completions',
       name: 'Disable inline completions',
       checkCallback: (checking: boolean) => {
         if (checking) {
@@ -68,7 +68,7 @@ export default class Markpilot extends Plugin {
       },
     });
     this.addCommand({
-      id: 'markpilot-enable-chat-view',
+      id: 'enable-chat-view',
       name: 'Enable chat view',
       checkCallback: (checking: boolean) => {
         if (checking) {
@@ -82,7 +82,7 @@ export default class Markpilot extends Plugin {
       },
     });
     this.addCommand({
-      id: 'markpilot-disable-chat-view',
+      id: 'disable-chat-view',
       name: 'Disable chat view',
       checkCallback: (checking: boolean) => {
         if (checking) {
@@ -96,7 +96,7 @@ export default class Markpilot extends Plugin {
       },
     });
     this.addCommand({
-      id: 'markpilot-clear-chat-history',
+      id: 'clear-chat-history',
       name: 'Clear chat history',
       checkCallback: (checking: boolean) => {
         if (checking) {
@@ -113,7 +113,7 @@ export default class Markpilot extends Plugin {
       },
     });
     this.addCommand({
-      id: 'markpilot-enable-cache',
+      id: 'enable-cache',
       name: 'Enable cache',
       checkCallback: (checking: boolean) => {
         if (checking) {
@@ -126,7 +126,7 @@ export default class Markpilot extends Plugin {
       },
     });
     this.addCommand({
-      id: 'markpilot-disable-cache',
+      id: 'disable-cache',
       name: 'Disable cache',
       checkCallback: (checking: boolean) => {
         if (checking) {
