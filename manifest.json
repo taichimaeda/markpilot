@@ -5,7 +5,6 @@
   "minAppVersion": "0.15.0",
   "description": "",
   "author": "Taichi Maeda",
-  "authorUrl": "https://obsidian.md",
-  "fundingUrl": "https://obsidian.md/pricing",
+  "authorUrl": "https://taichimaeda.github.io",
   "isDesktopOnly": true
 }
