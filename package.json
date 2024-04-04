@@ -1,7 +1,7 @@
 {
   "name": "markpilot",
-  "version": "1.0.2",
-  "description": "A plugin for inline completions and chat view powered by OpenAI",
+  "version": "1.0.3",
+  "description": "Inline completions and chat view powered by OpenAI",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
