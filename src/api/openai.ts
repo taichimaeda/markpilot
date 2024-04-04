@@ -2,6 +2,7 @@ import { getEncoding } from 'js-tiktoken';
 import { Notice } from 'obsidian';
 import OpenAI from 'openai';
 import Markpilot from 'src/main';
+import { getThisMonthAsString, getTodayAsString } from 'src/utils';
 
 export const COMPLETIONS_MODELS = [
   'gpt-3.5-turbo-instruct',
@@ -121,8 +122,17 @@ export class OpenAIClient implements APIClient {
       return;
     }
 
+    const { settings } = this.plugin;
+
+    const thisMonth = getThisMonthAsString();
+    if (settings.usage.monthlyCosts[thisMonth] >= settings.usage.monthlyLimit) {
+      new Notice(
+        'Monthly usage limit reached. Please increase the limit to keep on using the features.',
+      );
+      return;
+    }
+
     try {
-      const { settings } = this.plugin;
       const stream = await this.openai.chat.completions.create({
         messages,
         model: settings.chat.model,
@@ -160,8 +170,17 @@ export class OpenAIClient implements APIClient {
       return;
     }
 
+    const { settings } = this.plugin;
+
+    const thisMonth = getThisMonthAsString();
+    if (settings.usage.monthlyCosts[thisMonth] >= settings.usage.monthlyLimit) {
+      new Notice(
+        'Monthly usage limit reached. Please increase the limit to keep on using the features.',
+      );
+      return;
+    }
+
     try {
-      const { settings } = this.plugin;
       const completions = await this.openai.completions.create({
         prompt: `Continue the following code written in ${language} language:\n\n${prefix}`,
         suffix,
@@ -195,14 +214,18 @@ export class OpenAIClient implements APIClient {
     outputTokens: number,
   ) {
     const { settings } = this.plugin;
-    const today = new Date().toISOString().split('T')[0];
-    if (settings.usage.costs[today] === undefined) {
-      settings.usage.costs[today] = 0;
+    const today = getTodayAsString();
+    const thisMonth = getThisMonthAsString();
+    if (settings.usage.dailyCosts[today] === undefined) {
+      settings.usage.dailyCosts[today] = 0;
     }
-    settings.usage.costs[today] +=
+    const cost =
       (inputTokens * MODEL_INPUT_COSTS[model] +
         outputTokens * MODEL_OUTPUT_COSTS[model]) /
       1_000_000;
+    settings.usage.dailyCosts[today] += cost;
+    settings.usage.monthlyCosts[thisMonth] += cost;
+
     await this.plugin.saveSettings();
   }
 }

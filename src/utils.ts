@@ -47,6 +47,14 @@ export function debounceAsyncFunc<T>(
   };
 }
 
+export function getTodayAsString(): string {
+  return new Date().toISOString().split('T')[0];
+}
+
+export function getThisMonthAsString(): string {
+  return new Date().toISOString().split('-').slice(0, 2).join('-');
+}
+
 export function getDaysInCurrentMonth(): Date[] {
   const today = new Date();
   const date = new Date(today.getFullYear(), today.getMonth(), 1);

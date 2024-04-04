@@ -34,7 +34,9 @@ export interface MarkpilotSettings {
     enabled: boolean;
   };
   usage: {
-    costs: Record<string, number>;
+    dailyCosts: Record<string, number>; // e.g. '2021-09-01' to 10.0 (USD)
+    monthlyCosts: Record<string, number>; // e.g. '2021-09' to 100.0 (USD)
+    monthlyLimit: number;
   };
 }
 
@@ -64,7 +66,9 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
     enabled: false,
   },
   usage: {
-    costs: {},
+    dailyCosts: {},
+    monthlyCosts: {},
+    monthlyLimit: 20,
   },
 };
 
@@ -132,8 +136,11 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         text
           .setValue(settings.completions.maxTokens.toString())
           .onChange(async (value) => {
-            settings.completions.maxTokens =
-              parseInt(value) || DEFAULT_SETTINGS.completions.maxTokens;
+            const amount = parseInt(value);
+            if (isNaN(amount) || amount < 0) {
+              return;
+            }
+            settings.completions.maxTokens = amount;
             await plugin.saveSettings();
           }),
       );
@@ -145,8 +152,11 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         text
           .setValue(settings.completions.temperature.toString())
           .onChange(async (value) => {
-            settings.completions.temperature =
-              parseFloat(value) || DEFAULT_SETTINGS.completions.temperature;
+            const amount = parseFloat(value);
+            if (isNaN(amount) || amount < 0) {
+              return;
+            }
+            settings.completions.temperature = amount;
             await plugin.saveSettings();
           }),
       );
@@ -161,8 +171,11 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         text
           .setValue(settings.completions.waitTime.toString())
           .onChange(async (value) => {
-            settings.completions.waitTime =
-              parseInt(value) || DEFAULT_SETTINGS.completions.waitTime;
+            const amount = parseFloat(value);
+            if (isNaN(amount) || amount < 0) {
+              return;
+            }
+            settings.completions.waitTime = amount;
             await plugin.saveSettings();
           }),
       );
@@ -176,8 +189,11 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         text
           .setValue(settings.completions.windowSize.toString())
           .onChange(async (value) => {
-            settings.completions.windowSize =
-              parseInt(value) || DEFAULT_SETTINGS.completions.windowSize;
+            const amount = parseInt(value);
+            if (isNaN(amount) || amount < 0) {
+              return;
+            }
+            settings.completions.windowSize = amount;
             await plugin.saveSettings();
           }),
       );
@@ -249,8 +265,11 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         text
           .setValue(settings.chat.maxTokens.toString())
           .onChange(async (value) => {
-            settings.chat.maxTokens =
-              parseInt(value) || DEFAULT_SETTINGS.chat.maxTokens;
+            const amount = parseFloat(value);
+            if (isNaN(amount) || amount < 0) {
+              return;
+            }
+            settings.chat.maxTokens = amount;
             await plugin.saveSettings();
           }),
       );
@@ -262,8 +281,11 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         text
           .setValue(settings.chat.temperature.toString())
           .onChange(async (value) => {
-            settings.chat.temperature =
-              parseFloat(value) || DEFAULT_SETTINGS.chat.temperature;
+            const amount = parseFloat(value);
+            if (isNaN(amount) || amount < 0) {
+              return;
+            }
+            settings.chat.temperature = amount;
             await plugin.saveSettings();
           }),
       );
@@ -286,14 +308,32 @@ export class MarkpilotSettingTab extends PluginSettingTab {
     containerEl.createEl('h2', { text: 'Usage' });
 
     new Setting(containerEl)
-      .setName('Costs')
+      .setName('Monthly Limit')
+      .setDesc(
+        'Set the monthly limit for the usage costs (USD). When this limit is reached, the plugin will disable both inline completions and chat view',
+      )
+      .addText((text) =>
+        text
+          .setValue(settings.usage.monthlyLimit.toString())
+          .onChange(async (value) => {
+            const amount = parseFloat(value);
+            if (isNaN(amount) || amount < 0) {
+              return;
+            }
+            settings.usage.monthlyLimit = amount;
+            await plugin.saveSettings();
+          }),
+      );
+
+    new Setting(containerEl)
+      .setName('Monthly Costs')
       .setDesc(
         'Below you can find the estimated usage of OpenAI API for inline completions and chat view this month',
       );
 
     const dates = getDaysInCurrentMonth();
     const data = dates.map((date) => ({ date, cost: 0 }));
-    for (const [day, cost] of Object.entries(settings.usage.costs)) {
+    for (const [day, cost] of Object.entries(settings.usage.dailyCosts)) {
       const target = new Date(day + 'T00:00:00').toDateString();
       const index = dates.findIndex((date) => date.toDateString() === target);
       if (index !== -1) {

@@ -21,16 +21,12 @@ export default class Markpilot extends Plugin {
     const cache = new MemoryCache(client, this);
     this.client = cache;
 
-    const fetcher = async (
-      language: string,
-      prefix: string,
-      suffix: string,
-    ) => {
-      if (this.settings.completions.enabled) {
-        return this.client.fetchCompletions(language, prefix, suffix);
-      }
-    };
-    this.registerEditorExtension(inlineCompletionsExtension(fetcher, this));
+    this.registerEditorExtension(
+      inlineCompletionsExtension(
+        this.client.fetchCompletions.bind(this.client),
+        this,
+      ),
+    );
     this.registerView(CHAT_VIEW_TYPE, (leaf) => new ChatView(leaf, this));
     if (this.settings.chat.enabled) {
       this.activateView();
