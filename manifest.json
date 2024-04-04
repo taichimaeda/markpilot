@@ -1,10 +1,10 @@
 {
-  "id": "markpilot",
-  "name": "Markpilot",
-  "version": "1.0.0",
-  "minAppVersion": "0.15.0",
-  "description": "",
-  "author": "Taichi Maeda",
-  "authorUrl": "https://taichimaeda.github.io",
-  "isDesktopOnly": true
+	"id": "markpilot",
+	"name": "Markpilot",
+	"version": "1.0.1",
+	"minAppVersion": "0.15.0",
+	"description": "Obsidian plugin for AI-powered inline completions and chat view",
+	"author": "Taichi Maeda",
+	"authorUrl": "https://taichimaeda.github.io",
+	"isDesktopOnly": true
 }
