@@ -165,7 +165,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       .setDisabled(!settings.completions.enabled)
       .setName('Wait time')
       .setDesc(
-        'Time in miliseconds which it will wait for before fetching inline completions from the server.',
+        'Time in milliseconds which it will wait for before fetching inline completions from the server.',
       )
       .addText((text) =>
         text
