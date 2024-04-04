@@ -40,7 +40,7 @@ export class MemoryCache implements APIClient {
 
     if (await this.store.has(hash)) {
       const cache = await this.store.get(hash);
-      return cache as string;
+      return cache;
     }
 
     const completions = await this.client.fetchCompletions(

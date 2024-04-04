@@ -22,10 +22,11 @@ export default class Markpilot extends Plugin {
     this.client = cache;
 
     this.registerEditorExtension(
-      inlineCompletionsExtension(
-        this.client.fetchCompletions.bind(this.client),
-        this,
-      ),
+      inlineCompletionsExtension(async (...args) => {
+        if (this.settings.completions.enabled) {
+          return this.client.fetchCompletions(...args);
+        }
+      }, this),
     );
     this.registerView(CHAT_VIEW_TYPE, (leaf) => new ChatView(leaf, this));
     if (this.settings.chat.enabled) {
