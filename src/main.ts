@@ -36,6 +36,15 @@ export default class Markpilot extends Plugin {
       this.activateView();
     }
 
+    if (
+      (this.settings.completions.enabled || this.settings.chat.enabled) &&
+      !this.settings.apiKey?.startsWith('sk')
+    ) {
+      new Notice(
+        'OpenAI API key is not set. Please register it in the settings tab to use the features.',
+      );
+    }
+
     this.addCommand({
       id: 'markpilot-enable-completions',
       name: 'Enable inline completions',

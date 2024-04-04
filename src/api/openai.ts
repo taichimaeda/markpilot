@@ -1,4 +1,5 @@
 import { getEncoding } from 'js-tiktoken';
+import { Notice } from 'obsidian';
 import OpenAI from 'openai';
 import Markpilot from 'src/main';
 
@@ -120,31 +121,38 @@ export class OpenAIClient implements APIClient {
       return;
     }
 
-    const { settings } = this.plugin;
-    const stream = await this.openai.chat.completions.create({
-      messages,
-      model: settings.chat.model,
-      max_tokens: settings.chat.maxTokens,
-      temperature: settings.chat.temperature,
-      top_p: 1,
-      n: 1,
-      stream: true,
-    });
+    try {
+      const { settings } = this.plugin;
+      const stream = await this.openai.chat.completions.create({
+        messages,
+        model: settings.chat.model,
+        max_tokens: settings.chat.maxTokens,
+        temperature: settings.chat.temperature,
+        top_p: 1,
+        n: 1,
+        stream: true,
+      });
 
-    const contents = [];
-    for await (const chunk of stream) {
-      const content = chunk.choices[0].delta.content ?? '';
-      contents.push(content);
-      yield content;
+      const contents = [];
+      for await (const chunk of stream) {
+        const content = chunk.choices[0].delta.content ?? '';
+        contents.push(content);
+        yield content;
+      }
+
+      // Update usage cost estimates.
+      const enc = getEncoding('gpt2'); // Assume GPT-2 encoding
+      const inputMessage = messages
+        .map((message) => message.content)
+        .join('\n');
+      const outputMessage = contents.join('');
+      const inputTokens = enc.encode(inputMessage).length;
+      const outputTokens = enc.encode(outputMessage).length;
+      await this.updateUsage(settings.chat.model, inputTokens, outputTokens);
+    } catch (error) {
+      console.error(error);
+      new Notice('Failed to fetch chat completions.');
     }
-
-    // Update usage cost estimates.
-    const enc = getEncoding('gpt2'); // Assume GPT-2 encoding
-    const inputMessage = messages.map((message) => message.content).join('\n');
-    const outputMessage = contents.join('');
-    const inputTokens = enc.encode(inputMessage).length;
-    const outputTokens = enc.encode(outputMessage).length;
-    await this.updateUsage(settings.chat.model, inputTokens, outputTokens);
   }
 
   async fetchCompletions(language: string, prefix: string, suffix: string) {
@@ -152,28 +160,33 @@ export class OpenAIClient implements APIClient {
       return;
     }
 
-    const { settings } = this.plugin;
-    const completions = await this.openai.completions.create({
-      prompt: `Continue the following code written in ${language} language:\n\n${prefix}`,
-      suffix,
-      model: settings.completions.model,
-      max_tokens: settings.completions.maxTokens,
-      temperature: settings.completions.temperature,
-      top_p: 1,
-      n: 1,
-      stop: ['\n\n\n'],
-    });
+    try {
+      const { settings } = this.plugin;
+      const completions = await this.openai.completions.create({
+        prompt: `Continue the following code written in ${language} language:\n\n${prefix}`,
+        suffix,
+        model: settings.completions.model,
+        max_tokens: settings.completions.maxTokens,
+        temperature: settings.completions.temperature,
+        top_p: 1,
+        n: 1,
+        stop: ['\n\n\n'],
+      });
 
-    // Update usage cost estimates.
-    const inputTokens = completions.usage?.prompt_tokens ?? 0;
-    const outputTokens = completions.usage?.completion_tokens ?? 0;
-    await this.updateUsage(
-      settings.completions.model,
-      inputTokens,
-      outputTokens,
-    );
+      // Update usage cost estimates.
+      const inputTokens = completions.usage?.prompt_tokens ?? 0;
+      const outputTokens = completions.usage?.completion_tokens ?? 0;
+      await this.updateUsage(
+        settings.completions.model,
+        inputTokens,
+        outputTokens,
+      );
 
-    return completions.choices[0].text;
+      return completions.choices[0].text;
+    } catch (error) {
+      console.error(error);
+      new Notice('Failed to fetch completions.');
+    }
   }
 
   async updateUsage(
