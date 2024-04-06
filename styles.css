@@ -3,6 +3,7 @@
   display: none;
 }
 
-.katex-html {
-  
+/* Show inline completions text with less opacity */
+.markpilot-completions {
+  opacity: 0.5;
 }

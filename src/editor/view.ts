@@ -17,7 +17,7 @@ class CompletionsWidget extends WidgetType {
 
   toDOM(view: EditorView) {
     const spanEl = document.createElement('span');
-    spanEl.style.opacity = '0.5';
+    spanEl.classList.add('markpilot-completions');
     spanEl.textContent = this.completions;
     return spanEl;
   }
