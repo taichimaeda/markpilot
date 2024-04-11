@@ -308,7 +308,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
     containerEl.createEl('h2', { text: 'Usage' });
 
     new Setting(containerEl)
-      .setName('Monthly Limit')
+      .setName('Monthly limit')
       .setDesc(
         'Set the monthly limit for the usage costs (USD). When this limit is reached, the plugin will disable both inline completions and chat view',
       )
@@ -326,7 +326,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName('Monthly Costs')
+      .setName('Monthly costs')
       .setDesc(
         'Below you can find the estimated usage of OpenAI API for inline completions and chat view this month',
       );
