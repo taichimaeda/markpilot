@@ -88,7 +88,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
     const { plugin } = this;
     const { settings } = plugin;
 
-    containerEl.createEl('h2', { text: 'OpenAI' });
+    new Setting(containerEl).setName('OpenAI').setHeading();
 
     new Setting(containerEl)
       .setName('OpenAI API Key')
@@ -100,7 +100,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         }),
       );
 
-    containerEl.createEl('h2', { text: 'Inline completions' });
+    new Setting(containerEl).setName('Inline completions').setHeading();
 
     new Setting(containerEl)
       .setName('Enable inline completions')
@@ -226,7 +226,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           }),
       );
 
-    containerEl.createEl('h2', { text: 'Chat view' });
+    new Setting(containerEl).setName('Chat view').setHeading();
 
     new Setting(containerEl)
       .setName('Enable chat view')
@@ -290,7 +290,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           }),
       );
 
-    containerEl.createEl('h2', { text: 'Cache' });
+    new Setting(containerEl).setName('Cache').setHeading();
 
     new Setting(containerEl)
       .setName('Enable caching')
@@ -305,7 +305,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         }),
       );
 
-    containerEl.createEl('h2', { text: 'Usage' });
+    new Setting(containerEl).setName('Usage').setHeading();
 
     new Setting(containerEl)
       .setName('Monthly limit')
