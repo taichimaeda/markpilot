@@ -1,8 +1,3 @@
-// Sleep for `duration` milliseconds.
-export function sleep(duration: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, duration));
-}
-
 export function uuid(): string {
   return crypto.randomUUID();
 }
