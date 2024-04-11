@@ -45,64 +45,45 @@ export default class Markpilot extends Plugin {
     this.addCommand({
       id: 'enable-completions',
       name: 'Enable inline completions',
-      checkCallback: (checking: boolean) => {
-        if (checking) {
-          return true;
-        }
+      callback: () => {
         this.settings.completions.enabled = true;
         this.saveSettings();
         new Notice('Inline completions enabled.');
-        return true;
       },
     });
     this.addCommand({
       id: 'disable-completions',
       name: 'Disable inline completions',
-      checkCallback: (checking: boolean) => {
-        if (checking) {
-          return true;
-        }
+      callback: () => {
         this.settings.completions.enabled = false;
         this.saveSettings();
         new Notice('Inline completions disabled.');
-        return true;
       },
     });
     this.addCommand({
       id: 'enable-chat-view',
-      name: 'Enable chat view',
-      checkCallback: (checking: boolean) => {
-        if (checking) {
-          return true;
-        }
+      name: 'Enale chat view',
+      callback: () => {
         this.settings.chat.enabled = true;
         this.saveSettings();
         this.activateView();
         new Notice('Chat view enabled.');
-        return true;
       },
     });
     this.addCommand({
       id: 'disable-chat-view',
       name: 'Disable chat view',
-      checkCallback: (checking: boolean) => {
-        if (checking) {
-          return true;
-        }
+      callback: () => {
         this.settings.chat.enabled = false;
         this.saveSettings();
         this.deactivateView();
         new Notice('Chat view disabled.');
-        return true;
       },
     });
     this.addCommand({
       id: 'clear-chat-history',
       name: 'Clear chat history',
-      checkCallback: (checking: boolean) => {
-        if (checking) {
-          return true;
-        }
+      callback: () => {
         this.settings.chat.history = {
           messages: [],
           response: '',
@@ -110,33 +91,24 @@ export default class Markpilot extends Plugin {
         this.saveSettings();
         this.reloadView();
         new Notice('Chat history cleared.');
-        return true;
       },
     });
     this.addCommand({
       id: 'enable-cache',
       name: 'Enable cache',
-      checkCallback: (checking: boolean) => {
-        if (checking) {
-          return true;
-        }
+      callback: () => {
         this.settings.cache.enabled = true;
         this.saveSettings();
         new Notice('Cache enabled.');
-        return true;
       },
     });
     this.addCommand({
       id: 'disable-cache',
       name: 'Disable cache',
-      checkCallback: (checking: boolean) => {
-        if (checking) {
-          return true;
-        }
+      callback: () => {
         this.settings.cache.enabled = false;
         this.saveSettings();
         new Notice('Cache disabled.');
-        return true;
       },
     });
   }
