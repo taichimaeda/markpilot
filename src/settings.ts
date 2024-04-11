@@ -331,6 +331,15 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         'Below you can find the estimated usage of OpenAI API for inline completions and chat view this month',
       );
 
+    this.renderGraph();
+  }
+
+  renderGraph() {
+    const { plugin } = this;
+    const { settings } = plugin;
+
+    const { containerEl } = this;
+
     const dates = getDaysInCurrentMonth();
     const data = dates.map((date) => ({ date, cost: 0 }));
     for (const [day, cost] of Object.entries(settings.usage.dailyCosts)) {
@@ -340,8 +349,14 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         data[index].cost = cost;
       }
     }
-    const backgroundColor =
-      getComputedStyle(containerEl).getPropertyValue('--color-accent');
+    // Get the accent color from the theme
+    // using CSS variables provided by Obsidian:
+    // https://docs.obsidian.md/Reference/CSS+variables/Foundations/Colors#Accent+color
+    const style = getComputedStyle(containerEl);
+    const hue = style.getPropertyValue('--accent-h');
+    const saturation = style.getPropertyValue('--accent-s');
+    const lightness = style.getPropertyValue('--accent-l');
+    const backgroundColor = `hsl(${hue}, ${saturation}, ${lightness})`;
     new Chart(containerEl.createEl('canvas'), {
       type: 'bar',
       options: {
