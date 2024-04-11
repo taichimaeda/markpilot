@@ -34,7 +34,6 @@
     "@codemirror/language": "^6.10.1",
     "@codemirror/state": "^6.4.1",
     "@codemirror/view": "^6.26.0",
-    "@emotion/react": "^11.11.4",
     "chart.js": "^4.4.2",
     "js-tiktoken": "^1.0.10",
     "lucide-react": "^0.363.0",

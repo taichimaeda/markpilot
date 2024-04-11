@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import { Bot, Copy, User } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import rehypeKatex from 'rehype-katex';
@@ -8,19 +7,10 @@ import { ChatMessage } from 'src/api/openai';
 export function ChatItem({ message }: { message: ChatMessage }) {
   return (
     <div
-      css={css`
-        padding: 15px 20px;
-        background-color: rgba(
-          255,
-          255,
-          255,
-          ${message.role === 'user' ? 0.025 : 0}
-        );
-        border-bottom: 1px solid gray;
-        &:last-of-type {
-          border-bottom: none;
-        }
-      `}
+      className={
+        'markpilot-chat-item' +
+        (message.role === 'user' ? ' user' : ' assistant')
+      }
     >
       <ChatItemHeader message={message} />
       <ChatItemBody message={message} />
@@ -30,60 +20,17 @@ export function ChatItem({ message }: { message: ChatMessage }) {
 
 function ChatItemHeader({ message }: { message: ChatMessage }) {
   return (
-    <div
-      css={css`
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-      `}
-    >
-      <div
-        css={css`
-          display: flex;
-          align-items: center;
-        `}
-      >
-        <div
-          css={css`
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            border: 1px solid gray;
-            border-radius: 50%;
-          `}
-        >
+    <div className="markpilot-chat-item-header">
+      <div className="profile-container">
+        <div className="profile-icon">
           {message.role === 'user' ? <User size={16} /> : <Bot size={16} />}
         </div>
-        <span
-          css={css`
-            margin-left: 10px;
-            font-size: 13px;
-            font-weight: bold;
-          `}
-        >
+        <span className="profile-name">
           {message.role === 'user' ? 'You' : 'Markpilot'}
         </span>
       </div>
       <button
-        css={css`
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 20px;
-          height: 20px;
-          padding: 0;
-          margin: 0;
-          border: 1px solid gray;
-          border-radius: 5px;
-          &:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-          }
-          &:active {
-            background-color: rgba(255, 255, 255, 0.2);
-          }
-        `}
+        className="copy-button"
         onClick={() => {
           navigator.clipboard.writeText(message.content);
         }}
@@ -96,11 +43,7 @@ function ChatItemHeader({ message }: { message: ChatMessage }) {
 
 function ChatItemBody({ message }: { message: ChatMessage }) {
   return (
-    <div
-      css={css`
-        font-size: 13px;
-      `}
-    >
+    <div className="markpilot-chat-item-body">
       <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
         {message.content}
       </ReactMarkdown>

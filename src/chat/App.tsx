@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import { useEffect, useState } from 'react';
 import { ChatHistory, ChatRole } from 'src/api/openai';
 import Markpilot from 'src/main';
@@ -70,20 +69,8 @@ export function App({ view, plugin }: { view: ChatView; plugin: Markpilot }) {
   }
 
   return (
-    <div
-      css={css`
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-      `}
-    >
-      <div
-        css={css`
-          margin: 15px 0;
-          flex-grow: 1;
-          overflow-y: scroll;
-        `}
-      >
+    <div className="markpilot-chat-root">
+      <div className="items-container">
         {history.messages.map((message, index) => (
           <ChatItem key={index} message={message} />
         ))}
@@ -93,12 +80,7 @@ export function App({ view, plugin }: { view: ChatView; plugin: Markpilot }) {
           />
         )}
       </div>
-      <div
-        css={css`
-          margin: 15px;
-          margin-top: 0;
-        `}
-      >
+      <div className="input-container">
         <ChatInput disabled={turn === 'assistant'} submit={submit} />
       </div>
     </div>

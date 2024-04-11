@@ -7,3 +7,125 @@
 .markpilot-completions {
   opacity: 0.5;
 }
+
+.markpilot-chat-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.markpilot-chat-root .items-container {
+  margin: 15px 0;
+  flex-grow: 1;
+  overflow-y: scroll;
+}
+
+.markpilot-chat-root .input-container {
+  margin: 15px;
+  margin-top: 0;
+}
+
+.markpilot-chat-item {
+  padding: 15px 20px;
+  border-bottom: 1px solid gray;
+}
+
+.markpilot-chat-item:last-of-type {
+  border-bottom: none;
+}
+
+.markpilot-chat-item.assistant {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.markpilot-chat-item.user {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.markpilot-chat-item-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.markpilot-chat-item-header .profile-container {
+  display: flex;
+  align-items: center;
+}
+
+.markpilot-chat-item-header .profile-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid gray;
+  border-radius: 50%;
+}
+
+.markpilot-chat-item-header .profile-name {
+  margin-left: 10px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.markpilot-chat-item-header .copy-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+.markpilot-chat-item-header .copy-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.markpilot-chat-item-header .copy-button:active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.markpilot-chat-item-body {
+  font-size: 13px;
+}
+
+.markpilot-chat-input {
+  position: relative;
+  width: 100%;
+}
+
+.markpilot-chat-input .input-field {
+  width: 100%;
+  resize: none;
+  margin: 0;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.markpilot-chat-input .send-button-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.markpilot-chat-input .send-button {
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  box-shadow: none !important;
+  background-color: rgba(255, 255, 255, 0) !important;
+}
+
+.markpilot-chat-input .send-button:hover {
+  box-shadow: none !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 50%;
+}

@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import { SendHorizontal } from 'lucide-react';
 import { useState } from 'react';
 
@@ -15,13 +14,10 @@ export function ChatInput({
   const numRows = Math.min(10, numLines);
 
   return (
-    <div
-      css={css`
-        position: relative;
-        width: 100%;
-      `}
-    >
+    <div className="markpilot-chat-input">
       <textarea
+        className="input-field"
+        style={{ height: `${numRows + 1.5}rem` }}
         disabled={disabled}
         placeholder="Type a message..."
         value={value}
@@ -38,41 +34,12 @@ export function ChatInput({
             submit(value);
           }
         }}
-        css={css`
-          width: 100%;
-          height: ${numRows + 1.5}rem;
-          resize: none;
-          margin: 0;
-          padding: 10px;
-          border-radius: 5px;
-        `}
       />
       <div
-        css={css`
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          height: ${numRows + 1.5}rem;
-          right: 10px;
-          display: flex;
-          align-items: center;
-        `}
+        className="send-button-container"
+        style={{ height: `${numRows + 1.5}rem` }}
       >
-        <button
-          css={css`
-            width: 24px;
-            height: 24px;
-            margin: 0;
-            padding: 0;
-            box-shadow: none !important;
-            background-color: rgba(255, 255, 255, 0) !important;
-            &:hover {
-              box-shadow: none !important;
-              background-color: rgba(255, 255, 255, 0.1) !important;
-              border-radius: 50%;
-            }
-          `}
-        >
+        <button className="send-button">
           <SendHorizontal size={16} />
         </button>
       </div>
