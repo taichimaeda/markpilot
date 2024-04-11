@@ -10,8 +10,9 @@ import {
 } from './settings';
 
 export default class Markpilot extends Plugin {
-  settings: MarkpilotSettings;
   client: APIClient;
+  settings: MarkpilotSettings;
+  view: ChatView;
 
   async onload() {
     await this.loadSettings();
@@ -28,7 +29,10 @@ export default class Markpilot extends Plugin {
         }
       }, this),
     );
-    this.registerView(CHAT_VIEW_TYPE, (leaf) => new ChatView(leaf, this));
+    this.registerView(CHAT_VIEW_TYPE, (leaf) => {
+      this.view = new ChatView(leaf, this);
+      return this.view;
+    });
     if (this.settings.chat.enabled) {
       this.activateView();
     }
@@ -62,7 +66,7 @@ export default class Markpilot extends Plugin {
     });
     this.addCommand({
       id: 'enable-chat-view',
-      name: 'Enale chat view',
+      name: 'Enable chat view',
       callback: () => {
         this.settings.chat.enabled = true;
         this.saveSettings();
@@ -89,7 +93,7 @@ export default class Markpilot extends Plugin {
           response: '',
         };
         this.saveSettings();
-        this.reloadView();
+        this.view.clear?.();
         new Notice('Chat history cleared.');
       },
     });
@@ -119,11 +123,6 @@ export default class Markpilot extends Plugin {
 
   async saveSettings() {
     await this.saveData(this.settings);
-  }
-
-  async reloadView() {
-    await this.deactivateView();
-    await this.activateView();
   }
 
   async activateView() {

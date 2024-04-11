@@ -4,21 +4,29 @@ import { ChatHistory, ChatRole } from 'src/api/openai';
 import Markpilot from 'src/main';
 import { ChatInput } from './components/ChatBox';
 import { ChatItem } from './components/ChatItem';
+import { ChatView } from './view';
 
 const systemPrompt = `
 Welcome, I'm your Copilot and I'm here to help you get things done faster. You can also start an inline chat session.
 
 I'm powered by AI, so surprises and mistakes are possible. Make sure to verify any generated code or suggestions, and share feedback so that we can learn and improve. Check out the Copilot documentation to learn more.
 `;
+const defaultHistory: ChatHistory = {
+  messages: [{ role: 'system', content: systemPrompt }],
+  response: '',
+};
 
-export function App({ plugin }: { plugin: Markpilot }) {
+export function App({ view, plugin }: { view: ChatView; plugin: Markpilot }) {
   const [turn, setTurn] = useState<ChatRole>('system');
-  const [history, setHistory] = useState<ChatHistory>({
-    messages: [{ role: 'system', content: systemPrompt }],
-    response: '',
-  });
+  const [history, setHistory] = useState<ChatHistory>(defaultHistory);
 
   const { settings } = plugin;
+
+  useEffect(() => {
+    // Expose the method to clear history to the view
+    // so that the plugin command can call it.
+    view.clear = () => setHistory(defaultHistory);
+  }, []);
 
   useEffect(() => {
     if (settings.chat.history.messages.length > 1) {

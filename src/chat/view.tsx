@@ -8,6 +8,7 @@ export const CHAT_VIEW_TYPE = 'markpilot-chat-view';
 
 export class ChatView extends ItemView {
   private root: Root;
+  public clear?: () => void;
 
   constructor(
     leaf: WorkspaceLeaf,
@@ -37,7 +38,7 @@ export class ChatView extends ItemView {
     this.root = createRoot(containerEl);
     this.root.render(
       <React.StrictMode>
-        <App plugin={this.plugin} />
+        <App view={this} plugin={this.plugin} />
       </React.StrictMode>,
     );
   }
