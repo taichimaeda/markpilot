@@ -17,8 +17,14 @@ export class MemoryCache implements APIClient {
 
   async fetchCompletions(language: string, prefix: string, suffix: string) {
     const { settings } = this.plugin;
+
     if (!settings.cache.enabled) {
-      return;
+      const completions = await this.client.fetchCompletions(
+        language,
+        prefix,
+        suffix,
+      );
+      return completions;
     }
 
     // Extra whitespaces should not affect the completions.
