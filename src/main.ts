@@ -1,3 +1,4 @@
+import { Extension } from '@codemirror/state';
 import { Notice, Plugin } from 'obsidian';
 import { MemoryCache } from './api/cache';
 import { APIClient, OpenAIClient } from './api/openai';
@@ -13,6 +14,7 @@ export default class Markpilot extends Plugin {
   client: APIClient;
   settings: MarkpilotSettings;
   view: ChatView;
+  extensions: Extension[];
 
   async onload() {
     await this.loadSettings();
@@ -21,14 +23,8 @@ export default class Markpilot extends Plugin {
     const client = new OpenAIClient(this);
     const cache = new MemoryCache(client, this);
     this.client = cache;
-
-    this.registerEditorExtension(
-      inlineCompletionsExtension(async (...args) => {
-        if (this.settings.completions.enabled) {
-          return this.client.fetchCompletions(...args);
-        }
-      }, this),
-    );
+    this.extensions = this.getEditorExtension();
+    this.registerEditorExtension(this.extensions);
     this.registerView(CHAT_VIEW_TYPE, (leaf) => {
       this.view = new ChatView(leaf, this);
       return this.view;
@@ -115,6 +111,25 @@ export default class Markpilot extends Plugin {
         new Notice('Cache disabled.');
       },
     });
+  }
+
+  getEditorExtension() {
+    return inlineCompletionsExtension(async (...args) => {
+      if (this.settings.completions.enabled) {
+        return this.client.fetchCompletions(...args);
+      }
+    }, this);
+  }
+
+  updateEditorExtension() {
+    const { workspace } = this.app;
+
+    this.extensions.splice(
+      0,
+      this.extensions.length,
+      ...this.getEditorExtension(),
+    );
+    workspace.updateOptions();
   }
 
   async loadSettings() {
