@@ -49,7 +49,7 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
     temperature: 1,
     waitTime: 500,
     windowSize: 512,
-    acceptKey: 'Enter',
+    acceptKey: 'Tab',
     rejectKey: 'Escape',
   },
   chat: {
@@ -178,6 +178,10 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             }
             settings.completions.waitTime = amount;
             await plugin.saveSettings();
+            // Editor extension needs to be updated when settings are changed
+            // because some fields e.g. `acceptKey` become stale and there is no way
+            // to make the extension query it on the fly.
+            plugin.updateEditorExtension();
           }),
       );
     new Setting(containerEl)
@@ -196,6 +200,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             }
             settings.completions.windowSize = amount;
             await plugin.saveSettings();
+            plugin.updateEditorExtension();
           }),
       );
     new Setting(containerEl)
@@ -210,6 +215,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           .onChange(async (value) => {
             settings.completions.acceptKey = value;
             await plugin.saveSettings();
+            plugin.updateEditorExtension();
           }),
       );
     new Setting(containerEl)
@@ -224,6 +230,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           .onChange(async (value) => {
             settings.completions.rejectKey = value;
             await plugin.saveSettings();
+            plugin.updateEditorExtension();
           }),
       );
 
