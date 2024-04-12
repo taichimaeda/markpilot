@@ -1,7 +1,7 @@
 # 🤖 Markpilot: AI-powered inline completions and chat view for Obsidian
 
 ![workflow](https://github.com/taichimaeda/markpilot/actions/workflows/ci.yaml/badge.svg)
-![semver](https://img.shields.io/badge/semver-1.0.0-blue)
+![semver](https://img.shields.io/badge/semver-1.0.9-blue)
 
 Markpilot is an Obsidian plugin that offers _inline completions_ features and _chat view_ in the sidebar. It is powered by the OpenAI API and aims to provide a similar experience to [GitHub Copilot](https://github.com/features/copilot) in Obsidian.
 
@@ -80,3 +80,15 @@ Some of the settings you will likely want to customize:
   - The longer the window size, the more context-aware completions you get, but it will take longer to generate completions and result in hitting the cache less often.
 - Wait time
   - The time in milliseconds to wait before sending the content to the model to generate completions.
+
+## Frequently Asked Questions
+
+### How do I get an OpenAI API key?
+
+You can obtain an OpenAI API key from [OpenAI API](https://platform.openai.com/docs/guides/authentication).
+
+### I can't accept completions by hitting `Tab`.
+
+Currently some extensions like [Obsidian Outliner](https://github.com/vslinko/obsidian-outliner) use the `Tab` key for their own purposes, which will conflict with Markpilot's completions.
+
+Although I could not find documentation on this, it seems like the keybindings are loaded in the order of when the plugins got enabled, so you can try disabling the conflicting plugin and enabling it again to prioritise Markpilot's keybindings.
