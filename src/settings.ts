@@ -1,5 +1,5 @@
 import Chart from 'chart.js/auto';
-import { App, PluginSettingTab, Setting } from 'obsidian';
+import { App, Notice, PluginSettingTab, Setting } from 'obsidian';
 import {
   CHAT_COMPLETIONS_MODELS,
   ChatCompletionsModel,
@@ -97,6 +97,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         text.setValue(settings.apiKey ?? '').onChange(async (value) => {
           settings.apiKey = value;
           await plugin.saveSettings();
+          new Notice('Suceessfully saved API key.');
         }),
       );
 

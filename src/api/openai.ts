@@ -110,11 +110,11 @@ export interface APIClient {
 }
 
 export class OpenAIClient implements APIClient {
-  private openai: OpenAI | undefined;
+  constructor(private plugin: Markpilot) {}
 
-  constructor(private plugin: Markpilot) {
+  get openai() {
     const apiKey = this.plugin.settings.apiKey ?? '';
-    this.openai = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
+    return new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
   }
 
   async *fetchChat(messages: ChatMessage[]) {
