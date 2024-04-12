@@ -1,7 +1,7 @@
 {
 	"id": "markpilot",
 	"name": "Markpilot",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"minAppVersion": "1.5.7",
 	"description": "Inline completions and chat view powered by OpenAI",
 	"author": "Taichi Maeda",
