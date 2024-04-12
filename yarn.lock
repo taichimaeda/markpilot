@@ -7,24 +7,12 @@
   resolved "https://registry.yarnpkg.com/@aashutoshrathi/word-wrap/-/word-wrap-1.2.6.tgz#bd9154aec9983f77b3a034ecaa015c2e4201f6cf"
   integrity sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==
 
-"@codemirror/language@^6.10.1":
-  version "6.10.1"
-  resolved "https://registry.yarnpkg.com/@codemirror/language/-/language-6.10.1.tgz#428c932a158cb75942387acfe513c1ece1090b05"
-  integrity sha512-5GrXzrhq6k+gL5fjkAwt90nYDmjlzTIJV8THnxNFtNKWotMIlzzN+CpqxqwXOECnUdOndmSeWntVrVcv5axWRQ==
-  dependencies:
-    "@codemirror/state" "^6.0.0"
-    "@codemirror/view" "^6.23.0"
-    "@lezer/common" "^1.1.0"
-    "@lezer/highlight" "^1.0.0"
-    "@lezer/lr" "^1.0.0"
-    style-mod "^4.0.0"
-
-"@codemirror/state@^6.0.0", "@codemirror/state@^6.4.0", "@codemirror/state@^6.4.1":
+"@codemirror/state@^6.4.0", "@codemirror/state@^6.4.1":
   version "6.4.1"
   resolved "https://registry.yarnpkg.com/@codemirror/state/-/state-6.4.1.tgz#da57143695c056d9a3c38705ed34136e2b68171b"
   integrity sha512-QkEyUiLhsJoZkbumGZlswmAhA7CBU02Wrz7zvH4SrcifbsqwlXShVXg65f3v/ts57W3dqyamEriMhij1Z3Zz4A==
 
-"@codemirror/view@^6.23.0", "@codemirror/view@^6.26.0":
+"@codemirror/view@^6.26.0":
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/@codemirror/view/-/view-6.26.0.tgz#ab5a85aa8ebfb953cb5534e07d0a3751f9a3869a"
   integrity sha512-nSSmzONpqsNzshPOxiKhK203R6BvABepugAe34QfQDbNDslyjkqBuKgrK5ZBvqNXpfxz5iLrlGTmEfhbQyH46A==
@@ -199,25 +187,6 @@
   resolved "https://registry.yarnpkg.com/@kurkle/color/-/color-0.3.2.tgz#5acd38242e8bde4f9986e7913c8fdf49d3aa199f"
   integrity sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==
 
-"@lezer/common@^1.0.0", "@lezer/common@^1.1.0":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@lezer/common/-/common-1.2.1.tgz#198b278b7869668e1bebbe687586e12a42731049"
-  integrity sha512-yemX0ZD2xS/73llMZIK6KplkjIjf2EvAHcinDi/TfJ9hS25G0388+ClHt6/3but0oOxinTcQHJLDXh6w1crzFQ==
-
-"@lezer/highlight@^1.0.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@lezer/highlight/-/highlight-1.2.0.tgz#e5898c3644208b4b589084089dceeea2966f7780"
-  integrity sha512-WrS5Mw51sGrpqjlh3d4/fOwpEV2Hd3YOkp9DBt4k8XZQcoTHZFB7sx030A6OcahF4J1nDQAa3jXlTVVYH50IFA==
-  dependencies:
-    "@lezer/common" "^1.0.0"
-
-"@lezer/lr@^1.0.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@lezer/lr/-/lr-1.4.0.tgz#ed52a75dbbfbb0d1eb63710ea84c35ee647cb67e"
-  integrity sha512-Wst46p51km8gH0ZUmeNrtpRYmdlRHUpN1DQd3GFAyKANi8WVz8c2jHYTf1CVScFaCjQw1iO3ZZdqGDxQPRErTg==
-  dependencies:
-    "@lezer/common" "^1.0.0"
-
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz#7619c2eb21b25483f6d167548b4cfd5a7488c3d5"
@@ -302,12 +271,17 @@
     "@types/node" "*"
     form-data "^4.0.0"
 
-"@types/node@*", "@types/node@^20.11.30":
+"@types/node@*":
   version "20.11.30"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.30.tgz#9c33467fc23167a347e73834f788f4b9f399d66f"
   integrity sha512-dHM6ZxwlmuZaRmUPfv1p+KrdD1Dci04FbdEm/9wEMouFqxYoFl5aMkt0VMAUtYRQDyYvD41WJLukhq/ha3YuTw==
   dependencies:
     undici-types "~5.26.4"
+
+"@types/node@^16.11.6":
+  version "16.18.96"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.18.96.tgz#eb0012d23ff53d14d64ec8a352bf89792de6aade"
+  integrity sha512-84iSqGXoO+Ha16j8pRZ/L90vDMKX04QTYMTfYeE1WrjWaZXuchBehGUZEpNgx7JnmlrIHdnABmpjrQjhCnNldQ==
 
 "@types/node@^18.11.18":
   version "18.19.26"
@@ -534,7 +508,7 @@ braces@^3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
-builtin-modules@^3.3.0:
+builtin-modules@3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-3.3.0.tgz#cae62812b89801e9656336e46223e030386be7b6"
   integrity sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==
@@ -2024,7 +1998,7 @@ strip-json-comments@^3.1.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-3.1.1.tgz#31f1281b3832630434831c310c01cccda8cbe006"
   integrity sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
 
-style-mod@^4.0.0, style-mod@^4.1.0:
+style-mod@^4.1.0:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/style-mod/-/style-mod-4.1.2.tgz#ca238a1ad4786520f7515a8539d5a63691d7bf67"
   integrity sha512-wnD1HyVqpJUI2+eKZ+eo1UwghftP6yuFheBqqe+bWCotBjC2K1YnteJILRMs3SM4V/0dLEW1SC27MWP5y+mwmw==
