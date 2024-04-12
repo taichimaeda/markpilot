@@ -1,6 +1,6 @@
 {
   "name": "markpilot",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Inline completions and chat view powered by OpenAI",
   "main": "main.js",
   "scripts": {
