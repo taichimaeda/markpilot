@@ -1,9 +1,10 @@
 import { Extension } from '@codemirror/state';
-import { Notice, Plugin } from 'obsidian';
+import { addIcon, Notice, Plugin, setIcon } from 'obsidian';
 import { MemoryCache } from './api/cache';
 import { APIClient, OpenAIClient } from './api/openai';
 import { CHAT_VIEW_TYPE, ChatView } from './chat/view';
 import { inlineCompletionsExtension } from './editor/extension';
+import botOffIcon from './icons/bot-off.svg';
 import {
   DEFAULT_SETTINGS,
   MarkpilotSettings,
@@ -20,6 +21,8 @@ export default class Markpilot extends Plugin {
     await this.loadSettings();
     this.addSettingTab(new MarkpilotSettingTab(this.app, this));
 
+    // Initialize the OpenAI API client and
+    // register the editor extension and chat view.
     const client = new OpenAIClient(this);
     const cache = new MemoryCache(client, this);
     this.client = cache;
@@ -33,6 +36,7 @@ export default class Markpilot extends Plugin {
       this.activateView();
     }
 
+    // Notify the user if the OpenAI API key is not set.
     if (
       (this.settings.completions.enabled || this.settings.chat.enabled) &&
       !this.settings.apiKey?.startsWith('sk')
@@ -42,6 +46,37 @@ export default class Markpilot extends Plugin {
       );
     }
 
+    this.registerRibbonActions();
+    this.registerCommands();
+  }
+
+  registerRibbonActions() {
+    // Register custom icon.
+    // TODO:
+    // Remove once this PR gets merged:
+    // https://github.com/lucide-icons/lucide/pull/2079
+    addIcon('bot-off', botOffIcon);
+
+    // TODO:
+    // Extract duplicate logic when toggling features.
+    const toggleCompletionsItem = this.addRibbonIcon(
+      'bot',
+      'Toggle inline completions',
+      () => {
+        this.settings.completions.enabled = !this.settings.completions.enabled;
+        this.saveSettings();
+        setIcon(
+          toggleCompletionsItem,
+          this.settings.completions.enabled ? 'bot' : 'bot-off',
+        );
+        new Notice(
+          `Inline completions ${this.settings.completions.enabled ? 'enabled' : 'disabled'}.`,
+        );
+      },
+    );
+  }
+
+  registerCommands() {
     this.addCommand({
       id: 'enable-completions',
       name: 'Enable inline completions',
@@ -58,6 +93,17 @@ export default class Markpilot extends Plugin {
         this.settings.completions.enabled = false;
         this.saveSettings();
         new Notice('Inline completions disabled.');
+      },
+    });
+    this.addCommand({
+      id: 'toggle-completions',
+      name: 'Toggle inline completions',
+      callback: () => {
+        this.settings.completions.enabled = !this.settings.completions.enabled;
+        this.saveSettings();
+        new Notice(
+          `Inline completions ${this.settings.completions.enabled ? 'enabled' : 'disabled'}.`,
+        );
       },
     });
     this.addCommand({
@@ -78,6 +124,18 @@ export default class Markpilot extends Plugin {
         this.saveSettings();
         this.deactivateView();
         new Notice('Chat view disabled.');
+      },
+    });
+    this.addCommand({
+      id: 'toggle-chat-view',
+      name: 'Toggle chat view',
+      callback: () => {
+        this.settings.chat.enabled = !this.settings.chat.enabled;
+        this.saveSettings();
+        this.deactivateView();
+        new Notice(
+          `Chat view ${this.settings.completions.enabled ? 'enabled' : 'disabled'}.`,
+        );
       },
     });
     this.addCommand({
@@ -109,6 +167,17 @@ export default class Markpilot extends Plugin {
         this.settings.cache.enabled = false;
         this.saveSettings();
         new Notice('Cache disabled.');
+      },
+    });
+    this.addCommand({
+      id: 'toggle-cache',
+      name: 'Toggle cache',
+      callback: () => {
+        this.settings.cache.enabled = !this.settings.cache.enabled;
+        this.saveSettings();
+        new Notice(
+          `Cache ${this.settings.completions.enabled ? 'enabled' : 'disabled'}.`,
+        );
       },
     });
   }
