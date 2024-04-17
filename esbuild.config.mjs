@@ -39,6 +39,8 @@ const context = await esbuild.context({
   sourcemap: prod ? false : "inline",
   treeShaking: true,
   outfile: "main.js",
+  // For loading custom icons:
+  loader: { ".svg": "text" },
 });
 
 if (prod) {
