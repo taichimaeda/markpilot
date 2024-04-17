@@ -1,12 +1,11 @@
 import Chart from 'chart.js/auto';
 import { App, Notice, PluginSettingTab, Setting } from 'obsidian';
+import { CHAT_COMPLETIONS_MODELS, COMPLETIONS_MODELS } from './api/openai';
 import {
-  CHAT_COMPLETIONS_MODELS,
   ChatCompletionsModel,
   ChatHistory,
-  COMPLETIONS_MODELS,
   CompletionsModel,
-} from './api/openai';
+} from './api/types';
 
 import Markpilot from './main';
 import { getDaysInCurrentMonth } from './utils';

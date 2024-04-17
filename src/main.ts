@@ -1,7 +1,8 @@
 import { Extension } from '@codemirror/state';
 import { addIcon, Notice, Plugin, setIcon } from 'obsidian';
 import { MemoryCache } from './api/cache';
-import { APIClient, OpenAIClient } from './api/openai';
+import { OpenAIClient } from './api/openai';
+import { APIClient } from './api/types';
 import { CHAT_VIEW_TYPE, ChatView } from './chat/view';
 import { inlineCompletionsExtension } from './editor/extension';
 import botOffIcon from './icons/bot-off.svg';

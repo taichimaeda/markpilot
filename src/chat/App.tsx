@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ChatHistory, ChatRole } from 'src/api/openai';
+import { ChatHistory, ChatRole } from 'src/api/types';
 import Markpilot from 'src/main';
 import { ChatInput } from './components/ChatBox';
 import { ChatItem } from './components/ChatItem';

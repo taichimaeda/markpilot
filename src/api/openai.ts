@@ -3,6 +3,12 @@ import { Notice } from 'obsidian';
 import OpenAI from 'openai';
 import Markpilot from 'src/main';
 import { getThisMonthAsString, getTodayAsString } from 'src/utils';
+import {
+  APIClient,
+  ChatCompletionsModel,
+  ChatMessage,
+  CompletionsModel,
+} from './types';
 
 export const COMPLETIONS_MODELS = [
   'gpt-3.5-turbo-instruct',
@@ -83,31 +89,6 @@ export const MODEL_OUTPUT_COSTS: Record<
   'gpt-3.5-turbo-0125': 1.5,
   'gpt-3.5-turbo-16k-0613': 1.5,
 };
-
-export type CompletionsModel = (typeof COMPLETIONS_MODELS)[number];
-
-export type ChatCompletionsModel = (typeof CHAT_COMPLETIONS_MODELS)[number];
-
-export type ChatRole = 'system' | 'assistant' | 'user';
-
-export interface ChatMessage {
-  role: ChatRole;
-  content: string;
-}
-
-export interface ChatHistory {
-  messages: ChatMessage[];
-  response: string;
-}
-
-export interface APIClient {
-  fetchChat(messages: ChatMessage[]): AsyncGenerator<string | undefined>;
-  fetchCompletions(
-    language: string,
-    prefix: string,
-    suffix: string,
-  ): Promise<string | undefined>;
-}
 
 export class OpenAIClient implements APIClient {
   constructor(private plugin: Markpilot) {}
