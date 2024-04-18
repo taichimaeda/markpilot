@@ -33,11 +33,13 @@ export const OPENAI_MODELS = [
   'gpt-3.5-turbo-16k-0613',
 ] as const;
 
-// TODO
-export const OPENROUTER_MODELS = ['gpt-4'];
+// TODO:
+// This is a placeholder.
+export const OPENROUTER_MODELS = ['gpt-4'] as const;
 
-// TODO
-export const OLLAMA_MODELS = ['gpt-4'];
+// TODO:
+// This is a placeholder.
+export const OLLAMA_MODELS = ['gpt-4'] as const;
 
 export const MODELS = {
   openai: OPENAI_MODELS,

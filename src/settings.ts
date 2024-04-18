@@ -29,6 +29,8 @@ export interface MarkpilotSettings {
     windowSize: number;
     acceptKey: string;
     rejectKey: string;
+    ignoredFiles: string[];
+    ignoredTags: string[];
   };
   chat: {
     enabled: boolean;
@@ -64,13 +66,15 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
   completions: {
     enabled: true,
     provider: 'openai',
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-3.5-turbo-instruct',
     maxTokens: 64,
     temperature: 0,
     waitTime: 500,
     windowSize: 512,
     acceptKey: 'Tab',
     rejectKey: 'Escape',
+    ignoredFiles: [],
+    ignoredTags: [],
   },
   chat: {
     enabled: true,
@@ -148,13 +152,8 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         text
           .setValue(settings.providers.ollama.apiUrl ?? '')
           .onChange(async (value) => {
-            if (validateURL(value)) {
-              new Notice('Invalid Ollama API URL.');
-              return;
-            }
             settings.providers.ollama.apiUrl = value;
             await plugin.saveSettings();
-            new Notice('Successfully saved Ollama API URL.');
           }),
       );
 
@@ -168,11 +167,16 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             new Notice('Ollama API URL is not set.');
             return;
           }
-          // TODO
-          const response = await fetch(apiUrl);
-          if (response.ok) {
+          if (!validateURL(apiUrl)) {
+            new Notice('Invalid Ollama API URL.');
+            return;
+          }
+          // TODO:
+          // Properly implement logic for checking Ollama API status.
+          try {
+            await fetch(apiUrl);
             new Notice('Successfully connected to Ollama API.');
-          } else {
+          } catch {
             new Notice('Failed to connect to Ollama API.');
           }
         }),
@@ -198,44 +202,48 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setDisabled(!settings.chat.enabled)
       .setName('Provider')
       .setDesc('Select the provider for inline completions.')
       .addDropdown((dropdown) => {
         for (const option of PROVIDERS) {
           dropdown.addOption(option, option);
         }
-        dropdown.setValue(settings.completions.provider);
-        dropdown.onChange(async (value) => {
-          settings.completions.provider = value as Provider;
-          await plugin.saveSettings();
-          this.display(); // Re-render settings tab
-        });
+        dropdown
+          .setDisabled(!settings.completions.enabled)
+          .setValue(settings.completions.provider)
+          .onChange(async (value) => {
+            settings.completions.provider = value as Provider;
+            await plugin.saveSettings();
+            this.display(); // Re-render settings tab
+          });
       });
 
     new Setting(containerEl)
-      .setDisabled(!settings.completions.enabled)
       .setName('Model')
       .setDesc('Select the model for inline completions.')
       .addDropdown((dropdown) => {
         for (const option of MODELS[settings.completions.provider]) {
           dropdown.addOption(option, option);
         }
-        dropdown.setValue(settings.completions.model);
-        dropdown.onChange(async (value) => {
-          settings.completions.model = value as Model;
-          await plugin.saveSettings();
-        });
+        dropdown
+          .setDisabled(!settings.completions.enabled)
+          .setValue(settings.completions.model)
+          .onChange(async (value) => {
+            settings.completions.model = value as Model;
+            await plugin.saveSettings();
+          });
       });
 
     new Setting(containerEl)
-      .setDisabled(!settings.completions.enabled)
       .setName('Max tokens')
       .setDesc('Set the max tokens for inline completions.')
       .addSlider((slider) =>
         slider
+          .setDisabled(!settings.completions.enabled)
           .setValue(settings.completions.maxTokens)
           .setLimits(128, 8192, 128)
+          // TODO:
+          // Figure out how to add unit to the slider
           .setDynamicTooltip()
           .onChange(async (value) => {
             settings.completions.maxTokens = value;
@@ -244,11 +252,11 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setDisabled(!settings.completions.enabled)
       .setName('Temperature')
       .setDesc('Set the temperature for inline completions.')
       .addSlider((slider) =>
         slider
+          .setDisabled(!settings.completions.enabled)
           .setValue(settings.completions.temperature)
           .setLimits(0, 1, 0.01)
           .setDynamicTooltip()
@@ -259,13 +267,13 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setDisabled(!settings.completions.enabled)
       .setName('Wait time')
       .setDesc(
         'Time in milliseconds which it will wait for before fetching inline completions from the server.',
       )
       .addSlider((slider) =>
         slider
+          .setDisabled(!settings.completions.enabled)
           .setValue(settings.completions.waitTime)
           .setLimits(0, 1000, 100)
           .setDynamicTooltip()
@@ -280,13 +288,13 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setDisabled(!settings.completions.enabled)
       .setName('Window size')
       .setDesc(
         'Set the window size for inline completions. The window size the number of characters around the cursor used to obtain inline completions',
       )
       .addSlider((slider) =>
         slider
+          .setDisabled(!settings.completions.enabled)
           .setValue(settings.completions.windowSize)
           .setLimits(128, 8192, 128)
           .setDynamicTooltip()
@@ -298,13 +306,13 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setDisabled(!settings.completions.enabled)
       .setName('Accept key')
       .setDesc(
         'Set the key to accept inline completions. The list of available keys can be found at: https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values',
       )
       .addText((text) =>
         text
+          .setDisabled(!settings.completions.enabled)
           .setValue(settings.completions.acceptKey)
           .onChange(async (value) => {
             settings.completions.acceptKey = value;
@@ -314,18 +322,51 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setDisabled(!settings.completions.enabled)
       .setName('Reject key')
       .setDesc(
         'Set the key to reject inline completions. The list of available keys can be found at: https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values',
       )
       .addText((text) =>
         text
+          .setDisabled(!settings.completions.enabled)
           .setValue(settings.completions.rejectKey)
           .onChange(async (value) => {
             settings.completions.rejectKey = value;
             await plugin.saveSettings();
             plugin.updateEditorExtension();
+          }),
+      );
+
+    new Setting(containerEl)
+
+      .setName('Ignored files')
+      .setDesc(
+        'Set the list of files to ignore inline completions. The completions will not be triggered in these files.',
+      )
+      .addTextArea((text) =>
+        text
+          .setDisabled(!settings.completions.enabled)
+          .setValue(settings.completions.ignoredFiles.join('\n'))
+          .setPlaceholder('myFile.md\nmyDirectory/**/*.md')
+          .onChange(async (value) => {
+            settings.completions.ignoredFiles = value.split('\n');
+            await plugin.saveSettings();
+          }),
+      );
+
+    new Setting(containerEl)
+      .setName('Ignored tags')
+      .setDesc(
+        'Set the list of tags to ignore inline completions. The completions will not be triggered in these tags.',
+      )
+      .addTextArea((text) =>
+        text
+          .setDisabled(!settings.completions.enabled)
+          .setValue(settings.completions.ignoredTags.join('\n'))
+          .setPlaceholder('#myTag\n#myTag2')
+          .onChange(async (value) => {
+            settings.completions.ignoredTags = value.split('\n');
+            await plugin.saveSettings();
           }),
       );
 
@@ -352,42 +393,44 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setDisabled(!settings.chat.enabled)
       .setName('Provider')
       .setDesc('Select the provider for chat view.')
       .addDropdown((dropdown) => {
         for (const option of PROVIDERS) {
           dropdown.addOption(option, option);
         }
-        dropdown.setValue(settings.chat.provider);
-        dropdown.onChange(async (value) => {
-          settings.chat.provider = value as Provider;
-          await plugin.saveSettings();
-          this.display(); // Re-render settings tab
-        });
+        dropdown
+          .setDisabled(!settings.chat.enabled)
+          .setValue(settings.chat.provider)
+          .onChange(async (value) => {
+            settings.chat.provider = value as Provider;
+            await plugin.saveSettings();
+            this.display(); // Re-render settings tab
+          });
       });
 
     new Setting(containerEl)
-      .setDisabled(!settings.chat.enabled)
       .setName('Model')
       .setDesc('Select the model for GPT.')
       .addDropdown((dropdown) => {
         for (const option of MODELS[settings.chat.provider]) {
           dropdown.addOption(option, option);
         }
-        dropdown.setValue(settings.chat.model);
-        dropdown.onChange(async (value) => {
-          settings.chat.model = value as Model;
-          await plugin.saveSettings();
-        });
+        dropdown
+          .setDisabled(!settings.chat.enabled)
+          .setValue(settings.chat.model)
+          .onChange(async (value) => {
+            settings.chat.model = value as Model;
+            await plugin.saveSettings();
+          });
       });
 
     new Setting(containerEl)
-      .setDisabled(!settings.chat.enabled)
       .setName('Max tokens')
       .setDesc('Set the max tokens for chat view.')
       .addSlider((slider) =>
         slider
+          .setDisabled(!settings.chat.enabled)
           .setValue(settings.chat.maxTokens)
           .setLimits(128, 8192, 128)
           .setDynamicTooltip()
@@ -398,11 +441,11 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setDisabled(!settings.chat.enabled)
       .setName('Temperature')
       .setDesc('Set the temperature for chat view.')
       .addSlider((slider) =>
         slider
+          .setDisabled(!settings.chat.enabled)
           .setValue(settings.chat.temperature)
           .setLimits(0, 1, 0.01)
           .setDynamicTooltip()
@@ -424,11 +467,14 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         'Turn this on to enable memory caching. The cached data will be invalided on startup.',
       )
       .addToggle((toggle) =>
-        toggle.setValue(settings.cache.enabled).onChange(async (value) => {
-          settings.cache.enabled = value;
-          await plugin.saveSettings();
-          this.display(); // Re-render settings tab
-        }),
+        toggle
+          .setDisabled(!settings.completions.enabled)
+          .setValue(settings.cache.enabled)
+          .onChange(async (value) => {
+            settings.cache.enabled = value;
+            await plugin.saveSettings();
+            this.display(); // Re-render settings tab
+          }),
       );
 
     /************************************************************/

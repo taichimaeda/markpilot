@@ -113,7 +113,7 @@ export class BaseAPIClient implements APIClient {
   async fetchCompletions(language: string, prefix: string, suffix: string) {
     const { settings } = this.plugin;
 
-    const instance = this.getInstance(settings.chat.provider);
+    const instance = this.getInstance(settings.completions.provider);
     if (instance === undefined) {
       return;
     }

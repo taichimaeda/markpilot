@@ -1,5 +1,6 @@
 import { Extension } from '@codemirror/state';
-import { addIcon, Notice, Plugin, setIcon } from 'obsidian';
+import { minimatch } from 'minimatch';
+import { addIcon, MarkdownView, Notice, Plugin, setIcon } from 'obsidian';
 import { MemoryCacheProxy } from './api/cache';
 import { APIClient, BaseAPIClient } from './api/client';
 import { UsageMonitorProxy, UsageTracker } from './api/usage';
@@ -191,9 +192,25 @@ export default class Markpilot extends Plugin {
 
   getEditorExtension() {
     return inlineCompletionsExtension(async (...args) => {
-      if (this.settings.completions.enabled) {
-        return this.client.fetchCompletions(...args);
+      // TODO:
+      // Extract this logic to somewhere appropriate.
+      const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+      const file = view?.file;
+      const content = view?.editor.getValue();
+      const isIgnoredFile = this.settings.completions.ignoredFiles.some(
+        (pattern) => file?.path && minimatch(file?.path, pattern),
+      );
+      const hasIgnoredTags = this.settings.completions.ignoredTags.some((tag) =>
+        content?.includes(tag),
+      );
+      if (
+        isIgnoredFile ||
+        hasIgnoredTags ||
+        !this.settings.completions.enabled
+      ) {
+        return;
       }
+      return this.client.fetchCompletions(...args);
     }, this);
   }
 

@@ -57,33 +57,41 @@ const OPENAI_MODEL_OUTPUT_COSTS: Record<OpenAIModel, number> = {
   'gpt-3.5-turbo-16k-0613': 1.5,
 };
 
-// TODO
+// TODO:
+// This is a placeholder.
 const OPENROUTER_INPUT_COSTS: Record<OpenRouterModel, number> = {
   'gpt-4': 30,
 };
 
-// TODO
+// TODO:
+// This is a placeholder.
 const OPENROUTER_OUTPUT_COSTS: Record<OpenRouterModel, number> = {
   'gpt-4': 60,
 };
 
-// TODO
+// TODO:
+// This is a placeholder.
 const OLLAMA_INPUT_COSTS: Record<OllamaModel, number> = {
   'gpt-4': 0,
 };
 
-// TODO
+// TODO:
+// This is a placeholder.
 const OLLAMA_OUTPUT_COSTS: Record<OllamaModel, number> = {
   'gpt-4': 0,
 };
 
-const INPUT_COSTS: Record<Provider, Record<Model, number>> = {
+// TODO:
+// Replace `Record<string, number>` to an appropriate type.
+const INPUT_COSTS: Record<Provider, Record<string, number>> = {
   openai: OPENAI_MODEL_INPUT_COSTS,
   openrouter: OPENROUTER_INPUT_COSTS,
   ollama: OLLAMA_INPUT_COSTS,
 };
 
-const OUTPUT_COSTS: Record<Provider, Record<Model, number>> = {
+// TODO:
+// Replace `Record<string, number>` to an appropriate type.
+const OUTPUT_COSTS: Record<Provider, Record<string, number>> = {
   openai: OPENAI_MODEL_OUTPUT_COSTS,
   openrouter: OPENROUTER_OUTPUT_COSTS,
   ollama: OLLAMA_OUTPUT_COSTS,
