@@ -2,6 +2,15 @@ export function uuid(): string {
   return crypto.randomUUID();
 }
 
+export function validateURL(url: string): boolean {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 // Debounce an async function by waiting for `wait` milliseconds before resolving.
 // If a new request is made before the timeout, the previous request is cancelled.
 /* eslint-disable @typescript-eslint/no-explicit-any */

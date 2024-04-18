@@ -1,20 +1,28 @@
 import Chart from 'chart.js/auto';
 import { App, Notice, PluginSettingTab, Setting } from 'obsidian';
-import { CHAT_COMPLETIONS_MODELS, COMPLETIONS_MODELS } from './api/openai';
-import {
-  ChatCompletionsModel,
-  ChatHistory,
-  CompletionsModel,
-} from './api/types';
+import { Model, MODELS, Provider, PROVIDERS } from './api/provider';
+import { ChatHistory } from './api/types';
 
 import Markpilot from './main';
-import { getDaysInCurrentMonth } from './utils';
+import { getDaysInCurrentMonth, validateURL } from './utils';
 
 export interface MarkpilotSettings {
-  apiKey: string | undefined;
+  version: string;
+  providers: {
+    openai: {
+      apiKey: string | undefined;
+    };
+    openrouter: {
+      apiKey: string | undefined;
+    };
+    ollama: {
+      apiUrl: string | undefined;
+    };
+  };
   completions: {
     enabled: boolean;
-    model: CompletionsModel;
+    provider: Provider;
+    model: Model;
     maxTokens: number;
     temperature: number;
     waitTime: number;
@@ -24,7 +32,8 @@ export interface MarkpilotSettings {
   };
   chat: {
     enabled: boolean;
-    model: ChatCompletionsModel;
+    provider: Provider;
+    model: Model;
     maxTokens: number;
     temperature: number;
     history: ChatHistory;
@@ -40,12 +49,24 @@ export interface MarkpilotSettings {
 }
 
 export const DEFAULT_SETTINGS: MarkpilotSettings = {
-  apiKey: undefined,
+  version: '1.2.0',
+  providers: {
+    openai: {
+      apiKey: undefined,
+    },
+    openrouter: {
+      apiKey: undefined,
+    },
+    ollama: {
+      apiUrl: undefined,
+    },
+  },
   completions: {
     enabled: true,
-    model: 'gpt-3.5-turbo-instruct',
+    provider: 'openai',
+    model: 'gpt-3.5-turbo',
     maxTokens: 64,
-    temperature: 1,
+    temperature: 0,
     waitTime: 500,
     windowSize: 512,
     acceptKey: 'Tab',
@@ -53,9 +74,10 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
   },
   chat: {
     enabled: true,
-    model: 'gpt-3.5-turbo-0125',
+    provider: 'openai',
+    model: 'gpt-3.5-turbo',
     maxTokens: 1024,
-    temperature: 0.1,
+    temperature: 0.5,
     history: {
       messages: [],
       response: '',
@@ -87,18 +109,78 @@ export class MarkpilotSettingTab extends PluginSettingTab {
     const { plugin } = this;
     const { settings } = plugin;
 
-    new Setting(containerEl).setName('OpenAI').setHeading();
+    /************************************************************/
+    /*                       Providers                         */
+    /************************************************************/
+
+    new Setting(containerEl).setName('Providers').setHeading();
 
     new Setting(containerEl)
-      .setName('OpenAI API Key')
-      .setDesc('Enter your OpenAI API key to enable features.')
+      .setName('OpenAI API key')
+      .setDesc('Enter your OpenAI API key.')
       .addText((text) =>
-        text.setValue(settings.apiKey ?? '').onChange(async (value) => {
-          settings.apiKey = value;
-          await plugin.saveSettings();
-          new Notice('Suceessfully saved API key.');
+        text
+          .setValue(settings.providers.openai.apiKey ?? '')
+          .onChange(async (value) => {
+            settings.providers.openai.apiKey = value;
+            await plugin.saveSettings();
+            new Notice('Successfully saved OpenAI API key.');
+          }),
+      );
+
+    new Setting(containerEl)
+      .setName('OpenRouter API key')
+      .setDesc('Enter your OpenRouter API key.')
+      .addText((text) =>
+        text
+          .setValue(settings.providers.openrouter.apiKey ?? '')
+          .onChange(async (value) => {
+            settings.providers.openrouter.apiKey = value;
+            await plugin.saveSettings();
+            new Notice('Successfully saved OpenRouter API key.');
+          }),
+      );
+
+    new Setting(containerEl)
+      .setName('Ollama API URL')
+      .setDesc('Enter your Ollama API URL.')
+      .addText((text) =>
+        text
+          .setValue(settings.providers.ollama.apiUrl ?? '')
+          .onChange(async (value) => {
+            if (validateURL(value)) {
+              new Notice('Invalid Ollama API URL.');
+              return;
+            }
+            settings.providers.ollama.apiUrl = value;
+            await plugin.saveSettings();
+            new Notice('Successfully saved Ollama API URL.');
+          }),
+      );
+
+    new Setting(containerEl)
+      .setName('Test Ollama API connection')
+      .setDesc('Test the connection to the local Ollama API.')
+      .addButton((button) =>
+        button.setButtonText('Test Connection').onClick(async () => {
+          const apiUrl = settings.providers.ollama.apiUrl;
+          if (apiUrl === undefined) {
+            new Notice('Ollama API URL is not set.');
+            return;
+          }
+          // TODO
+          const response = await fetch(apiUrl);
+          if (response.ok) {
+            new Notice('Successfully connected to Ollama API.');
+          } else {
+            new Notice('Failed to connect to Ollama API.');
+          }
         }),
       );
+
+    /************************************************************/
+    /*                   Inline completions                     */
+    /************************************************************/
 
     new Setting(containerEl).setName('Inline completions').setHeading();
 
@@ -114,49 +196,64 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             this.display(); // Re-render settings tab
           }),
       );
+
+    new Setting(containerEl)
+      .setDisabled(!settings.chat.enabled)
+      .setName('Provider')
+      .setDesc('Select the provider for inline completions.')
+      .addDropdown((dropdown) => {
+        for (const option of PROVIDERS) {
+          dropdown.addOption(option, option);
+        }
+        dropdown.setValue(settings.completions.provider);
+        dropdown.onChange(async (value) => {
+          settings.completions.provider = value as Provider;
+          await plugin.saveSettings();
+          this.display(); // Re-render settings tab
+        });
+      });
+
     new Setting(containerEl)
       .setDisabled(!settings.completions.enabled)
       .setName('Model')
       .setDesc('Select the model for inline completions.')
       .addDropdown((dropdown) => {
-        for (const option of COMPLETIONS_MODELS) {
+        for (const option of MODELS[settings.completions.provider]) {
           dropdown.addOption(option, option);
         }
         dropdown.setValue(settings.completions.model);
         dropdown.onChange(async (value) => {
-          settings.completions.model = value as CompletionsModel;
+          settings.completions.model = value as Model;
           await plugin.saveSettings();
         });
       });
+
     new Setting(containerEl)
       .setDisabled(!settings.completions.enabled)
       .setName('Max tokens')
       .setDesc('Set the max tokens for inline completions.')
-      .addText((text) =>
-        text
-          .setValue(settings.completions.maxTokens.toString())
+      .addSlider((slider) =>
+        slider
+          .setValue(settings.completions.maxTokens)
+          .setLimits(128, 8192, 128)
+          .setDynamicTooltip()
           .onChange(async (value) => {
-            const amount = parseInt(value);
-            if (isNaN(amount) || amount < 0) {
-              return;
-            }
-            settings.completions.maxTokens = amount;
+            settings.completions.maxTokens = value;
             await plugin.saveSettings();
           }),
       );
+
     new Setting(containerEl)
       .setDisabled(!settings.completions.enabled)
       .setName('Temperature')
       .setDesc('Set the temperature for inline completions.')
-      .addText((text) =>
-        text
-          .setValue(settings.completions.temperature.toString())
+      .addSlider((slider) =>
+        slider
+          .setValue(settings.completions.temperature)
+          .setLimits(0, 1, 0.01)
+          .setDynamicTooltip()
           .onChange(async (value) => {
-            const amount = parseFloat(value);
-            if (isNaN(amount) || amount < 0) {
-              return;
-            }
-            settings.completions.temperature = amount;
+            settings.completions.temperature = value;
             await plugin.saveSettings();
           }),
       );
@@ -167,15 +264,13 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       .setDesc(
         'Time in milliseconds which it will wait for before fetching inline completions from the server.',
       )
-      .addText((text) =>
-        text
-          .setValue(settings.completions.waitTime.toString())
+      .addSlider((slider) =>
+        slider
+          .setValue(settings.completions.waitTime)
+          .setLimits(0, 1000, 100)
+          .setDynamicTooltip()
           .onChange(async (value) => {
-            const amount = parseFloat(value);
-            if (isNaN(amount) || amount < 0) {
-              return;
-            }
-            settings.completions.waitTime = amount;
+            settings.completions.waitTime = value;
             await plugin.saveSettings();
             // Editor extension needs to be updated when settings are changed
             // because some fields e.g. `acceptKey` become stale and there is no way
@@ -183,25 +278,25 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             plugin.updateEditorExtension();
           }),
       );
+
     new Setting(containerEl)
       .setDisabled(!settings.completions.enabled)
       .setName('Window size')
       .setDesc(
         'Set the window size for inline completions. The window size the number of characters around the cursor used to obtain inline completions',
       )
-      .addText((text) =>
-        text
-          .setValue(settings.completions.windowSize.toString())
+      .addSlider((slider) =>
+        slider
+          .setValue(settings.completions.windowSize)
+          .setLimits(128, 8192, 128)
+          .setDynamicTooltip()
           .onChange(async (value) => {
-            const amount = parseInt(value);
-            if (isNaN(amount) || amount < 0) {
-              return;
-            }
-            settings.completions.windowSize = amount;
+            settings.completions.windowSize = value;
             await plugin.saveSettings();
             plugin.updateEditorExtension();
           }),
       );
+
     new Setting(containerEl)
       .setDisabled(!settings.completions.enabled)
       .setName('Accept key')
@@ -217,6 +312,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             plugin.updateEditorExtension();
           }),
       );
+
     new Setting(containerEl)
       .setDisabled(!settings.completions.enabled)
       .setName('Reject key')
@@ -232,6 +328,10 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             plugin.updateEditorExtension();
           }),
       );
+
+    /************************************************************/
+    /*                        Chat View                         */
+    /************************************************************/
 
     new Setting(containerEl).setName('Chat view').setHeading();
 
@@ -250,52 +350,71 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           this.display(); // Re-render settings tab
         }),
       );
+
+    new Setting(containerEl)
+      .setDisabled(!settings.chat.enabled)
+      .setName('Provider')
+      .setDesc('Select the provider for chat view.')
+      .addDropdown((dropdown) => {
+        for (const option of PROVIDERS) {
+          dropdown.addOption(option, option);
+        }
+        dropdown.setValue(settings.chat.provider);
+        dropdown.onChange(async (value) => {
+          settings.chat.provider = value as Provider;
+          await plugin.saveSettings();
+          this.display(); // Re-render settings tab
+        });
+      });
+
     new Setting(containerEl)
       .setDisabled(!settings.chat.enabled)
       .setName('Model')
       .setDesc('Select the model for GPT.')
       .addDropdown((dropdown) => {
-        for (const option of CHAT_COMPLETIONS_MODELS) {
+        for (const option of MODELS[settings.chat.provider]) {
           dropdown.addOption(option, option);
         }
         dropdown.setValue(settings.chat.model);
         dropdown.onChange(async (value) => {
-          settings.chat.model = value as ChatCompletionsModel;
+          settings.chat.model = value as Model;
           await plugin.saveSettings();
         });
       });
+
     new Setting(containerEl)
       .setDisabled(!settings.chat.enabled)
       .setName('Max tokens')
       .setDesc('Set the max tokens for chat view.')
-      .addText((text) =>
-        text
-          .setValue(settings.chat.maxTokens.toString())
+      .addSlider((slider) =>
+        slider
+          .setValue(settings.chat.maxTokens)
+          .setLimits(128, 8192, 128)
+          .setDynamicTooltip()
           .onChange(async (value) => {
-            const amount = parseFloat(value);
-            if (isNaN(amount) || amount < 0) {
-              return;
-            }
-            settings.chat.maxTokens = amount;
+            settings.chat.maxTokens = value;
             await plugin.saveSettings();
           }),
       );
+
     new Setting(containerEl)
       .setDisabled(!settings.chat.enabled)
       .setName('Temperature')
       .setDesc('Set the temperature for chat view.')
-      .addText((text) =>
-        text
-          .setValue(settings.chat.temperature.toString())
+      .addSlider((slider) =>
+        slider
+          .setValue(settings.chat.temperature)
+          .setLimits(0, 1, 0.01)
+          .setDynamicTooltip()
           .onChange(async (value) => {
-            const amount = parseFloat(value);
-            if (isNaN(amount) || amount < 0) {
-              return;
-            }
-            settings.chat.temperature = amount;
+            settings.chat.temperature = value;
             await plugin.saveSettings();
           }),
       );
+
+    /************************************************************/
+    /*                          Cache                           */
+    /************************************************************/
 
     new Setting(containerEl).setName('Cache').setHeading();
 
@@ -312,6 +431,10 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         }),
       );
 
+    /************************************************************/
+    /*                          Usage                           */
+    /************************************************************/
+
     new Setting(containerEl).setName('Usage').setHeading();
 
     new Setting(containerEl)
@@ -319,15 +442,13 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       .setDesc(
         'Set the monthly limit for the usage costs (USD). When this limit is reached, the plugin will disable both inline completions and chat view',
       )
-      .addText((text) =>
-        text
-          .setValue(settings.usage.monthlyLimit.toString())
+      .addSlider((slider) =>
+        slider
+          .setValue(settings.usage.monthlyLimit)
+          .setLimits(0, 100, 1)
+          .setDynamicTooltip()
           .onChange(async (value) => {
-            const amount = parseFloat(value);
-            if (isNaN(amount) || amount < 0) {
-              return;
-            }
-            settings.usage.monthlyLimit = amount;
+            settings.usage.monthlyLimit = value;
             await plugin.saveSettings();
           }),
       );
@@ -338,10 +459,10 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         'Below you can find the estimated usage of OpenAI API for inline completions and chat view this month',
       );
 
-    this.renderGraph();
+    this.showMonthlyCosts();
   }
 
-  renderGraph() {
+  showMonthlyCosts() {
     const { plugin } = this;
     const { settings } = plugin;
 

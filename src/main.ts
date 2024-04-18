@@ -1,8 +1,8 @@
 import { Extension } from '@codemirror/state';
 import { addIcon, Notice, Plugin, setIcon } from 'obsidian';
-import { MemoryCache } from './api/cache';
-import { OpenAIClient } from './api/openai';
-import { APIClient } from './api/types';
+import { MemoryCacheProxy } from './api/cache';
+import { APIClient, BaseAPIClient } from './api/client';
+import { UsageMonitorProxy, UsageTracker } from './api/usage';
 import { CHAT_VIEW_TYPE, ChatView } from './chat/view';
 import { inlineCompletionsExtension } from './editor/extension';
 import botOffIcon from './icons/bot-off.svg';
@@ -13,8 +13,9 @@ import {
 } from './settings';
 
 export default class Markpilot extends Plugin {
-  client: APIClient;
   settings: MarkpilotSettings;
+
+  client: APIClient;
   view: ChatView;
   extensions: Extension[];
 
@@ -22,13 +23,18 @@ export default class Markpilot extends Plugin {
     await this.loadSettings();
     this.addSettingTab(new MarkpilotSettingTab(this.app, this));
 
-    // Initialize the OpenAI API client and
-    // register the editor extension and chat view.
-    const client = new OpenAIClient(this);
-    const cache = new MemoryCache(client, this);
-    this.client = cache;
+    // Initialize the OpenAI API client.
+    const tracker = new UsageTracker(this);
+    const client = new BaseAPIClient(tracker, this);
+    const clientWithMonitor = new UsageMonitorProxy(client, this);
+    const clientWithCache = new MemoryCacheProxy(clientWithMonitor, this);
+    this.client = clientWithCache;
+
+    // Register the editor extension.
     this.extensions = this.getEditorExtension();
     this.registerEditorExtension(this.extensions);
+
+    // Register the chat view.
     this.registerView(CHAT_VIEW_TYPE, (leaf) => {
       this.view = new ChatView(leaf, this);
       return this.view;
@@ -37,16 +43,7 @@ export default class Markpilot extends Plugin {
       this.activateView();
     }
 
-    // Notify the user if the OpenAI API key is not set.
-    if (
-      (this.settings.completions.enabled || this.settings.chat.enabled) &&
-      !this.settings.apiKey?.startsWith('sk')
-    ) {
-      new Notice(
-        'OpenAI API key is not set. Please register it in the settings tab to use the features.',
-      );
-    }
-
+    // Register the ribbon actions and commands.
     this.registerRibbonActions();
     this.registerCommands();
   }
@@ -87,6 +84,7 @@ export default class Markpilot extends Plugin {
         new Notice('Inline completions enabled.');
       },
     });
+
     this.addCommand({
       id: 'disable-completions',
       name: 'Disable inline completions',
@@ -96,6 +94,7 @@ export default class Markpilot extends Plugin {
         new Notice('Inline completions disabled.');
       },
     });
+
     this.addCommand({
       id: 'toggle-completions',
       name: 'Toggle inline completions',
@@ -107,6 +106,7 @@ export default class Markpilot extends Plugin {
         );
       },
     });
+
     this.addCommand({
       id: 'enable-chat-view',
       name: 'Enable chat view',
@@ -117,6 +117,7 @@ export default class Markpilot extends Plugin {
         new Notice('Chat view enabled.');
       },
     });
+
     this.addCommand({
       id: 'disable-chat-view',
       name: 'Disable chat view',
@@ -127,6 +128,7 @@ export default class Markpilot extends Plugin {
         new Notice('Chat view disabled.');
       },
     });
+
     this.addCommand({
       id: 'toggle-chat-view',
       name: 'Toggle chat view',
@@ -139,6 +141,7 @@ export default class Markpilot extends Plugin {
         );
       },
     });
+
     this.addCommand({
       id: 'clear-chat-history',
       name: 'Clear chat history',
@@ -152,6 +155,7 @@ export default class Markpilot extends Plugin {
         new Notice('Chat history cleared.');
       },
     });
+
     this.addCommand({
       id: 'enable-cache',
       name: 'Enable cache',
@@ -161,6 +165,7 @@ export default class Markpilot extends Plugin {
         new Notice('Cache enabled.');
       },
     });
+
     this.addCommand({
       id: 'disable-cache',
       name: 'Disable cache',
@@ -170,6 +175,7 @@ export default class Markpilot extends Plugin {
         new Notice('Cache disabled.');
       },
     });
+
     this.addCommand({
       id: 'toggle-cache',
       name: 'Toggle cache',

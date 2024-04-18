@@ -1,8 +1,9 @@
 import { createHash } from 'crypto';
 import Markpilot from 'src/main';
-import { APIClient, ChatMessage } from './types';
+import { APIClient } from './client';
+import { ChatMessage } from './types';
 
-export class MemoryCache implements APIClient {
+export class MemoryCacheProxy implements APIClient {
   private store: Map<string, string> = new Map();
 
   constructor(
