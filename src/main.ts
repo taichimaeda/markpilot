@@ -52,21 +52,20 @@ export default class Markpilot extends Plugin {
       return this.chatView;
     });
 
+    this.registerCustomIcons(); // Call before `registerRibbonActions()`.
     this.registerRibbonActions();
     this.registerCommands();
   }
 
-  registerRibbonActions() {
-    // Register custom icon.
-    // TODO:
-    // Remove once this PR gets merged:
-    // https://github.com/lucide-icons/lucide/pull/2079
+  registerCustomIcons() {
     addIcon('bot-off', botOffIcon);
+  }
 
-    // TODO:
-    // Extract duplicate logic when toggling features.
+  registerRibbonActions() {
+    const { settings } = this;
+
     const toggleCompletionsItem = this.addRibbonIcon(
-      'bot',
+      settings.completions.enabled ? 'bot' : 'bot-off',
       'Toggle inline completions',
       () => {
         this.settings.completions.enabled = !this.settings.completions.enabled;
