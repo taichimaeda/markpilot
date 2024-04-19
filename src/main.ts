@@ -24,6 +24,7 @@ import {
   MarkpilotSettings,
   MarkpilotSettingTab,
 } from './settings';
+import { SettingsMigrationsRunner } from './settings/runner';
 
 export default class Markpilot extends Plugin {
   settings: MarkpilotSettings;
@@ -35,6 +36,8 @@ export default class Markpilot extends Plugin {
 
   async onload() {
     await this.loadSettings();
+    const runner = new SettingsMigrationsRunner(this);
+    await runner.apply();
     this.addSettingTab(new MarkpilotSettingTab(this.app, this));
 
     const { settings } = this;
