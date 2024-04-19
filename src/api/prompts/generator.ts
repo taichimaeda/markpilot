@@ -59,4 +59,9 @@ export class PromptGenerator {
       },
     ] as ChatMessage[];
   }
+
+  parse(content: string) {
+    const lines = content.split('\n');
+    return lines.slice(lines.indexOf('<INSERT>') + 1).join('\n');
+  }
 }

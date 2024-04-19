@@ -3,14 +3,19 @@ import OpenAI from 'openai';
 import Markpilot from 'src/main';
 import { APIClient } from '..';
 import { CostsTracker } from '../costs';
+import { PromptGenerator } from '../prompts/generator';
 import { OpenAICompatibleAPIClient } from './openai-compatible';
 
 export class OpenAIAPIClient
   extends OpenAICompatibleAPIClient
   implements APIClient
 {
-  constructor(tracker: CostsTracker, plugin: Markpilot) {
-    super(tracker, plugin);
+  constructor(
+    generator: PromptGenerator,
+    tracker: CostsTracker,
+    plugin: Markpilot,
+  ) {
+    super(generator, tracker, plugin);
   }
 
   get openai(): OpenAI | undefined {

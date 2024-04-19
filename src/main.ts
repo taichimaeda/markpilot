@@ -13,6 +13,7 @@ import { OllamaAPIClient } from './api/clients/ollama';
 import { OpenAIAPIClient } from './api/clients/openai';
 import { OpenRouterAPIClient } from './api/clients/openrouter';
 import { CostsTracker } from './api/costs';
+import { PromptGenerator } from './api/prompts/generator';
 import { Provider } from './api/provider';
 import { MemoryCacheProxy } from './api/proxies/memory-cache';
 import { UsageMonitorProxy } from './api/proxies/usage-monitor';
@@ -199,15 +200,16 @@ export default class Markpilot extends Plugin {
   }
 
   createAPIClient(provider: Provider) {
+    const generator = new PromptGenerator(this);
     const tracker = new CostsTracker(this);
     const client = (() => {
       switch (provider) {
         case 'openai':
-          return new OpenAIAPIClient(tracker, this);
+          return new OpenAIAPIClient(generator, tracker, this);
         case 'openrouter':
-          return new OpenRouterAPIClient(tracker, this);
+          return new OpenRouterAPIClient(generator, tracker, this);
         case 'ollama':
-          return new OllamaAPIClient(tracker, this);
+          return new OllamaAPIClient(generator, tracker, this);
       }
     })();
     const clientWithMonitor = new UsageMonitorProxy(client, this);

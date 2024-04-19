@@ -5,9 +5,11 @@ import Markpilot from 'src/main';
 import { APIClient } from '..';
 import { ChatMessage } from '../../types';
 import { CostsTracker } from '../costs';
+import { PromptGenerator } from '../prompts/generator';
 
 export abstract class OpenAICompatibleAPIClient implements APIClient {
   constructor(
+    protected generator: PromptGenerator,
     protected tracker: CostsTracker,
     protected plugin: Markpilot,
   ) {}
@@ -69,10 +71,9 @@ export abstract class OpenAICompatibleAPIClient implements APIClient {
     }
 
     try {
-      // TODO:
-      // Get messages from the prompt generator.
+      const messages = this.generator.generate(prefix, suffix);
       const completions = await this.openai.chat.completions.create({
-        messages: [],
+        messages,
         model: settings.completions.model,
         max_tokens: settings.completions.maxTokens,
         temperature: settings.completions.temperature,
@@ -91,7 +92,11 @@ export abstract class OpenAICompatibleAPIClient implements APIClient {
         outputTokens,
       );
 
-      return completions.choices[0].message.content ?? undefined;
+      const content = completions.choices[0].message.content;
+      if (content === null) {
+        return;
+      }
+      return this.generator.parse(content);
     } catch (error) {
       console.error(error);
       new Notice(
