@@ -1,13 +1,8 @@
 import Chart from 'chart.js/auto';
 import { App, Notice, PluginSettingTab, Setting } from 'obsidian';
-import {
-  DEFAULT_MODELS,
-  Model,
-  MODELS,
-  Provider,
-  PROVIDERS,
-} from './api/provider';
-import { ChatHistory } from './api/types';
+import { DEFAULT_MODELS, Model, MODELS } from './api/models';
+import { DEFAULT_PROVIDER, Provider, PROVIDERS } from './api/provider';
+import { ChatHistory } from './types';
 
 import Markpilot from './main';
 import { getDaysInCurrentMonth, validateURL } from './utils';
@@ -71,8 +66,8 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
   },
   completions: {
     enabled: true,
-    provider: 'openai',
-    model: 'gpt-3.5-turbo-instruct',
+    provider: DEFAULT_PROVIDER,
+    model: DEFAULT_MODELS[DEFAULT_PROVIDER],
     maxTokens: 64,
     temperature: 0,
     waitTime: 500,
@@ -84,8 +79,8 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
   },
   chat: {
     enabled: true,
-    provider: 'openai',
-    model: 'gpt-3.5-turbo',
+    provider: DEFAULT_PROVIDER,
+    model: DEFAULT_MODELS[DEFAULT_PROVIDER],
     maxTokens: 1024,
     temperature: 0.5,
     history: {

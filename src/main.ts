@@ -8,15 +8,14 @@ import {
   setIcon,
   WorkspaceLeaf,
 } from 'obsidian';
-import { MemoryCacheProxy } from './api/cache';
-import {
-  APIClient,
-  OllamaAPIClient,
-  OpenAIAPIClient,
-  OpenRouterAPIClient,
-} from './api/client';
+import { APIClient } from './api/client';
+import { OllamaAPIClient } from './api/clients/ollama';
+import { OpenAIAPIClient } from './api/clients/openai';
+import { OpenRouterAPIClient } from './api/clients/openrouter';
+import { CostsTracker } from './api/costs';
 import { Provider } from './api/provider';
-import { UsageMonitorProxy, UsageTracker } from './api/usage';
+import { MemoryCacheProxy } from './api/proxies/memory-cache';
+import { UsageMonitorProxy } from './api/proxies/usage-monitor';
 import { CHAT_VIEW_TYPE, ChatView } from './chat/view';
 import { inlineCompletionsExtension } from './editor/extension';
 import botOffIcon from './icons/bot-off.svg';
@@ -197,7 +196,7 @@ export default class Markpilot extends Plugin {
   }
 
   createAPIClient(provider: Provider) {
-    const tracker = new UsageTracker(this);
+    const tracker = new CostsTracker(this);
     const client = (() => {
       switch (provider) {
         case 'openai':

@@ -1,16 +1,7 @@
-import { Notice } from 'obsidian';
 import Markpilot from 'src/main';
 import { getThisMonthAsString, getTodayAsString } from 'src/utils';
-import { APIClient } from './client';
-import {
-  Model,
-  OLLAMA_MODELS,
-  OllamaModel,
-  OpenAIModel,
-  OpenRouterModel,
-  Provider,
-} from './provider';
-import { ChatMessage } from './types';
+import { Model, OpenAIModel, OpenRouterModel } from './models';
+import { OFFLINE_PROVIDERS, OnlineProvider, Provider } from './provider';
 
 const OPENAI_MODEL_INPUT_COSTS: Record<OpenAIModel, number> = {
   'gpt-3.5-turbo-instruct': 1.5,
@@ -72,33 +63,21 @@ const OPENROUTER_OUTPUT_COSTS: Record<OpenRouterModel, number> = {
   'openai/gpt-4-turbo': 0,
 };
 
-const OLLAMA_INPUT_COSTS = OLLAMA_MODELS.reduce(
-  (acc, model) => ({ ...acc, [model]: 0 }),
-  {},
-) as Record<OllamaModel, number>;
-
-const OLLAMA_OUTPUT_COSTS: Record<OllamaModel, number> = OLLAMA_MODELS.reduce(
-  (acc, model) => ({ ...acc, [model]: 0 }),
-  {},
-) as Record<OllamaModel, number>;
-
 // TODO:
 // Replace `Record<string, number>` to an appropriate type.
-const INPUT_COSTS: Record<Provider, Record<string, number>> = {
+const INPUT_COSTS: Record<OnlineProvider, Record<string, number>> = {
   openai: OPENAI_MODEL_INPUT_COSTS,
   openrouter: OPENROUTER_INPUT_COSTS,
-  ollama: OLLAMA_INPUT_COSTS,
 };
 
 // TODO:
 // Replace `Record<string, number>` to an appropriate type.
-const OUTPUT_COSTS: Record<Provider, Record<string, number>> = {
+const OUTPUT_COSTS: Record<OnlineProvider, Record<string, number>> = {
   openai: OPENAI_MODEL_OUTPUT_COSTS,
   openrouter: OPENROUTER_OUTPUT_COSTS,
-  ollama: OLLAMA_OUTPUT_COSTS,
 };
 
-export class UsageTracker {
+export class CostsTracker {
   constructor(private plugin: Markpilot) {}
 
   async add(
@@ -109,6 +88,11 @@ export class UsageTracker {
   ) {
     const { settings } = this.plugin;
 
+    // No costs associated with offline providers.
+    if (provider in OFFLINE_PROVIDERS) {
+      return;
+    }
+
     const today = getTodayAsString();
     const thisMonth = getThisMonthAsString();
     if (settings.usage.dailyCosts[today] === undefined) {
@@ -116,51 +100,13 @@ export class UsageTracker {
     }
 
     const cost =
-      (inputTokens * INPUT_COSTS[provider][model] +
-        outputTokens * OUTPUT_COSTS[provider][model]) /
+      (inputTokens * INPUT_COSTS[provider as OnlineProvider][model] +
+        outputTokens * OUTPUT_COSTS[provider as OnlineProvider][model]) /
       1_000_000;
 
     settings.usage.dailyCosts[today] += cost;
     settings.usage.monthlyCosts[thisMonth] += cost;
 
     await this.plugin.saveSettings();
-  }
-}
-
-export class UsageMonitorProxy implements APIClient {
-  constructor(
-    private client: APIClient,
-    private plugin: Markpilot,
-  ) {}
-
-  hasReachedLimit() {
-    const { settings } = this.plugin;
-
-    const thisMonth = getThisMonthAsString();
-    return (
-      settings.usage.monthlyCosts[thisMonth] >= settings.usage.monthlyLimit
-    );
-  }
-
-  async *fetchChat(messages: ChatMessage[]) {
-    if (this.hasReachedLimit()) {
-      new Notice(
-        'Monthly usage limit reached. Please increase the limit to keep on using inline completions.',
-      );
-      return;
-    }
-
-    yield* this.client.fetchChat(messages);
-  }
-
-  async fetchCompletions(language: string, prefix: string, suffix: string) {
-    if (this.hasReachedLimit()) {
-      new Notice(
-        'Monthly usage limit reached. Please increase the limit to keep on using chat view.',
-      );
-      return;
-    }
-
-    return await this.client.fetchCompletions(language, prefix, suffix);
   }
 }

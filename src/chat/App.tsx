@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { ChatHistory, ChatRole } from 'src/api/types';
 import Markpilot from 'src/main';
+import { ChatHistory, ChatRole } from 'src/types';
 import { ChatInput } from './components/ChatBox';
 import { ChatItem } from './components/ChatItem';
 import { ChatView } from './view';
