@@ -8,7 +8,7 @@ import {
   setIcon,
   WorkspaceLeaf,
 } from 'obsidian';
-import { APIClient } from './api/client';
+import { APIClient } from './api';
 import { OllamaAPIClient } from './api/clients/ollama';
 import { OpenAIAPIClient } from './api/clients/openai';
 import { OpenRouterAPIClient } from './api/clients/openrouter';

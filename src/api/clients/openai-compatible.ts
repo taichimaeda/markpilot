@@ -2,8 +2,8 @@ import { getEncoding } from 'js-tiktoken';
 import { Notice } from 'obsidian';
 import OpenAI from 'openai';
 import Markpilot from 'src/main';
+import { APIClient } from '..';
 import { ChatMessage } from '../../types';
-import { APIClient } from '../client';
 import { CostsTracker } from '../costs';
 
 export abstract class OpenAICompatibleAPIClient implements APIClient {

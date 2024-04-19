@@ -1,8 +1,8 @@
 import { Notice } from 'obsidian';
 import Markpilot from 'src/main';
 import { getThisMonthAsString } from 'src/utils';
+import { APIClient } from '..';
 import { ChatMessage } from '../../types';
-import { APIClient } from '../client';
 
 export class UsageMonitorProxy implements APIClient {
   constructor(

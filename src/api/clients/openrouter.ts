@@ -1,7 +1,7 @@
 import { Notice } from 'obsidian';
 import OpenAI from 'openai';
 import Markpilot from 'src/main';
-import { APIClient } from '../client';
+import { APIClient } from '..';
 import { CostsTracker } from '../costs';
 import { OpenAICompatibleAPIClient } from './openai-compatible';
 
