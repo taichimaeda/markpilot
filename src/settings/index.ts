@@ -1,1 +1,1 @@
-export type SettingsMigrator = (settings: object) => object;
+export type SettingsMigrator<From, To> = (settings: From) => To;
