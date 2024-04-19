@@ -30,7 +30,7 @@ export class UsageMonitorProxy implements APIClient {
     yield* this.client.fetchChat(messages);
   }
 
-  async fetchCompletions(language: string, prefix: string, suffix: string) {
+  async fetchCompletions(prefix: string, suffix: string) {
     if (this.hasReachedLimit()) {
       new Notice(
         'Monthly usage limit reached. Please increase the limit to keep on using chat view.',
@@ -38,6 +38,6 @@ export class UsageMonitorProxy implements APIClient {
       return;
     }
 
-    return await this.client.fetchCompletions(language, prefix, suffix);
+    return await this.client.fetchCompletions(prefix, suffix);
   }
 }

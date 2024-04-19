@@ -61,7 +61,7 @@ export abstract class OpenAICompatibleAPIClient implements APIClient {
     }
   }
 
-  async fetchCompletions(language: string, prefix: string, suffix: string) {
+  async fetchCompletions(prefix: string, suffix: string) {
     const { settings } = this.plugin;
 
     if (this.openai === undefined) {
@@ -69,9 +69,10 @@ export abstract class OpenAICompatibleAPIClient implements APIClient {
     }
 
     try {
-      const completions = await this.openai.completions.create({
-        prompt: `Continue the following code written in ${language} language:\n\n${prefix}`,
-        suffix,
+      // TODO:
+      // Get messages from the prompt generator.
+      const completions = await this.openai.chat.completions.create({
+        messages: [],
         model: settings.completions.model,
         max_tokens: settings.completions.maxTokens,
         temperature: settings.completions.temperature,
@@ -90,7 +91,7 @@ export abstract class OpenAICompatibleAPIClient implements APIClient {
         outputTokens,
       );
 
-      return completions.choices[0].text;
+      return completions.choices[0].message.content ?? undefined;
     } catch (error) {
       console.error(error);
       new Notice(

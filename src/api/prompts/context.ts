@@ -71,6 +71,9 @@ export function getLanguage(prefix: string, suffix: string): string {
 }
 
 function isCursorInBlock(text: string, regex: RegExp): boolean {
-  const blocks = text.match(regex) ?? [];
+  const blocks = text.match(regex) as string[] | null;
+  if (blocks === null) {
+    return false;
+  }
   return blocks.some((block) => block.includes(CURSOR_CHAR));
 }

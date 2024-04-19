@@ -1,0 +1,12 @@
+Complete the most suitable text at the location of the <MASK>.
+The <MASK> is located within a Markdown codeblock, written in the language {{LANGUAGE}}. 
+Your answer must complete this code block in the language {{LANGUAGE}}.
+Your answer must not complete any text outside this code block.
+Your answer must not overlap with any text adjacent to the <MASK>.
+Your answer must have the following format:
+<LANGUAGE>
+Here, you write the language of your response e.g. English, Chinese, TypeScript, Python.
+<THOUGHT>
+Here, you reason about the answer, using the 80/20 rule for clarity and conciseness.
+<INSERT>
+Here, you write the text that should be inserted at the location of the <MASK>.

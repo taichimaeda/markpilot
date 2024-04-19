@@ -9,7 +9,6 @@ export class GeminiAPIClient implements APIClient {
     throw new Error('Method not implemented.');
   }
   fetchCompletions(
-    language: string,
     prefix: string,
     suffix: string,
   ): Promise<string | undefined> {
