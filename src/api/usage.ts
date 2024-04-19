@@ -4,6 +4,7 @@ import { getThisMonthAsString, getTodayAsString } from 'src/utils';
 import { APIClient } from './client';
 import {
   Model,
+  OLLAMA_MODELS,
   OllamaModel,
   OpenAIModel,
   OpenRouterModel,
@@ -60,26 +61,26 @@ const OPENAI_MODEL_OUTPUT_COSTS: Record<OpenAIModel, number> = {
 // TODO:
 // This is a placeholder.
 const OPENROUTER_INPUT_COSTS: Record<OpenRouterModel, number> = {
-  'gpt-4': 30,
+  'openai/gpt-3.5-turbo': 0,
+  'openai/gpt-4-turbo': 0,
 };
 
 // TODO:
 // This is a placeholder.
 const OPENROUTER_OUTPUT_COSTS: Record<OpenRouterModel, number> = {
-  'gpt-4': 60,
+  'openai/gpt-3.5-turbo': 0,
+  'openai/gpt-4-turbo': 0,
 };
 
-// TODO:
-// This is a placeholder.
-const OLLAMA_INPUT_COSTS: Record<OllamaModel, number> = {
-  'gpt-4': 0,
-};
+const OLLAMA_INPUT_COSTS = OLLAMA_MODELS.reduce(
+  (acc, model) => ({ ...acc, [model]: 0 }),
+  {},
+) as Record<OllamaModel, number>;
 
-// TODO:
-// This is a placeholder.
-const OLLAMA_OUTPUT_COSTS: Record<OllamaModel, number> = {
-  'gpt-4': 0,
-};
+const OLLAMA_OUTPUT_COSTS: Record<OllamaModel, number> = OLLAMA_MODELS.reduce(
+  (acc, model) => ({ ...acc, [model]: 0 }),
+  {},
+) as Record<OllamaModel, number>;
 
 // TODO:
 // Replace `Record<string, number>` to an appropriate type.

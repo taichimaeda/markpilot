@@ -1,8 +1,21 @@
 import { Extension } from '@codemirror/state';
 import { minimatch } from 'minimatch';
-import { addIcon, MarkdownView, Notice, Plugin, setIcon } from 'obsidian';
+import {
+  addIcon,
+  MarkdownView,
+  Notice,
+  Plugin,
+  setIcon,
+  WorkspaceLeaf,
+} from 'obsidian';
 import { MemoryCacheProxy } from './api/cache';
-import { APIClient, BaseAPIClient } from './api/client';
+import {
+  APIClient,
+  OllamaAPIClient,
+  OpenAIAPIClient,
+  OpenRouterAPIClient,
+} from './api/client';
+import { Provider } from './api/provider';
 import { UsageMonitorProxy, UsageTracker } from './api/usage';
 import { CHAT_VIEW_TYPE, ChatView } from './chat/view';
 import { inlineCompletionsExtension } from './editor/extension';
@@ -16,35 +29,28 @@ import {
 export default class Markpilot extends Plugin {
   settings: MarkpilotSettings;
 
-  client: APIClient;
-  view: ChatView;
   extensions: Extension[];
+  completionsClient: APIClient;
+  chatClient: APIClient;
+  chatView: ChatView;
 
   async onload() {
     await this.loadSettings();
     this.addSettingTab(new MarkpilotSettingTab(this.app, this));
 
-    // Initialize the OpenAI API client.
-    const tracker = new UsageTracker(this);
-    const client = new BaseAPIClient(tracker, this);
-    const clientWithMonitor = new UsageMonitorProxy(client, this);
-    const clientWithCache = new MemoryCacheProxy(clientWithMonitor, this);
-    this.client = clientWithCache;
+    const { settings } = this;
+    this.completionsClient = this.createAPIClient(
+      settings.completions.provider,
+    );
+    this.chatClient = this.createAPIClient(settings.chat.provider);
 
-    // Register the editor extension.
-    this.extensions = this.getEditorExtension();
+    this.extensions = this.createEditorExtension();
     this.registerEditorExtension(this.extensions);
-
-    // Register the chat view.
     this.registerView(CHAT_VIEW_TYPE, (leaf) => {
-      this.view = new ChatView(leaf, this);
-      return this.view;
+      this.chatView = this.createChatView(leaf);
+      return this.chatView;
     });
-    if (this.settings.chat.enabled) {
-      this.activateView();
-    }
 
-    // Register the ribbon actions and commands.
     this.registerRibbonActions();
     this.registerCommands();
   }
@@ -152,7 +158,7 @@ export default class Markpilot extends Plugin {
           response: '',
         };
         this.saveSettings();
-        this.view.clear?.();
+        this.chatView.clear?.();
         new Notice('Chat history cleared.');
       },
     });
@@ -190,7 +196,34 @@ export default class Markpilot extends Plugin {
     });
   }
 
-  getEditorExtension() {
+  createAPIClient(provider: Provider) {
+    const tracker = new UsageTracker(this);
+    const client = (() => {
+      switch (provider) {
+        case 'openai':
+          return new OpenAIAPIClient(tracker, this);
+        case 'openrouter':
+          return new OpenRouterAPIClient(tracker, this);
+        case 'ollama':
+          return new OllamaAPIClient(tracker, this);
+      }
+    })();
+    const clientWithMonitor = new UsageMonitorProxy(client, this);
+    const clientWithCache = new MemoryCacheProxy(clientWithMonitor, this);
+
+    return clientWithCache;
+  }
+
+  updateAPIClient() {
+    const { settings } = this;
+
+    this.chatClient = this.createAPIClient(settings.chat.provider);
+    this.completionsClient = this.createAPIClient(
+      settings.completions.provider,
+    );
+  }
+
+  createEditorExtension() {
     return inlineCompletionsExtension(async (...args) => {
       // TODO:
       // Extract this logic to somewhere appropriate.
@@ -210,7 +243,7 @@ export default class Markpilot extends Plugin {
       ) {
         return;
       }
-      return this.client.fetchCompletions(...args);
+      return this.completionsClient.fetchCompletions(...args);
     }, this);
   }
 
@@ -220,9 +253,17 @@ export default class Markpilot extends Plugin {
     this.extensions.splice(
       0,
       this.extensions.length,
-      ...this.getEditorExtension(),
+      ...this.createEditorExtension(),
     );
     workspace.updateOptions();
+  }
+
+  createChatView(leaf: WorkspaceLeaf) {
+    const view = new ChatView(leaf, this);
+    if (this.settings.chat.enabled) {
+      this.activateView();
+    }
+    return view;
   }
 
   async loadSettings() {

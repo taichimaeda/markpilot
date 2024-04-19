@@ -42,12 +42,14 @@ export function App({ view, plugin }: { view: ChatView; plugin: Markpilot }) {
   useEffect(() => {
     if (turn === 'assistant') {
       (async () => {
-        for await (const chunk of plugin.client.fetchChat(history.messages)) {
+        const chunks = plugin.chatClient.fetchChat(history.messages);
+        for await (const chunk of chunks) {
           setHistory((history) => ({
             ...history,
             response: history.response + chunk,
           }));
         }
+
         setHistory((history) => ({
           messages: [
             ...history.messages,

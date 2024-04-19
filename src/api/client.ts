@@ -1,8 +1,8 @@
 import { getEncoding } from 'js-tiktoken';
 import { Notice } from 'obsidian';
-import OpenAI, { ClientOptions } from 'openai';
+import OpenAI from 'openai';
 import Markpilot from 'src/main';
-import { Provider } from './provider';
+import { validateURL } from 'src/utils';
 import { ChatMessage } from './types';
 import { UsageTracker } from './usage';
 
@@ -15,63 +15,23 @@ export interface APIClient {
   ): Promise<string | undefined>;
 }
 
-// TODO:
-// Allow use of APIs that are not compatible with the OpenAI API standard.
-export class BaseAPIClient implements APIClient {
+abstract class OpenAICompatibleAPIClient implements APIClient {
   constructor(
-    private tracker: UsageTracker,
-    private plugin: Markpilot,
+    protected tracker: UsageTracker,
+    protected plugin: Markpilot,
   ) {}
 
-  getInstance(provider: Provider) {
-    const { settings } = this.plugin;
-
-    const options: ClientOptions = {
-      apiKey: undefined,
-      baseURL: undefined,
-      dangerouslyAllowBrowser: true,
-    };
-    switch (provider) {
-      case 'openai':
-        options.apiKey = settings.providers.openai.apiKey;
-        if (options.apiKey === undefined || !options.apiKey?.startsWith('sk')) {
-          new Notice('OpenAI API key is not set or invalid.');
-          return;
-        }
-        break;
-      case 'openrouter':
-        options.baseURL = 'https://openrouter.ai/api/v1';
-        options.apiKey = settings.providers.openrouter.apiKey;
-        if (options.apiKey === undefined || !options.apiKey?.startsWith('sk')) {
-          new Notice('OpenRouter API key is not set or invalid.');
-          return;
-        }
-        break;
-      case 'ollama':
-        options.baseURL = 'http://localhost:11434/v1/';
-        options.baseURL = settings.providers.ollama.apiUrl;
-        if (options.apiKey === undefined) {
-          new Notice('Ollama API URL is not set or invalid.');
-          return;
-        }
-        break;
-      default:
-        throw new Error('Invalid API provider.');
-    }
-
-    return new OpenAI(options);
-  }
+  abstract get openai(): OpenAI | undefined;
 
   async *fetchChat(messages: ChatMessage[]) {
     const { settings } = this.plugin;
 
-    const instance = this.getInstance(settings.chat.provider);
-    if (instance === undefined) {
+    if (this.openai === undefined) {
       return;
     }
 
     try {
-      const stream = await instance.chat.completions.create({
+      const stream = await this.openai.chat.completions.create({
         messages,
         model: settings.chat.model,
         max_tokens: settings.chat.maxTokens,
@@ -113,13 +73,12 @@ export class BaseAPIClient implements APIClient {
   async fetchCompletions(language: string, prefix: string, suffix: string) {
     const { settings } = this.plugin;
 
-    const instance = this.getInstance(settings.completions.provider);
-    if (instance === undefined) {
+    if (this.openai === undefined) {
       return;
     }
 
     try {
-      const completions = await instance.completions.create({
+      const completions = await this.openai.completions.create({
         prompt: `Continue the following code written in ${language} language:\n\n${prefix}`,
         suffix,
         model: settings.completions.model,
@@ -147,5 +106,105 @@ export class BaseAPIClient implements APIClient {
         'Failed to fetch completions.  Make sure your API key or API URL is correct.',
       );
     }
+  }
+}
+
+export class OpenAIAPIClient
+  extends OpenAICompatibleAPIClient
+  implements APIClient
+{
+  constructor(tracker: UsageTracker, plugin: Markpilot) {
+    super(tracker, plugin);
+  }
+
+  get openai(): OpenAI | undefined {
+    const { settings } = this.plugin;
+
+    const apiKey = settings.providers.openai.apiKey;
+    if (apiKey === undefined) {
+      new Notice('OpenAI API key is not set.');
+      return;
+    }
+    if (!apiKey.startsWith('sk')) {
+      new Notice('OpenAI API key is invalid.');
+      return;
+    }
+
+    return new OpenAI({
+      apiKey,
+      dangerouslyAllowBrowser: true,
+    });
+  }
+}
+
+export class OpenRouterAPIClient
+  extends OpenAICompatibleAPIClient
+  implements APIClient
+{
+  constructor(tracker: UsageTracker, plugin: Markpilot) {
+    super(tracker, plugin);
+  }
+
+  get openai(): OpenAI | undefined {
+    const { settings } = this.plugin;
+
+    const apiKey = settings.providers.openrouter.apiKey;
+    if (apiKey === undefined) {
+      new Notice('OpenRouter API key is not set.');
+      return;
+    }
+    if (!apiKey.startsWith('sk')) {
+      new Notice('OpenRouter API key is invalid.');
+      return;
+    }
+
+    return new OpenAI({
+      apiKey,
+      baseURL: 'https://openrouter.ai/api/v1',
+      dangerouslyAllowBrowser: true,
+    });
+  }
+}
+
+export class OllamaAPIClient
+  extends OpenAICompatibleAPIClient
+  implements APIClient
+{
+  constructor(tracker: UsageTracker, plugin: Markpilot) {
+    super(tracker, plugin);
+  }
+
+  get openai(): OpenAI | undefined {
+    const { settings } = this.plugin;
+
+    const apiUrl = settings.providers.ollama.apiUrl;
+    if (apiUrl === undefined) {
+      new Notice('Ollama API URL is not set.');
+      return;
+    }
+    if (!validateURL(apiUrl)) {
+      new Notice('Ollama API URL is invalid.');
+      return;
+    }
+
+    return new OpenAI({
+      baseURL: apiUrl,
+      dangerouslyAllowBrowser: true,
+    });
+  }
+}
+
+// TODO:
+// Implement API client for Gemini.
+export class GeminiAPIClient implements APIClient {
+  fetchChat(messages: ChatMessage[]): AsyncGenerator<string | undefined> {
+    throw new Error('Method not implemented.');
+  }
+  fetchCompletions(
+    language: string,
+    prefix: string,
+    suffix: string,
+  ): Promise<string | undefined> {
+    throw new Error('Method not implemented.');
   }
 }

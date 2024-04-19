@@ -35,14 +35,28 @@ export const OPENAI_MODELS = [
 
 // TODO:
 // This is a placeholder.
-export const OPENROUTER_MODELS = ['gpt-4'] as const;
+export const OPENROUTER_MODELS = [
+  'openai/gpt-3.5-turbo',
+  'openai/gpt-4-turbo',
+] as const;
 
 // TODO:
 // This is a placeholder.
-export const OLLAMA_MODELS = ['gpt-4'] as const;
+export const OLLAMA_MODELS = [
+  'llama2',
+  'llama3',
+  'codellama',
+  'phind-codellama',
+] as const;
 
 export const MODELS = {
   openai: OPENAI_MODELS,
   openrouter: OPENROUTER_MODELS,
   ollama: OLLAMA_MODELS,
+};
+
+export const DEFAULT_MODELS: Record<Provider, Model> = {
+  openai: 'gpt-3.5-turbo',
+  openrouter: 'openai/gpt-3.5-turbo',
+  ollama: 'llama2',
 };
