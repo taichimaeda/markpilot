@@ -2,7 +2,7 @@ import { Bot, Copy, User } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
-import { ChatMessage } from 'src/types';
+import { ChatMessage } from 'src/api';
 
 export function ChatItem({ message }: { message: ChatMessage }) {
   return (

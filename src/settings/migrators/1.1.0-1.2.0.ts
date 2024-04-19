@@ -1,4 +1,4 @@
-import { SettingsMigrator } from '..';
+import { SettingsMigrator } from '.';
 import { MarkpilotSettings1_1_0 } from '../versions/1.1.0';
 import { MarkpilotSettings1_2_0 } from '../versions/1.2.0';
 

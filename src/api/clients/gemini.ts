@@ -1,5 +1,4 @@
-import { APIClient } from '..';
-import { ChatMessage } from '../../types';
+import { APIClient, ChatMessage } from '..';
 
 // TODO:
 // Implement API client for Gemini.

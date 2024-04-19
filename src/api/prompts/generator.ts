@@ -1,6 +1,6 @@
 import Markpilot from 'src/main';
-import { ChatMessage } from 'src/types';
 import { FewShotPrompt } from '.';
+import { ChatMessage } from '..';
 import { BlockQuotePrompt } from './block-quote';
 import { CodeBlockPrompt } from './code-block';
 import { Context, getContext, getLanguage } from './context';

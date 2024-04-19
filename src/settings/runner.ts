@@ -1,5 +1,5 @@
-import { SettingsMigrator } from '.';
 import Markpilot from '../main';
+import { SettingsMigrator } from './migrators';
 import { migrateVersion1_1_0_toVersion1_2_0 } from './migrators/1.1.0-1.2.0';
 
 export class SettingsMigrationsRunner {

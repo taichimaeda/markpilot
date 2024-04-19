@@ -2,8 +2,7 @@ import { getEncoding } from 'js-tiktoken';
 import { Notice } from 'obsidian';
 import OpenAI from 'openai';
 import Markpilot from 'src/main';
-import { APIClient } from '..';
-import { ChatMessage } from '../../types';
+import { APIClient, ChatMessage } from '..';
 import { CostsTracker } from '../costs';
 import { PromptGenerator } from '../prompts/generator';
 
