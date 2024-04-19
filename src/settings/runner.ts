@@ -25,6 +25,9 @@ export class SettingsMigrationsRunner {
         break;
       }
       settings = migrator(structuredClone(settings));
+      if (settings.version === version) {
+        throw new Error('Settings migration did not update the version');
+      }
     }
 
     this.plugin.settings = settings;

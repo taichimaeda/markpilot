@@ -34,6 +34,10 @@ export const migrateVersion1_1_0_toVersion1_2_0: SettingsMigrator<
     },
     usage: settings.usage,
   };
+  // Update if default accept key is still selected.
+  if (settings.completions.acceptKey === 'Enter') {
+    newSettings.completions.acceptKey = 'Tab';
+  }
   // Update if default models are still selected.
   if (settings.completions.model === 'gpt-3.5-turbo-instruct') {
     newSettings.completions.model = 'gpt-3.5-turbo';
