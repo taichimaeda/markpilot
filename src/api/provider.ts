@@ -10,4 +10,10 @@ export const OFFLINE_PROVIDERS = ['ollama'] as const;
 
 export const PROVIDERS = [...ONLINE_PROVIDERS, ...OFFLINE_PROVIDERS] as const;
 
+export const PROVIDERS_NAMES: Record<Provider, string> = {
+  openai: 'OpenAI',
+  openrouter: 'OpenRouter',
+  ollama: 'Ollama',
+};
+
 export const DEFAULT_PROVIDER = 'openai' as Provider;

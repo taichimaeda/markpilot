@@ -1,7 +1,12 @@
 import Chart from 'chart.js/auto';
 import { App, Notice, PluginSettingTab, Setting } from 'obsidian';
 import { DEFAULT_MODELS, Model, MODELS } from './api/models';
-import { DEFAULT_PROVIDER, Provider, PROVIDERS } from './api/provider';
+import {
+  DEFAULT_PROVIDER,
+  Provider,
+  PROVIDERS,
+  PROVIDERS_NAMES,
+} from './api/provider';
 import { ChatHistory } from './types';
 
 import Markpilot from './main';
@@ -214,7 +219,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       .setDesc('Select the provider for inline completions.')
       .addDropdown((dropdown) => {
         for (const option of PROVIDERS) {
-          dropdown.addOption(option, option);
+          dropdown.addOption(option, PROVIDERS_NAMES[option]);
         }
         dropdown
           .setDisabled(!settings.completions.enabled)
@@ -410,7 +415,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       .setDesc('Select the provider for chat view.')
       .addDropdown((dropdown) => {
         for (const option of PROVIDERS) {
-          dropdown.addOption(option, option);
+          dropdown.addOption(option, PROVIDERS_NAMES[option]);
         }
         dropdown
           .setDisabled(!settings.chat.enabled)
