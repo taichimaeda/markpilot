@@ -1,0 +1,6 @@
+<LANGUAGE>
+C
+<THOUGHT>
+This paragraph explains the strcmp function in C, which is used for comparing two strings.
+<INSERT>
+strcmp

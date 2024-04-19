@@ -1,0 +1,14 @@
+<LANGUAGE>
+JavaScript
+<THOUGHT>
+This JavaScript function should sort an array of numbers in ascending order using the bubble sort algorithm.
+The bubble sort algorithm works by comparing each element in the array with the element next to it, and swapping them if they are in the wrong order.
+In this specific case the code should use 2 spaces for indentation.
+<INSERT>
+for (let i = 0; i < array.length; i++) {
+  for (let j = 0; j < array.length; j++) {
+    if (array[j] > array[j + 1]) {
+      [array[j], array[j + 1]] = [array[j + 1], array[j]];
+    }
+  }
+}

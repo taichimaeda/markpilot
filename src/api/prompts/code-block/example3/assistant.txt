@@ -1,0 +1,7 @@
+<LANGUAGE>
+Python
+<THOUGHT>
+This Python function should take an integer as input and determine if it is a prime number.
+In this specific case the code should use 4 spaces for indentation.
+<INSERT>
+n: int

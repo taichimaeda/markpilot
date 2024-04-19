@@ -1,0 +1,7 @@
+<LANGUAGE>
+English, French
+<THOUGHT>
+This paragraph explains the passé composé.
+It shows "Je vais à la gare" (I go to the station) as an example of the present tense. The corresponding passé composé should be "Je suis allé à la gare" (I went to the station).
+<INSERT>
+"Je suis allé à la gare" (I went to the station).

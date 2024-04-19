@@ -1,0 +1,6 @@
+<LANGUAGE>
+English
+<THOUGHTS>
+This is a list of the plays written by William Shakespeare, so the missing title "William Shakespeare" should be inserted and nothing after it.
+<INSERT>
+William Shakespeare
