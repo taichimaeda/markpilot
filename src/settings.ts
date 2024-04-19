@@ -1,6 +1,12 @@
 import Chart from 'chart.js/auto';
 import { App, Notice, PluginSettingTab, Setting } from 'obsidian';
-import { Model, MODELS, Provider, PROVIDERS } from './api/provider';
+import {
+  DEFAULT_MODELS,
+  Model,
+  MODELS,
+  Provider,
+  PROVIDERS,
+} from './api/provider';
 import { ChatHistory } from './api/types';
 
 import Markpilot from './main';
@@ -128,6 +134,11 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           .onChange(async (value) => {
             settings.providers.openai.apiKey = value;
             await plugin.saveSettings();
+            // NOTE:
+            // The API client needs to be updated when the API key, API URL or provider is changed,
+            // because these parameters are captured by the underlying library on initialization
+            // and become stale when the settings are changed.
+            plugin.updateAPIClient();
             new Notice('Successfully saved OpenAI API key.');
           }),
       );
@@ -141,6 +152,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           .onChange(async (value) => {
             settings.providers.openrouter.apiKey = value;
             await plugin.saveSettings();
+            plugin.updateAPIClient();
             new Notice('Successfully saved OpenRouter API key.');
           }),
       );
@@ -154,6 +166,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           .onChange(async (value) => {
             settings.providers.ollama.apiUrl = value;
             await plugin.saveSettings();
+            plugin.updateAPIClient();
           }),
       );
 
@@ -213,7 +226,9 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           .setValue(settings.completions.provider)
           .onChange(async (value) => {
             settings.completions.provider = value as Provider;
+            settings.completions.model = DEFAULT_MODELS[value as Provider];
             await plugin.saveSettings();
+            plugin.updateAPIClient();
             this.display(); // Re-render settings tab
           });
       });
@@ -237,16 +252,15 @@ export class MarkpilotSettingTab extends PluginSettingTab {
     new Setting(containerEl)
       .setName('Max tokens')
       .setDesc('Set the max tokens for inline completions.')
-      .addSlider((slider) =>
-        slider
-          .setDisabled(!settings.completions.enabled)
-          .setValue(settings.completions.maxTokens)
-          .setLimits(128, 8192, 128)
-          // TODO:
-          // Figure out how to add unit to the slider
-          .setDynamicTooltip()
+      .addText((text) =>
+        text
+          .setValue(settings.completions.maxTokens.toString())
           .onChange(async (value) => {
-            settings.completions.maxTokens = value;
+            const amount = parseInt(value);
+            if (isNaN(amount) || amount < 0) {
+              return;
+            }
+            settings.completions.maxTokens = amount;
             await plugin.saveSettings();
           }),
       );
@@ -259,6 +273,8 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           .setDisabled(!settings.completions.enabled)
           .setValue(settings.completions.temperature)
           .setLimits(0, 1, 0.01)
+          // TODO:
+          // Figure out how to add unit to the slider
           .setDynamicTooltip()
           .onChange(async (value) => {
             settings.completions.temperature = value;
@@ -280,6 +296,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           .onChange(async (value) => {
             settings.completions.waitTime = value;
             await plugin.saveSettings();
+            // NOTE:
             // Editor extension needs to be updated when settings are changed
             // because some fields e.g. `acceptKey` become stale and there is no way
             // to make the extension query it on the fly.
@@ -292,14 +309,15 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       .setDesc(
         'Set the window size for inline completions. The window size the number of characters around the cursor used to obtain inline completions',
       )
-      .addSlider((slider) =>
-        slider
-          .setDisabled(!settings.completions.enabled)
-          .setValue(settings.completions.windowSize)
-          .setLimits(128, 8192, 128)
-          .setDynamicTooltip()
+      .addText((text) =>
+        text
+          .setValue(settings.completions.windowSize.toString())
           .onChange(async (value) => {
-            settings.completions.windowSize = value;
+            const amount = parseInt(value);
+            if (isNaN(amount) || amount < 0) {
+              return;
+            }
+            settings.completions.windowSize = amount;
             await plugin.saveSettings();
             plugin.updateEditorExtension();
           }),
@@ -404,7 +422,9 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           .setValue(settings.chat.provider)
           .onChange(async (value) => {
             settings.chat.provider = value as Provider;
+            settings.chat.model = DEFAULT_MODELS[value as Provider];
             await plugin.saveSettings();
+            plugin.updateAPIClient();
             this.display(); // Re-render settings tab
           });
       });
@@ -428,14 +448,15 @@ export class MarkpilotSettingTab extends PluginSettingTab {
     new Setting(containerEl)
       .setName('Max tokens')
       .setDesc('Set the max tokens for chat view.')
-      .addSlider((slider) =>
-        slider
-          .setDisabled(!settings.chat.enabled)
-          .setValue(settings.chat.maxTokens)
-          .setLimits(128, 8192, 128)
-          .setDynamicTooltip()
+      .addText((text) =>
+        text
+          .setValue(settings.chat.maxTokens.toString())
           .onChange(async (value) => {
-            settings.chat.maxTokens = value;
+            const amount = parseFloat(value);
+            if (isNaN(amount) || amount < 0) {
+              return;
+            }
+            settings.chat.maxTokens = amount;
             await plugin.saveSettings();
           }),
       );
@@ -488,13 +509,15 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       .setDesc(
         'Set the monthly limit for the usage costs (USD). When this limit is reached, the plugin will disable both inline completions and chat view',
       )
-      .addSlider((slider) =>
-        slider
-          .setValue(settings.usage.monthlyLimit)
-          .setLimits(0, 100, 1)
-          .setDynamicTooltip()
+      .addText((text) =>
+        text
+          .setValue(settings.usage.monthlyLimit.toString())
           .onChange(async (value) => {
-            settings.usage.monthlyLimit = value;
+            const amount = parseFloat(value);
+            if (isNaN(amount) || amount < 0) {
+              return;
+            }
+            settings.usage.monthlyLimit = amount;
             await plugin.saveSettings();
           }),
       );
