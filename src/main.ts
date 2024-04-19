@@ -37,8 +37,6 @@ export default class Markpilot extends Plugin {
 
   async onload() {
     await this.loadSettings();
-    const runner = new SettingsMigrationsRunner(this);
-    await runner.apply();
     this.addSettingTab(new MarkpilotSettingTab(this.app, this));
 
     const { settings } = this;
@@ -271,7 +269,15 @@ export default class Markpilot extends Plugin {
   }
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    const data = await this.loadData();
+    if (data === null) {
+      this.settings = DEFAULT_SETTINGS;
+      return;
+    }
+
+    this.settings = data;
+    const runner = new SettingsMigrationsRunner(this);
+    await runner.apply();
   }
 
   async saveSettings() {

@@ -5,11 +5,13 @@ import { MarkpilotSettings1_2_0 } from '../versions/1.2.0';
 export const migrateVersion1_1_0_toVersion1_2_0: SettingsMigrator = (
   settings: MarkpilotSettings1_1_0,
 ) => {
+  const apiKey = settings.apiKey as string;
+  delete settings.apiKey;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const newSettings: MarkpilotSettings1_2_0 = structuredClone(settings) as any;
   newSettings.providers = {
     openai: {
-      apiKey: settings.apiKey,
+      apiKey,
     },
     openrouter: {
       apiKey: undefined,
