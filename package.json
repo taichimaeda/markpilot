@@ -12,13 +12,14 @@
     "format:fix": "prettier src --write",
     "lint": "eslint src --max-warnings 0",
     "lint:fix": "eslint src --max-warnings 0 --fix",
-    "test": "echo \"Error: no test specified\"",
+    "test": "jest",
     "scrape": "ts-node src/scripts/scrape.ts"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/jest": "^29.5.12",
     "@types/node": "^16.11.6",
     "@types/react": "^18.2.73",
     "@types/react-dom": "^18.2.22",
@@ -30,8 +31,10 @@
     "commander": "^12.0.0",
     "esbuild": "0.17.3",
     "eslint": "^8.57.0",
+    "jest": "^29.7.0",
     "obsidian": "latest",
     "prettier": "^3.2.5",
+    "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "tslib": "2.4.0",
     "typescript": "4.7.4"
