@@ -1,8 +1,8 @@
 import { MarkpilotSettings } from 'src/settings';
 import { Equal, Expect } from 'src/utils';
-import { Model } from './models';
-import { Provider } from './provider';
-import { ChatHistory } from './types';
+import { ChatHistory } from './api';
+import { Provider } from './api/providers';
+import { Model } from './api/providers/models';
 
 export interface MarkpilotSettings1_2_0 {
   version: string;

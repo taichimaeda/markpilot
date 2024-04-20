@@ -1,13 +1,13 @@
 import Chart from 'chart.js/auto';
 import { App, Notice, PluginSettingTab, Setting } from 'obsidian';
 import { ChatHistory } from 'src/api';
-import { DEFAULT_MODELS, Model, MODELS } from '../api/models';
 import {
   DEFAULT_PROVIDER,
   Provider,
   PROVIDERS,
   PROVIDERS_NAMES,
-} from '../api/provider';
+} from 'src/api/providers';
+import { DEFAULT_MODELS, Model, MODELS } from 'src/api/providers/models';
 
 import Markpilot from '../main';
 import { getDaysInCurrentMonth, validateURL } from '../utils';
@@ -66,7 +66,7 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
       apiKey: undefined,
     },
     ollama: {
-      apiUrl: undefined,
+      apiUrl: 'http://localhost:11434/v1/',
     },
   },
   completions: {
