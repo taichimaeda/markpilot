@@ -72,7 +72,7 @@ export abstract class OpenAICompatibleAPIClient implements APIClient {
 
     const { settings } = this.plugin;
     try {
-      const messages = this.generator.generate(prefix, suffix);
+      const messages = this.generator.generateFewShotPrompt(prefix, suffix);
       const completions = await this.openai.chat.completions.create({
         messages,
         model: settings.completions.model,
@@ -97,7 +97,7 @@ export abstract class OpenAICompatibleAPIClient implements APIClient {
       if (content === null) {
         return;
       }
-      return this.generator.parse(content);
+      return this.generator.parseResponse(content);
     } catch (error) {
       console.error(error);
       console.log(JSON.stringify(error));

@@ -26,6 +26,15 @@ export const CONTEXTS = [
   'code-block',
 ] as const;
 
+export const CONTEXTS_NAMES: Record<Context, string> = {
+  heading: 'Heading',
+  paragraph: 'Paragraph',
+  'list-item': 'List Item',
+  'block-quote': 'Block Quote',
+  'math-block': 'Math Block',
+  'code-block': 'Code Block',
+};
+
 export type Context = (typeof CONTEXTS)[number];
 
 export function getContext(prefix: string, suffix: string): Context {

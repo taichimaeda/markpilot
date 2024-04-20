@@ -21,6 +21,7 @@ export interface MarkpilotSettings1_2_0 {
     enabled: boolean;
     provider: Provider;
     model: Model;
+    fewShot: boolean;
     maxTokens: number;
     temperature: number;
     waitTime: number;

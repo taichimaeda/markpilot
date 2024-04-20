@@ -24,6 +24,7 @@ export const migrateVersion1_1_0_toVersion1_2_0: SettingsMigrator<
       ...settings.completions,
       provider: 'openai',
       model: 'gpt-3.5-turbo',
+      fewShot: true,
       ignoredFiles: [],
       ignoredTags: [],
     },

@@ -29,6 +29,7 @@ export interface MarkpilotSettings {
     enabled: boolean;
     provider: Provider;
     model: Model;
+    fewShot: boolean;
     maxTokens: number;
     temperature: number;
     waitTime: number;
@@ -73,6 +74,7 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
     enabled: true,
     provider: DEFAULT_PROVIDER,
     model: DEFAULT_MODELS[DEFAULT_PROVIDER],
+    fewShot: true,
     maxTokens: 64,
     temperature: 0,
     waitTime: 500,
@@ -94,7 +96,7 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
     },
   },
   cache: {
-    enabled: false,
+    enabled: true,
   },
   usage: {
     dailyCosts: {},
@@ -160,7 +162,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
     new Setting(containerEl)
       .setName('Ollama API URL')
       .setDesc(
-        'Enter your Ollama API URL. Prefer using 127.0.0.1 instead of localhost to avoid issues related to IPv4/IPv6',
+        "Enter your Ollama API URL. You should use '127.0.0.1' instead of 'localhost' to avoid issues related to IPv4/IPv6.",
       )
       .addText((text) =>
         text
@@ -267,6 +269,21 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             await plugin.saveSettings();
           });
       });
+
+    new Setting(containerEl)
+      .setName('Few-shot prompts')
+      .setDesc(
+        'Turn this on to enable few-shot prompts for inline completions.',
+      )
+      .addToggle((toggle) =>
+        toggle
+          .setDisabled(!settings.completions.enabled)
+          .setValue(settings.completions.fewShot)
+          .onChange(async (value) => {
+            settings.completions.fewShot = value;
+            await plugin.saveSettings();
+          }),
+      );
 
     new Setting(containerEl)
       .setName('Max tokens')
