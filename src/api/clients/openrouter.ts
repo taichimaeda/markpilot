@@ -31,7 +31,7 @@ export class OpenRouterAPIClient
       new Notice('OpenRouter API key is not set.');
       return;
     }
-    if (!apiKey.startsWith('sk')) {
+    if (!apiKey.startsWith('sk-or-')) {
       new Notice('OpenRouter API key is invalid.');
       return;
     }

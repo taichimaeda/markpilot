@@ -31,7 +31,7 @@ export class OpenAIAPIClient
       new Notice('OpenAI API key is not set.');
       return;
     }
-    if (!apiKey.startsWith('sk')) {
+    if (!apiKey.startsWith('sk-')) {
       new Notice('OpenAI API key is invalid.');
       return;
     }
