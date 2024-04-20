@@ -28,25 +28,28 @@ function showCompletions(fetcher: CompletionsFetcher) {
     if (state.selection.ranges.length > 1 || !state.selection.main.empty) {
       return;
     }
-
     // If the suffix does not end with a punctuation or space, ignore.
     const head = state.selection.main.head;
     const char = state.sliceDoc(head, head + 1);
     if (char.length == 1 && !char.match(/^[\p{P}\s]/u)) {
       return;
     }
+    // If the prefix is empty, ignore.
+    // This helps prevent showing completions when opening a new document.
+    const prefix = state.sliceDoc(0, head);
+    const suffix = state.sliceDoc(head, length);
+    if (prefix === '') {
+      return;
+    }
 
     const currentCompletionsId = ++latestCompletionsId;
 
-    // Get the completions context with code blocks taken into account.
-    const prefix = state.sliceDoc(0, head);
-    const suffix = state.sliceDoc(head, length);
     // Fetch completions from the server.
     const completions = await fetcher(prefix, suffix).catch((error) => {
       new Notice('Failed to fetch completions: ', error);
       return undefined;
     });
-    // if fetch has failed, ignore and return.
+    // If fetch has failed, ignore and return.
     if (completions === undefined) {
       return;
     }
