@@ -1,4 +1,8 @@
-import { ChatCompletionsModel, ChatHistory, CompletionsModel } from './api/openai';
+import {
+  ChatCompletionsModel,
+  ChatHistory,
+  CompletionsModel,
+} from './api/openai';
 
 export interface MarkpilotSettings1_1_0 {
   apiKey: string | undefined;
