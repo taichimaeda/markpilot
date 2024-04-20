@@ -1,10 +1,15 @@
 import { ItemView, WorkspaceLeaf } from 'obsidian';
 import * as React from 'react';
 import { createRoot, Root } from 'react-dom/client';
+import { ChatMessage } from 'src/api';
 import Markpilot from 'src/main';
 import { App } from './App';
 
 export const CHAT_VIEW_TYPE = 'markpilot-chat-view';
+
+export type ChatFetcher = (
+  messages: ChatMessage[],
+) => AsyncGenerator<string | undefined>;
 
 export class ChatView extends ItemView {
   private root: Root;
@@ -12,6 +17,8 @@ export class ChatView extends ItemView {
 
   constructor(
     leaf: WorkspaceLeaf,
+    private fetcher: ChatFetcher,
+    private cancel: () => void,
     private plugin: Markpilot,
   ) {
     super(leaf);
@@ -38,7 +45,12 @@ export class ChatView extends ItemView {
     this.root = createRoot(containerEl);
     this.root.render(
       <React.StrictMode>
-        <App view={this} plugin={this.plugin} />
+        <App
+          view={this}
+          fetcher={this.fetcher}
+          cancel={this.cancel}
+          plugin={this.plugin}
+        />
       </React.StrictMode>,
     );
   }

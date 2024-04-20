@@ -1,11 +1,14 @@
-import { SendHorizontal } from 'lucide-react';
+import { CircleStop, SendHorizontal } from 'lucide-react';
 import { useState } from 'react';
+import { ChatRole } from 'src/api';
 
 export function ChatInput({
-  disabled,
+  turn,
+  cancel,
   submit,
 }: {
-  disabled: boolean;
+  turn: ChatRole;
+  cancel: () => void;
   submit: (text: string) => void;
 }) {
   const [value, setValue] = useState('');
@@ -18,12 +21,13 @@ export function ChatInput({
       <textarea
         className="input-field"
         style={{ height: `${numRows + 1.5}rem` }}
-        disabled={disabled}
+        disabled={turn !== 'user'}
         placeholder="Type a message..."
         value={value}
         onChange={(event) => setValue(event.target.value)}
         onKeyDown={(event) => {
           if (
+            turn === 'user' &&
             value.trim() !== '' &&
             event.key === 'Enter' &&
             !event.shiftKey && // Allow newline with shift key
@@ -39,8 +43,25 @@ export function ChatInput({
         className="send-button-container"
         style={{ height: `${numRows + 1.5}rem` }}
       >
-        <button className="send-button">
-          <SendHorizontal size={16} />
+        <button
+          className="send-button"
+          disabled={turn === 'user' && value.trim() === ''}
+          onClick={(event) => {
+            if (turn === 'user') {
+              event.preventDefault();
+              setValue('');
+              submit(value);
+            } else if (turn === 'assistant') {
+              event.preventDefault();
+              cancel();
+            }
+          }}
+        >
+          {turn === 'user' ? (
+            <SendHorizontal size={16} />
+          ) : (
+            <CircleStop size={16} />
+          )}
         </button>
       </div>
     </div>

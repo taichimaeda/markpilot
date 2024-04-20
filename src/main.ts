@@ -8,7 +8,7 @@ import {
   setIcon,
   WorkspaceLeaf,
 } from 'obsidian';
-import { APIClient } from './api';
+import { APIClient, ChatMessage } from './api';
 import { OllamaAPIClient } from './api/clients/ollama';
 import { OpenAIAPIClient } from './api/clients/openai';
 import { OpenRouterAPIClient } from './api/clients/openrouter';
@@ -26,6 +26,7 @@ import {
   MarkpilotSettingTab,
 } from './settings';
 import { SettingsMigrationsRunner } from './settings/runner';
+import { debounceAsyncFunc, debounceAsyncGenerator } from './utils';
 
 export default class Markpilot extends Plugin {
   settings: MarkpilotSettings;
@@ -225,9 +226,9 @@ export default class Markpilot extends Plugin {
   }
 
   createEditorExtension() {
-    return inlineCompletionsExtension(async (...args) => {
-      // TODO:
-      // Extract this logic to somewhere appropriate.
+    const { settings } = this;
+
+    const fetcher = async (prefix: string, suffix: string) => {
       const view = this.app.workspace.getActiveViewOfType(MarkdownView);
       const file = view?.file;
       const content = view?.editor.getValue();
@@ -244,13 +245,22 @@ export default class Markpilot extends Plugin {
       ) {
         return;
       }
-      return this.completionsClient.fetchCompletions(...args);
-    }, this);
+      return this.completionsClient.fetchCompletions(prefix, suffix);
+    };
+
+    const { debounced, cancel, force } = debounceAsyncFunc(
+      fetcher,
+      settings.completions.waitTime,
+    );
+
+    return inlineCompletionsExtension(debounced, cancel, force, this);
   }
 
   updateEditorExtension() {
     const { workspace } = this.app;
 
+    // Clear the existing extensions and insert new ones,
+    // keeping the reference to the same array.
     this.extensions.splice(
       0,
       this.extensions.length,
@@ -260,11 +270,24 @@ export default class Markpilot extends Plugin {
   }
 
   createChatView(leaf: WorkspaceLeaf) {
-    const view = new ChatView(leaf, this);
+    const fetcher = (messages: ChatMessage[]) => {
+      return this.chatClient.fetchChat(messages);
+    };
+    const { debounced, cancel } = debounceAsyncGenerator(fetcher, 0);
+
+    const view = new ChatView(leaf, debounced, cancel, this);
     if (this.settings.chat.enabled) {
       this.activateView();
     }
     return view;
+  }
+
+  updateChatView() {
+    if (this.settings.chat.enabled) {
+      this.activateView();
+    } else {
+      this.deactivateView();
+    }
   }
 
   async loadSettings() {

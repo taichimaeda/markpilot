@@ -4,7 +4,13 @@ import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
 import { ChatMessage } from 'src/api';
 
-export function ChatItem({ message }: { message: ChatMessage }) {
+export function ChatItem({
+  active,
+  message,
+}: {
+  active?: boolean;
+  message: ChatMessage;
+}) {
   return (
     <div
       className={
@@ -13,7 +19,11 @@ export function ChatItem({ message }: { message: ChatMessage }) {
       }
     >
       <ChatItemHeader message={message} />
-      <ChatItemBody message={message} />
+      {active && message.content === '' ? (
+        <ChatItemBodyTyping />
+      ) : (
+        <ChatItemBody message={message} />
+      )}
     </div>
   );
 }
@@ -44,9 +54,20 @@ function ChatItemHeader({ message }: { message: ChatMessage }) {
 function ChatItemBody({ message }: { message: ChatMessage }) {
   return (
     <div className="markpilot-chat-item-body">
+      {/* TODO: Make markdown content selectable. */}
       <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
         {message.content}
       </ReactMarkdown>
+    </div>
+  );
+}
+
+function ChatItemBodyTyping() {
+  return (
+    <div className="markpilot-chat-item-body-typing">
+      <div className="dot" />
+      <div className="dot" />
+      <div className="dot" />
     </div>
   );
 }

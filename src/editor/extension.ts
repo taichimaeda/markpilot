@@ -1,5 +1,4 @@
 import Markpilot from 'src/main';
-import { debounceAsyncFunc } from '../utils';
 import {
   acceptCompletionsOnKeydown,
   rejectCompletionsOnKeydown,
@@ -18,18 +17,14 @@ export type CompletionsForce = () => void;
 
 export function inlineCompletionsExtension(
   fetcher: CompletionsFetcher,
+  cancel: () => void,
+  force: () => void,
   plugin: Markpilot,
 ) {
-  const { settings } = plugin;
-  const { debounced, cancel, force } = debounceAsyncFunc(
-    fetcher,
-    settings.completions.waitTime,
-  );
-
   return [
     completionsStateField,
     completionsRenderPlugin,
-    showCompletionsOnUpdate(debounced, plugin),
+    showCompletionsOnUpdate(fetcher, plugin),
     acceptCompletionsOnKeydown(force, plugin),
     rejectCompletionsOnKeydown(cancel, plugin),
   ];
