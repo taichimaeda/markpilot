@@ -1,0 +1,6 @@
+<LANGUAGE>
+English
+<THOUGHT>
+This paragraph summarizes the main points of the First Punic War. The title starts with "First" and ends with the year "264-241 BC", so the missing word "Punic War" should be inserted.
+<INSERT>
+Punic War

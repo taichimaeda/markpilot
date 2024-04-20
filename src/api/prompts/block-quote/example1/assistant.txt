@@ -1,0 +1,8 @@
+<LANGUAGE>
+English
+<THOUGHT>
+The quote is from Adam Smith's "The Wealth Of Nations". It is often used to describe the concept of the invisible hand in economics.
+<INSERT>
+led by an invisible hand to promote an end which was no part of his intention.
+>
+> The Wealth Of Nations, Book IV, Chapter V

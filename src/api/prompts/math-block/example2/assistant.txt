@@ -1,0 +1,6 @@
+<LANGUAGE>
+LaTeX
+<THOUGHT>
+This is the formula for the standard deviation of a sample. It should be the LaTeX formula representing the square root of the average of the squared differences between each data point and the mean.
+<INSERT>
+\sqrt{\frac{\sum_{i=1}^{n}(x_i - \mu)^2}{n}}

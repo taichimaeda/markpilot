@@ -1,0 +1,318 @@
+{
+  "llama3": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "wizardlm2": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "mistral": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "gemma": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "mixtral": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "llama2": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "codegemma": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "command-r": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "command-r-plus": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "llava": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "dbrx": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "codellama": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "dolphin-mixtral": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "qwen": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "llama2-uncensored": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "mistral-openorca": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "deepseek-coder": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "phi": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "nous-hermes2": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "dolphin-mistral": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "orca-mini": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "nomic-embed-text": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "zephyr": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "wizard-vicuna-uncensored": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "llama2-chinese": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "openhermes": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "vicuna": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "tinydolphin": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "tinyllama": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "openchat": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "starcoder2": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "wizardcoder": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "stable-code": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "starcoder": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "neural-chat": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "phind-codellama": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "yi": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "dolphin-phi": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "falcon": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "orca2": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "starling-lm": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "wizard-math": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "dolphincoder": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "nous-hermes": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "bakllava": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "medllama2": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "solar": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "nous-hermes2-mixtral": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "sqlcoder": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "wizardlm-uncensored": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "codeup": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "everythinglm": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "stablelm2": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "all-minilm": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "yarn-mistral": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "samantha-mistral": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "meditron": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "stable-beluga": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "mxbai-embed-large": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "magicoder": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "stablelm-zephyr": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "llama-pro": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "yarn-llama2": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "deepseek-llm": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "codebooga": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "mistrallite": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "wizard-vicuna": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "nexusraven": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "goliath": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "open-orca-platypus2": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "notux": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "megadolphin": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "alfred": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "duckdb-nsql": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "xwinlm": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "wizardlm": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "notus": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "codeqwen": {
+    "inputCost": 0,
+    "outputCost": 0
+  },
+  "snowflake-arctic-embed": {
+    "inputCost": 0,
+    "outputCost": 0
+  }
+}

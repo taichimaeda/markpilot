@@ -1,0 +1,7 @@
+<LANGUAGE>
+English
+<THOUGHT>
+This is a list of the ACID principles in database management. The "Consistency" and "Isolation" principles are missing and so must be inserted in a consistent format.
+<INSERT>
+Consistency: Transactions maintain database validity by transitioning it between consistent states.
+- Isolation: Transactions execute independently, preventing interference between concurrent operations.

@@ -1,5 +1,9 @@
-export function uuid(): string {
-  return crypto.randomUUID();
+// Utility function to get the keys of an object
+// that provides more informative typing on the return value than `Object.keys`.
+export function getObjectKeys<T extends Record<string, unknown>>(
+  obj: T,
+): (keyof T)[] {
+  return Object.keys(obj);
 }
 
 // Debounce an async function by waiting for `wait` milliseconds before resolving.
@@ -40,6 +44,16 @@ export function debounceAsyncFunc<T>(
     cancel: () => previous.cancel(),
     force: () => previous.force(),
   };
+}
+
+// Utility function to validate the given string is a valid URL or not.
+export function validateURL(url: string): boolean {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function getTodayAsString(): string {

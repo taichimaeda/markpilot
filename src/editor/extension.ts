@@ -9,7 +9,6 @@ import { completionsStateField } from './state';
 import { completionsRenderPlugin } from './view';
 
 export type CompletionsFetcher = (
-  language: string,
   prefix: string,
   suffix: string,
 ) => Promise<string | undefined>;

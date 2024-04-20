@@ -1,7 +1,22 @@
 import { Extension } from '@codemirror/state';
-import { addIcon, Notice, Plugin, setIcon } from 'obsidian';
-import { MemoryCache } from './api/cache';
-import { APIClient, OpenAIClient } from './api/openai';
+import { minimatch } from 'minimatch';
+import {
+  addIcon,
+  MarkdownView,
+  Notice,
+  Plugin,
+  setIcon,
+  WorkspaceLeaf,
+} from 'obsidian';
+import { APIClient } from './api';
+import { OllamaAPIClient } from './api/clients/ollama';
+import { OpenAIAPIClient } from './api/clients/openai';
+import { OpenRouterAPIClient } from './api/clients/openrouter';
+import { PromptGenerator } from './api/prompts/generator';
+import { Provider } from './api/providers';
+import { CostsTracker } from './api/providers/costs';
+import { MemoryCacheProxy } from './api/proxies/memory-cache';
+import { UsageMonitorProxy } from './api/proxies/usage-monitor';
 import { CHAT_VIEW_TYPE, ChatView } from './chat/view';
 import { inlineCompletionsExtension } from './editor/extension';
 import botOffIcon from './icons/bot-off.svg';
@@ -10,57 +25,47 @@ import {
   MarkpilotSettings,
   MarkpilotSettingTab,
 } from './settings';
+import { SettingsMigrationsRunner } from './settings/runner';
 
 export default class Markpilot extends Plugin {
-  client: APIClient;
   settings: MarkpilotSettings;
-  view: ChatView;
+
   extensions: Extension[];
+  completionsClient: APIClient;
+  chatClient: APIClient;
+  chatView: ChatView;
 
   async onload() {
     await this.loadSettings();
     this.addSettingTab(new MarkpilotSettingTab(this.app, this));
 
-    // Initialize the OpenAI API client and
-    // register the editor extension and chat view.
-    const client = new OpenAIClient(this);
-    const cache = new MemoryCache(client, this);
-    this.client = cache;
-    this.extensions = this.getEditorExtension();
+    const { settings } = this;
+    this.completionsClient = this.createAPIClient(
+      settings.completions.provider,
+    );
+    this.chatClient = this.createAPIClient(settings.chat.provider);
+
+    this.extensions = this.createEditorExtension();
     this.registerEditorExtension(this.extensions);
     this.registerView(CHAT_VIEW_TYPE, (leaf) => {
-      this.view = new ChatView(leaf, this);
-      return this.view;
+      this.chatView = this.createChatView(leaf);
+      return this.chatView;
     });
-    if (this.settings.chat.enabled) {
-      this.activateView();
-    }
 
-    // Notify the user if the OpenAI API key is not set.
-    if (
-      (this.settings.completions.enabled || this.settings.chat.enabled) &&
-      !this.settings.apiKey?.startsWith('sk')
-    ) {
-      new Notice(
-        'OpenAI API key is not set. Please register it in the settings tab to use the features.',
-      );
-    }
-
+    this.registerCustomIcons(); // Call before `registerRibbonActions()`.
     this.registerRibbonActions();
     this.registerCommands();
   }
 
-  registerRibbonActions() {
-    // Register custom icon.
-    // TODO:
-    // Remove once this PR gets merged:
-    // https://github.com/lucide-icons/lucide/pull/2079
+  registerCustomIcons() {
     addIcon('bot-off', botOffIcon);
+  }
 
-    // TODO:
-    // Extract duplicate logic when toggling features.
+  registerRibbonActions() {
+    const { settings } = this;
+
     const toggleCompletionsItem = this.addRibbonIcon(
-      'bot',
+      settings.completions.enabled ? 'bot' : 'bot-off',
       'Toggle inline completions',
       () => {
         this.settings.completions.enabled = !this.settings.completions.enabled;
@@ -86,6 +91,7 @@ export default class Markpilot extends Plugin {
         new Notice('Inline completions enabled.');
       },
     });
+
     this.addCommand({
       id: 'disable-completions',
       name: 'Disable inline completions',
@@ -95,6 +101,7 @@ export default class Markpilot extends Plugin {
         new Notice('Inline completions disabled.');
       },
     });
+
     this.addCommand({
       id: 'toggle-completions',
       name: 'Toggle inline completions',
@@ -106,6 +113,7 @@ export default class Markpilot extends Plugin {
         );
       },
     });
+
     this.addCommand({
       id: 'enable-chat-view',
       name: 'Enable chat view',
@@ -116,6 +124,7 @@ export default class Markpilot extends Plugin {
         new Notice('Chat view enabled.');
       },
     });
+
     this.addCommand({
       id: 'disable-chat-view',
       name: 'Disable chat view',
@@ -126,6 +135,7 @@ export default class Markpilot extends Plugin {
         new Notice('Chat view disabled.');
       },
     });
+
     this.addCommand({
       id: 'toggle-chat-view',
       name: 'Toggle chat view',
@@ -138,6 +148,7 @@ export default class Markpilot extends Plugin {
         );
       },
     });
+
     this.addCommand({
       id: 'clear-chat-history',
       name: 'Clear chat history',
@@ -147,10 +158,11 @@ export default class Markpilot extends Plugin {
           response: '',
         };
         this.saveSettings();
-        this.view.clear?.();
+        this.chatView.clear?.();
         new Notice('Chat history cleared.');
       },
     });
+
     this.addCommand({
       id: 'enable-cache',
       name: 'Enable cache',
@@ -160,6 +172,7 @@ export default class Markpilot extends Plugin {
         new Notice('Cache enabled.');
       },
     });
+
     this.addCommand({
       id: 'disable-cache',
       name: 'Disable cache',
@@ -169,6 +182,7 @@ export default class Markpilot extends Plugin {
         new Notice('Cache disabled.');
       },
     });
+
     this.addCommand({
       id: 'toggle-cache',
       name: 'Toggle cache',
@@ -182,11 +196,55 @@ export default class Markpilot extends Plugin {
     });
   }
 
-  getEditorExtension() {
-    return inlineCompletionsExtension(async (...args) => {
-      if (this.settings.completions.enabled) {
-        return this.client.fetchCompletions(...args);
+  createAPIClient(provider: Provider) {
+    const generator = new PromptGenerator(this);
+    const tracker = new CostsTracker(this);
+    const client = (() => {
+      switch (provider) {
+        case 'openai':
+          return new OpenAIAPIClient(generator, tracker, this);
+        case 'openrouter':
+          return new OpenRouterAPIClient(generator, tracker, this);
+        case 'ollama':
+          return new OllamaAPIClient(generator, tracker, this);
       }
+    })();
+    const clientWithMonitor = new UsageMonitorProxy(client, this);
+    const clientWithCache = new MemoryCacheProxy(clientWithMonitor, this);
+
+    return clientWithCache;
+  }
+
+  updateAPIClient() {
+    const { settings } = this;
+
+    this.chatClient = this.createAPIClient(settings.chat.provider);
+    this.completionsClient = this.createAPIClient(
+      settings.completions.provider,
+    );
+  }
+
+  createEditorExtension() {
+    return inlineCompletionsExtension(async (...args) => {
+      // TODO:
+      // Extract this logic to somewhere appropriate.
+      const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+      const file = view?.file;
+      const content = view?.editor.getValue();
+      const isIgnoredFile = this.settings.completions.ignoredFiles.some(
+        (pattern) => file?.path && minimatch(file?.path, pattern),
+      );
+      const hasIgnoredTags = this.settings.completions.ignoredTags.some((tag) =>
+        content?.includes(tag),
+      );
+      if (
+        isIgnoredFile ||
+        hasIgnoredTags ||
+        !this.settings.completions.enabled
+      ) {
+        return;
+      }
+      return this.completionsClient.fetchCompletions(...args);
     }, this);
   }
 
@@ -196,13 +254,29 @@ export default class Markpilot extends Plugin {
     this.extensions.splice(
       0,
       this.extensions.length,
-      ...this.getEditorExtension(),
+      ...this.createEditorExtension(),
     );
     workspace.updateOptions();
   }
 
+  createChatView(leaf: WorkspaceLeaf) {
+    const view = new ChatView(leaf, this);
+    if (this.settings.chat.enabled) {
+      this.activateView();
+    }
+    return view;
+  }
+
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    const data = await this.loadData();
+    if (data === null) {
+      this.settings = DEFAULT_SETTINGS;
+      return;
+    }
+
+    this.settings = data;
+    const runner = new SettingsMigrationsRunner(this);
+    await runner.apply();
   }
 
   async saveSettings() {

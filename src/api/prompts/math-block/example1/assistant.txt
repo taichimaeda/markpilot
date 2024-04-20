@@ -1,0 +1,7 @@
+<LANGUAGE>
+LaTeX
+<THOUGHT>
+This is an example of the contrapositive of a statement. 
+In this case, the original statement is "If P, then Q." The contrapositive is "If not Q, then not P.", which is written in LaTeX as $\neg Q\implies\neg P$.
+<INSERT>
+\neg Q\implies\neg P

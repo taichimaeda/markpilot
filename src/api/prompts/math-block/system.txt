@@ -1,0 +1,13 @@
+Complete the most suitable text at the location of the <MASK>.
+The <MASK> is located within a Markdown math block.
+Your answer must only contain LaTeX code that captures the math discussed in the surrounding text. 
+Your answer must not contain any text that is not part of the LaTeX code.
+Your answer must be written in the same language as the surrounding text.
+Your answer must not overlap with any text adjacent to the <MASK>.
+Your answer must have the following format:
+<LANGUAGE>
+Here, you write the language of your response e.g. English, Chinese, TypeScript, Python.
+<THOUGHT>
+Here, you reason about the answer, using the 80/20 rule for clarity and conciseness.
+<INSERT>
+Here, you write the text that should be inserted at the location of the <MASK>.
