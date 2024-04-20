@@ -13,4 +13,7 @@ export class GeminiAPIClient implements APIClient {
   ): Promise<string | undefined> {
     throw new Error('Method not implemented.');
   }
+  testConnection(): Promise<boolean> {
+    throw new Error('Method not implemented.');
+  }
 }

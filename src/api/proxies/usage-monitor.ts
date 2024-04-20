@@ -39,4 +39,8 @@ export class UsageMonitorProxy implements APIClient {
 
     return await this.client.fetchCompletions(prefix, suffix);
   }
+
+  testConnection() {
+    return this.client.testConnection();
+  }
 }

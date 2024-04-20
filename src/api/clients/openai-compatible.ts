@@ -4,7 +4,9 @@ import OpenAI from 'openai';
 import Markpilot from 'src/main';
 import { APIClient, ChatMessage } from '..';
 import { PromptGenerator } from '../prompts/generator';
+import { Provider } from '../providers';
 import { CostsTracker } from '../providers/costs';
+import { DEFAULT_MODELS } from '../providers/models';
 
 export abstract class OpenAICompatibleAPIClient implements APIClient {
   constructor(
@@ -13,15 +15,16 @@ export abstract class OpenAICompatibleAPIClient implements APIClient {
     protected plugin: Markpilot,
   ) {}
 
+  abstract get provider(): Provider;
+
   abstract get openai(): OpenAI | undefined;
 
   async *fetchChat(messages: ChatMessage[]) {
-    const { settings } = this.plugin;
-
     if (this.openai === undefined) {
       return;
     }
 
+    const { settings } = this.plugin;
     try {
       const stream = await this.openai.chat.completions.create({
         messages,
@@ -63,12 +66,11 @@ export abstract class OpenAICompatibleAPIClient implements APIClient {
   }
 
   async fetchCompletions(prefix: string, suffix: string) {
-    const { settings } = this.plugin;
-
     if (this.openai === undefined) {
       return;
     }
 
+    const { settings } = this.plugin;
     try {
       const messages = this.generator.generate(prefix, suffix);
       const completions = await this.openai.chat.completions.create({
@@ -98,9 +100,37 @@ export abstract class OpenAICompatibleAPIClient implements APIClient {
       return this.generator.parse(content);
     } catch (error) {
       console.error(error);
+      console.log(JSON.stringify(error));
       new Notice(
         'Failed to fetch completions.  Make sure your API key or API URL is correct.',
       );
+    }
+  }
+
+  async testConnection() {
+    if (this.openai === undefined) {
+      return false;
+    }
+
+    try {
+      const response = await this.openai.chat.completions.create({
+        messages: [
+          {
+            role: 'user',
+            content: 'Say this is a test',
+          },
+        ],
+        model: DEFAULT_MODELS[this.provider],
+        max_tokens: 1,
+        temperature: 0,
+        top_p: 1,
+        n: 1,
+      });
+
+      return response.choices[0].message.content !== '';
+    } catch (error) {
+      console.error(error);
+      return false;
     }
   }
 }

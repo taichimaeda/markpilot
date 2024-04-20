@@ -3,6 +3,7 @@ import OpenAI from 'openai';
 import Markpilot from 'src/main';
 import { APIClient } from '..';
 import { PromptGenerator } from '../prompts/generator';
+import { Provider } from '../providers';
 import { CostsTracker } from '../providers/costs';
 import { OpenAICompatibleAPIClient } from './openai-compatible';
 
@@ -16,6 +17,10 @@ export class OpenAIAPIClient
     plugin: Markpilot,
   ) {
     super(generator, tracker, plugin);
+  }
+
+  get provider(): Provider {
+    return 'openai';
   }
 
   get openai(): OpenAI | undefined {

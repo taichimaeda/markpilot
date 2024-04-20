@@ -4,6 +4,7 @@ import Markpilot from 'src/main';
 import { validateURL } from 'src/utils';
 import { APIClient } from '..';
 import { PromptGenerator } from '../prompts/generator';
+import { Provider } from '../providers';
 import { CostsTracker } from '../providers/costs';
 import { OpenAICompatibleAPIClient } from './openai-compatible';
 
@@ -17,6 +18,10 @@ export class OllamaAPIClient
     plugin: Markpilot,
   ) {
     super(generator, tracker, plugin);
+  }
+
+  get provider(): Provider {
+    return 'ollama';
   }
 
   get openai(): OpenAI | undefined {

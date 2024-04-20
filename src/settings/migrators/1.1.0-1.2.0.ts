@@ -17,7 +17,7 @@ export const migrateVersion1_1_0_toVersion1_2_0: SettingsMigrator<
         apiKey: undefined,
       },
       ollama: {
-        apiUrl: 'http://localhost:11434/v1/',
+        apiUrl: 'http://127.0.0.1:11434/v1/',
       },
     },
     completions: {

@@ -10,7 +10,7 @@ import {
 import { DEFAULT_MODELS, Model, MODELS } from 'src/api/providers/models';
 
 import Markpilot from '../main';
-import { getDaysInCurrentMonth, validateURL } from '../utils';
+import { getDaysInCurrentMonth } from '../utils';
 
 export interface MarkpilotSettings {
   version: string;
@@ -66,7 +66,7 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
       apiKey: undefined,
     },
     ollama: {
-      apiUrl: 'http://localhost:11434/v1/',
+      apiUrl: 'http://127.0.0.1:11434/v1/',
     },
   },
   completions: {
@@ -159,7 +159,9 @@ export class MarkpilotSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Ollama API URL')
-      .setDesc('Enter your Ollama API URL.')
+      .setDesc(
+        'Enter your Ollama API URL. Prefer using 127.0.0.1 instead of localhost to avoid issues related to IPv4/IPv6',
+      )
       .addText((text) =>
         text
           .setValue(settings.providers.ollama.apiUrl ?? '')
@@ -171,25 +173,42 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
+      .setName('Test OpenAI API connection')
+      .setDesc('Test the connection to the OpenAI API.')
+      .addButton((button) =>
+        button.setButtonText('Test Connection').onClick(async () => {
+          const client = this.plugin.createAPIClient('openai');
+          if (await client.testConnection()) {
+            new Notice('Successfully connected to OpenAI API.');
+          } else {
+            new Notice('Failed to connect to OpenAI API.');
+          }
+        }),
+      );
+
+    new Setting(containerEl)
+      .setName('Test OpenRouter API connection')
+      .setDesc('Test the connection to the OpenRouter API.')
+      .addButton((button) =>
+        button.setButtonText('Test Connection').onClick(async () => {
+          const client = this.plugin.createAPIClient('openrouter');
+          if (await client.testConnection()) {
+            new Notice('Successfully connected to OpenRouter API.');
+          } else {
+            new Notice('Failed to connect to OpenRouter API.');
+          }
+        }),
+      );
+
+    new Setting(containerEl)
       .setName('Test Ollama API connection')
       .setDesc('Test the connection to the local Ollama API.')
       .addButton((button) =>
         button.setButtonText('Test Connection').onClick(async () => {
-          const apiUrl = settings.providers.ollama.apiUrl;
-          if (apiUrl === undefined) {
-            new Notice('Ollama API URL is not set.');
-            return;
-          }
-          if (!validateURL(apiUrl)) {
-            new Notice('Invalid Ollama API URL.');
-            return;
-          }
-          // TODO:
-          // Properly implement logic for checking Ollama API status.
-          try {
-            await fetch(apiUrl);
+          const client = this.plugin.createAPIClient('ollama');
+          if (await client.testConnection()) {
             new Notice('Successfully connected to Ollama API.');
-          } catch {
+          } else {
             new Notice('Failed to connect to Ollama API.');
           }
         }),

@@ -53,4 +53,8 @@ export class MemoryCacheProxy implements APIClient {
     await this.store.set(hash, completions);
     return completions;
   }
+
+  testConnection() {
+    return this.client.testConnection();
+  }
 }
