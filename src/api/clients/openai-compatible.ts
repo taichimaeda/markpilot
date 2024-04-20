@@ -3,8 +3,8 @@ import { Notice } from 'obsidian';
 import OpenAI from 'openai';
 import Markpilot from 'src/main';
 import { APIClient, ChatMessage } from '..';
-import { CostsTracker } from '../costs';
 import { PromptGenerator } from '../prompts/generator';
+import { CostsTracker } from '../providers/costs';
 
 export abstract class OpenAICompatibleAPIClient implements APIClient {
   constructor(

@@ -3,8 +3,8 @@ import OpenAI from 'openai';
 import Markpilot from 'src/main';
 import { validateURL } from 'src/utils';
 import { APIClient } from '..';
-import { CostsTracker } from '../costs';
 import { PromptGenerator } from '../prompts/generator';
+import { CostsTracker } from '../providers/costs';
 import { OpenAICompatibleAPIClient } from './openai-compatible';
 
 export class OllamaAPIClient
@@ -34,6 +34,7 @@ export class OllamaAPIClient
 
     return new OpenAI({
       baseURL: apiUrl,
+      apiKey: 'ollama', // Required but ignored.
       dangerouslyAllowBrowser: true,
     });
   }

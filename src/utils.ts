@@ -76,3 +76,11 @@ export type Equal<X, Y> =
   (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2
     ? true
     : false;
+
+// Utility function to get the keys of an object
+// that provides more informative typing on the return value than `Object.keys`.
+export function getObjectKeys<T extends Record<string, unknown>>(
+  obj: T,
+): (keyof T)[] {
+  return Object.keys(obj);
+}

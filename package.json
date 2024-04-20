@@ -12,7 +12,8 @@
     "format:fix": "prettier src --write",
     "lint": "eslint src --max-warnings 0",
     "lint:fix": "eslint src --max-warnings 0 --fix",
-    "test": "echo \"Error: no test specified\""
+    "test": "echo \"Error: no test specified\"",
+    "scrape": "ts-node src/scripts/scrape.ts"
   },
   "keywords": [],
   "author": "",
@@ -23,11 +24,15 @@
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "5.29.0",
     "@typescript-eslint/parser": "5.29.0",
+    "axios": "^1.6.8",
     "builtin-modules": "3.3.0",
+    "cheerio": "^1.0.0-rc.12",
+    "commander": "^12.0.0",
     "esbuild": "0.17.3",
     "eslint": "^8.57.0",
     "obsidian": "latest",
     "prettier": "^3.2.5",
+    "ts-node": "^10.9.2",
     "tslib": "2.4.0",
     "typescript": "4.7.4"
   },
