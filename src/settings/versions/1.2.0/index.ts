@@ -1,5 +1,5 @@
 import { MarkpilotSettings } from 'src/settings';
-import { Equal, Expect } from 'src/utils';
+import { Equal, Expect } from 'src/settings/utils';
 import { ChatHistory } from './api';
 import { Provider } from './api/providers';
 import { Model } from './api/providers/models';

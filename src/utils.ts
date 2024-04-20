@@ -1,14 +1,9 @@
-export function uuid(): string {
-  return crypto.randomUUID();
-}
-
-export function validateURL(url: string): boolean {
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
+// Utility function to get the keys of an object
+// that provides more informative typing on the return value than `Object.keys`.
+export function getObjectKeys<T extends Record<string, unknown>>(
+  obj: T,
+): (keyof T)[] {
+  return Object.keys(obj);
 }
 
 // Debounce an async function by waiting for `wait` milliseconds before resolving.
@@ -51,6 +46,16 @@ export function debounceAsyncFunc<T>(
   };
 }
 
+// Utility function to validate the given string is a valid URL or not.
+export function validateURL(url: string): boolean {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function getTodayAsString(): string {
   return new Date().toISOString().split('T')[0];
 }
@@ -68,19 +73,4 @@ export function getDaysInCurrentMonth(): Date[] {
     date.setDate(date.getDate() + 1);
   }
   return dates;
-}
-
-// Utility types used for settings migration.
-export type Expect<T extends true> = T;
-export type Equal<X, Y> =
-  (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2
-    ? true
-    : false;
-
-// Utility function to get the keys of an object
-// that provides more informative typing on the return value than `Object.keys`.
-export function getObjectKeys<T extends Record<string, unknown>>(
-  obj: T,
-): (keyof T)[] {
-  return Object.keys(obj);
 }
