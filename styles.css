@@ -1,11 +1,19 @@
-/* Hide Unicode math symbols displayed by Rehype's KaTex plugin */
-.katex-html {
-  display: none;
-}
+/************************************************************/
+/*                   Inline completions                     */
+/************************************************************/
 
 /* Show inline completions text with less opacity */
 .markpilot-completions {
   opacity: 0.5;
+}
+
+/************************************************************/
+/*                        Chat view                         */
+/************************************************************/
+
+/* Hide Unicode math symbols displayed by Rehype's KaTex plugin */
+.katex-html {
+  display: none;
 }
 
 .markpilot-chat-root {

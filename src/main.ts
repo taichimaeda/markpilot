@@ -283,6 +283,9 @@ export default class Markpilot extends Plugin {
   }
 
   updateChatView() {
+    // TODO:
+    // This does not fully update the chat view.
+    // For example if anything becomes stale in the fetcher closure, it will not be updated.
     if (this.settings.chat.enabled) {
       this.activateView();
     } else {
