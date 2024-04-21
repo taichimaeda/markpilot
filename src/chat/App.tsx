@@ -59,7 +59,9 @@ export function App({
   useEffect(() => {
     if (turn === 'assistant') {
       (async () => {
-        for await (const chunk of fetcher(history.messages)) {
+        // Ignores the first message which is the system prompt.
+        const messages = history.messages.slice(1);
+        for await (const chunk of fetcher(messages)) {
           setHistory((history) => ({
             ...history,
             response: history.response + chunk,

@@ -36,6 +36,7 @@
 .markpilot-chat-item {
   padding: 15px 20px;
   border-bottom: 1px solid gray;
+  user-select: text;
 }
 
 .markpilot-chat-item:last-of-type {

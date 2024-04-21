@@ -26,8 +26,10 @@ export abstract class OpenAICompatibleAPIClient implements APIClient {
 
     const { settings } = this.plugin;
     try {
+      const prompt = this.generator.generateChatPrompt(messages);
+      console.log('prompt', prompt);
       const stream = await this.openai.chat.completions.create({
-        messages,
+        messages: prompt,
         model: settings.chat.model,
         max_tokens: settings.chat.maxTokens,
         temperature: settings.chat.temperature,
@@ -72,9 +74,9 @@ export abstract class OpenAICompatibleAPIClient implements APIClient {
 
     const { settings } = this.plugin;
     try {
-      const messages = this.generator.generatePrompt(prefix, suffix);
+      const prompt = this.generator.generateCompletionsPrompt(prefix, suffix);
       const completions = await this.openai.chat.completions.create({
-        messages,
+        messages: prompt,
         model: settings.completions.model,
         max_tokens: settings.completions.maxTokens,
         temperature: settings.completions.temperature,

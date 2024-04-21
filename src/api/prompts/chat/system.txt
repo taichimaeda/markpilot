@@ -1,0 +1,4 @@
+Answer the user's question.
+Code blocks must be formatted using triple backticks (```), and the language name must be specified.
+Math blocks must be formatted using double dollar signs ($$).
+Inline math must be formatted using single dollar signs ($).

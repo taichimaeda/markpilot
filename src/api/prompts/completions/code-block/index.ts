@@ -1,4 +1,4 @@
-import { FewShotPrompt } from '..';
+import { FewShotPrompt } from '../..';
 import example1Assistant from './example1/assistant.txt';
 import example1User from './example1/user.md';
 import example2Assistant from './example2/assistant.txt';
@@ -7,7 +7,7 @@ import example3Assistant from './example3/assistant.txt';
 import example3User from './example3/user.md';
 import system from './system.txt';
 
-export const CodeBlockPrompt: FewShotPrompt = {
+export const CODE_BLOCK_PROMPT: FewShotPrompt = {
   system,
   examples: [
     {

@@ -75,6 +75,7 @@ const version1_2_0: MarkpilotSettings1_2_0 = {
     enabled: true,
     provider: 'openai',
     model: 'gpt-4',
+    fewShot: false,
     maxTokens: 10,
     temperature: 1,
     history: {

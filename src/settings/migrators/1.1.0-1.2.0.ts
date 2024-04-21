@@ -39,6 +39,8 @@ export const migrateVersion1_1_0_toVersion1_2_0: SettingsMigrator<
       ...settings.chat,
       provider: 'openai',
       model: 'gpt-3.5-turbo',
+      // Few-shot prompts are still in beta
+      fewShot: false,
     },
     cache: {
       enabled: true, // Enable cache by default.

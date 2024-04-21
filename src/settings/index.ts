@@ -44,6 +44,7 @@ export interface MarkpilotSettings {
     enabled: boolean;
     provider: Provider;
     model: Model;
+    fewShot: boolean;
     maxTokens: number;
     temperature: number;
     history: ChatHistory;
@@ -91,6 +92,8 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
     enabled: true,
     provider: DEFAULT_PROVIDER,
     model: DEFAULT_MODELS[DEFAULT_PROVIDER],
+    // Few-shot prompts are still in beta
+    fewShot: false,
     maxTokens: 1024,
     temperature: 0.5,
     history: {
@@ -479,6 +482,21 @@ export class MarkpilotSettingTab extends PluginSettingTab {
             await plugin.saveSettings();
           });
       });
+
+    new Setting(containerEl)
+      .setName('Few-shot prompts (Beta)')
+      .setDesc(
+        'Turn this on to enable few-shot prompts for chat view. This is a beta feature and may not work as expected.',
+      )
+      .addToggle((toggle) =>
+        toggle
+          .setDisabled(!settings.chat.enabled)
+          .setValue(settings.chat.fewShot)
+          .onChange(async (value) => {
+            settings.chat.fewShot = value;
+            await plugin.saveSettings();
+          }),
+      );
 
     new Setting(containerEl)
       .setName('Max tokens')
