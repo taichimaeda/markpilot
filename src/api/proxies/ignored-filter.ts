@@ -21,12 +21,22 @@ export class IgnoredFilter implements APIClient {
     const view = plugin.app.workspace.getActiveViewOfType(MarkdownView);
     const file = view?.file;
     const content = view?.editor.getValue();
+
     const isIgnoredFile = settings.completions.ignoredFiles.some(
-      (pattern) => file?.path && minimatch(file?.path, pattern),
+      (filePattern) =>
+        file?.path &&
+        filePattern.trim() !== '' &&
+        minimatch(file?.path, filePattern),
     );
     const hasIgnoredTags = settings.completions.ignoredTags.some(
-      (tag) => content && new RegExp(tag, 'gm').test(content),
+      (tagRegex) =>
+        content &&
+        tagRegex.trim() !== '' &&
+        new RegExp(tagRegex, 'gm').test(content),
     );
+    console.log('tags', settings.completions.ignoredTags);
+    console.log('isIgnoredFile', isIgnoredFile);
+    console.log('hasIgnoredTags', hasIgnoredTags);
     if (isIgnoredFile || hasIgnoredTags) {
       return;
     }

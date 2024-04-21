@@ -3,7 +3,7 @@ import { FewShotPrompt } from '.';
 import { ChatMessage } from '..';
 import { BlockQuotePrompt } from './block-quote';
 import { CodeBlockPrompt } from './code-block';
-import { Context, CONTEXTS_NAMES, getContext, getLanguage } from './context';
+import { Context, getContext, getLanguage } from './context';
 import { HeadingPrompt } from './heading';
 import { ListItemPrompt } from './list-item';
 import { MathBlockPrompt } from './math-block';
@@ -26,7 +26,28 @@ export class PromptGenerator {
     return lines.slice(lines.indexOf('<INSERT>') + 1).join('\n');
   }
 
-  processRequest(prefix: string, suffix: string): string {
+  makeExamples(prefix: string, suffix: string) {
+    const { settings } = this.plugin;
+
+    if (!settings.completions.fewShot) {
+      return [];
+    }
+
+    const context = getContext(prefix, suffix);
+    const prompt = PROMPTS[context];
+    return prompt.examples.flatMap((example) => [
+      {
+        role: 'user',
+        content: example.user,
+      },
+      {
+        role: 'assistant',
+        content: example.assistant,
+      },
+    ]);
+  }
+
+  makeRequest(prefix: string, suffix: string): string {
     const { settings } = this.plugin;
 
     const windowSize = settings.completions.windowSize;
@@ -38,51 +59,23 @@ export class PromptGenerator {
     return `${truncatedPrefix}<MASK>${truncatedSuffix}`;
   }
 
-  generateSimplePrompt(prefix: string, suffix: string) {
-    const context = getContext(prefix, suffix);
-    const language =
-      context === 'code-block' ? getLanguage(prefix, suffix) : undefined;
-    const system =
-      `Insert the missing text at the location of the <MASK> from ${CONTEXTS_NAMES[context]}` +
-      (language ? ` in the language ${language}.` : '.');
-
-    return [
-      {
-        role: 'system',
-        content: system,
-      },
-      {
-        role: 'user',
-        content: this.processRequest(prefix, suffix),
-      },
-    ] as ChatMessage[];
-  }
-
-  generateFewShotPrompt(prefix: string, suffix: string): ChatMessage[] {
+  generatePrompt(prefix: string, suffix: string) {
     const context = getContext(prefix, suffix);
     const prompt = PROMPTS[context];
     const system =
       context === 'code-block'
         ? prompt.system.replace('{{LANGUAGE}}', getLanguage(prefix, suffix)!)
         : prompt.system;
+
     return [
       {
         role: 'system',
         content: system,
       },
-      ...prompt.examples.flatMap((example) => [
-        {
-          role: 'user',
-          content: example.user,
-        },
-        {
-          role: 'assistant',
-          content: example.assistant,
-        },
-      ]),
+      ...this.makeExamples(prefix, suffix),
       {
         role: 'user',
-        content: this.processRequest(prefix, suffix),
+        content: this.makeRequest(prefix, suffix),
       },
     ] as ChatMessage[];
   }
