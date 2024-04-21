@@ -1,16 +1,15 @@
 import { CircleStop, SendHorizontal } from 'lucide-react';
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { ChatRole } from 'src/api';
 
-export function ChatInput({
-  turn,
-  cancel,
-  submit,
-}: {
-  turn: ChatRole;
-  cancel: () => void;
-  submit: (text: string) => void;
-}) {
+export const ChatInput = forwardRef<
+  HTMLTextAreaElement,
+  {
+    turn: ChatRole;
+    cancel: () => void;
+    submit: (text: string) => void;
+  }
+>(function ({ turn, cancel, submit }, ref) {
   const [value, setValue] = useState('');
 
   const numLines = value.split('\n').length;
@@ -19,6 +18,7 @@ export function ChatInput({
   return (
     <div className="markpilot-chat-input">
       <textarea
+        ref={ref}
         className="input-field"
         style={{ height: `${numRows + 1.5}rem` }}
         disabled={turn !== 'user'}
@@ -66,4 +66,4 @@ export function ChatInput({
       </div>
     </div>
   );
-}
+});

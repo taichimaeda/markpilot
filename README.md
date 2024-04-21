@@ -1,7 +1,7 @@
 # 🤖 Markpilot: AI-powered inline completions and chat view for Obsidian
 
 ![workflow](https://github.com/taichimaeda/markpilot/actions/workflows/ci.yaml/badge.svg)
-![semver](https://img.shields.io/badge/semver-1.2.0-blue)
+![semver](https://img.shields.io/badge/semver-1.2.2-blue)
 
 Markpilot is an Obsidian plugin that offers _inline completions_ features and _chat view_ in the sidebar. It aims to provide a similar experience to [GitHub Copilot](https://github.com/features/copilot) in Obsidian.
 

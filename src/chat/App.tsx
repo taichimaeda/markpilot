@@ -36,6 +36,7 @@ export function App({
       : defaultHistory,
   );
 
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // Expose the method to clear history to the view
@@ -77,6 +78,8 @@ export function App({
         }));
         setTurn('user');
       })();
+    } else if (turn === 'user') {
+      inputRef.current?.focus();
     }
   }, [turn]);
 
@@ -103,7 +106,7 @@ export function App({
         <div ref={bottomRef} />
       </div>
       <div className="input-container">
-        <ChatInput turn={turn} cancel={cancel} submit={submit} />
+        <ChatInput ref={inputRef} turn={turn} cancel={cancel} submit={submit} />
       </div>
     </div>
   );
