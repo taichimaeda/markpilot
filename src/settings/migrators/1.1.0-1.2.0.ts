@@ -47,6 +47,10 @@ export const migrateVersion1_1_0_toVersion1_2_0: SettingsMigrator<
   if (!(settings.chat.model in OPENAI_MODELS)) {
     newSettings.chat.model = 'gpt-3.5-turbo';
   }
+  // Update if default temperature is still selected.
+  if (settings.chat.temperature === 0.1) {
+    newSettings.chat.temperature = 1;
+  }
   // Update if default accept key is still selected.
   if (settings.completions.acceptKey === 'Enter') {
     newSettings.completions.acceptKey = 'Tab';

@@ -21,7 +21,7 @@ const version1_1_0: MarkpilotSettings1_1_0 = {
     enabled: true,
     model: 'gpt-3.5-turbo',
     maxTokens: 10,
-    temperature: 0.5,
+    temperature: 0.1,
     history: {
       messages: [],
       response: '',
@@ -73,7 +73,7 @@ const version1_2_0: MarkpilotSettings1_2_0 = {
     provider: 'openai',
     model: 'gpt-3.5-turbo',
     maxTokens: 10,
-    temperature: 0.5,
+    temperature: 1,
     history: {
       messages: [],
       response: '',

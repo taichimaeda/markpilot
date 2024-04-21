@@ -271,9 +271,9 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       });
 
     new Setting(containerEl)
-      .setName('Few-shot prompts')
+      .setName('Few-shot prompts (Beta)')
       .setDesc(
-        'Turn this on to enable few-shot prompts for inline completions.',
+        'Turn this on to enable few-shot prompts for inline completions. This is a beta feature and may not work as expected.',
       )
       .addToggle((toggle) =>
         toggle
