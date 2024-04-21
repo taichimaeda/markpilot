@@ -94,7 +94,7 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
     model: DEFAULT_MODELS[DEFAULT_PROVIDER],
     // Few-shot prompts are still in beta
     fewShot: false,
-    maxTokens: 1024,
+    maxTokens: 4096,
     temperature: 0.5,
     history: {
       messages: [],

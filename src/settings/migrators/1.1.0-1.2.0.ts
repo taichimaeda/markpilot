@@ -60,6 +60,11 @@ export const migrateVersion1_1_0_toVersion1_2_0: SettingsMigrator<
   } else {
     newSettings.chat.model = 'gpt-3.5-turbo';
   }
+  // Update if default max tokens are still selected.
+  // 1024 turns out to be too small to make a meaningful chat response.
+  if (settings.chat.maxTokens === 1024) {
+    newSettings.chat.maxTokens = 4096;
+  }
   // Update if default temperature is still selected.
   if (settings.chat.temperature === 0.1) {
     newSettings.chat.temperature = 1;
