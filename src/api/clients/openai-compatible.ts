@@ -27,7 +27,6 @@ export abstract class OpenAICompatibleAPIClient implements APIClient {
     const { settings } = this.plugin;
     try {
       const prompt = this.generator.generateChatPrompt(messages);
-      console.log('prompt', prompt);
       const stream = await this.openai.chat.completions.create({
         messages: prompt,
         model: settings.chat.model,

@@ -85,7 +85,6 @@ export function debounceAsyncGenerator<T>(
       return;
     }
     for await (const chunk of func(...args)) {
-      console.log('id', id, 'lastId', lastId);
       if (id !== lastId) break;
       yield chunk;
     }
