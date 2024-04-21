@@ -38,7 +38,7 @@ function showCompletions(fetcher: CompletionsFetcher) {
     // This helps prevent showing completions when opening a new document.
     const prefix = state.sliceDoc(0, head);
     const suffix = state.sliceDoc(head, length);
-    if (prefix === '') {
+    if (prefix.trim() === '') {
       return;
     }
 

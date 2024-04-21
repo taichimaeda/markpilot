@@ -223,7 +223,6 @@ export default class Markpilot extends Plugin {
     const { settings } = this;
 
     const fetcher = async (prefix: string, suffix: string) => {
-      console.log('fetcher');
       if (!this.settings.completions.enabled) {
         return;
       }

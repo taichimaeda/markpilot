@@ -100,7 +100,6 @@ export abstract class OpenAICompatibleAPIClient implements APIClient {
       return this.generator.parseResponse(content);
     } catch (error) {
       console.error(error);
-      console.log(JSON.stringify(error));
       new Notice(
         'Failed to fetch completions.  Make sure your API key or API URL is correct.',
       );

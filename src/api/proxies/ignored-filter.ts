@@ -34,9 +34,6 @@ export class IgnoredFilter implements APIClient {
         tagRegex.trim() !== '' &&
         new RegExp(tagRegex, 'gm').test(content),
     );
-    console.log('tags', settings.completions.ignoredTags);
-    console.log('isIgnoredFile', isIgnoredFile);
-    console.log('hasIgnoredTags', hasIgnoredTags);
     if (isIgnoredFile || hasIgnoredTags) {
       return;
     }
