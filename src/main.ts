@@ -1,13 +1,5 @@
 import { Extension } from '@codemirror/state';
-import { minimatch } from 'minimatch';
-import {
-  addIcon,
-  MarkdownView,
-  Notice,
-  Plugin,
-  setIcon,
-  WorkspaceLeaf,
-} from 'obsidian';
+import { addIcon, Notice, Plugin, setIcon, WorkspaceLeaf } from 'obsidian';
 import { APIClient, ChatMessage } from './api';
 import { OllamaAPIClient } from './api/clients/ollama';
 import { OpenAIAPIClient } from './api/clients/openai';
@@ -15,6 +7,7 @@ import { OpenRouterAPIClient } from './api/clients/openrouter';
 import { PromptGenerator } from './api/prompts/generator';
 import { Provider } from './api/providers';
 import { CostsTracker } from './api/providers/costs';
+import { IgnoredFilter } from './api/proxies/ignored-filter';
 import { MemoryCacheProxy } from './api/proxies/memory-cache';
 import { UsageMonitorProxy } from './api/proxies/usage-monitor';
 import { CHAT_VIEW_TYPE, ChatView } from './chat/view';
@@ -210,7 +203,8 @@ export default class Markpilot extends Plugin {
           return new OllamaAPIClient(generator, tracker, this);
       }
     })();
-    const clientWithMonitor = new UsageMonitorProxy(client, this);
+    const clientWithFilter = new IgnoredFilter(client, this);
+    const clientWithMonitor = new UsageMonitorProxy(clientWithFilter, this);
     const clientWithCache = new MemoryCacheProxy(clientWithMonitor, this);
 
     return clientWithCache;
@@ -229,25 +223,11 @@ export default class Markpilot extends Plugin {
     const { settings } = this;
 
     const fetcher = async (prefix: string, suffix: string) => {
-      const view = this.app.workspace.getActiveViewOfType(MarkdownView);
-      const file = view?.file;
-      const content = view?.editor.getValue();
-      const isIgnoredFile = this.settings.completions.ignoredFiles.some(
-        (pattern) => file?.path && minimatch(file?.path, pattern),
-      );
-      const hasIgnoredTags = this.settings.completions.ignoredTags.some((tag) =>
-        content?.includes(tag),
-      );
-      if (
-        isIgnoredFile ||
-        hasIgnoredTags ||
-        !this.settings.completions.enabled
-      ) {
+      if (!this.settings.completions.enabled) {
         return;
       }
       return this.completionsClient.fetchCompletions(prefix, suffix);
     };
-
     const { debounced, cancel, force } = debounceAsyncFunc(
       fetcher,
       settings.completions.waitTime,

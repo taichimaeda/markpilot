@@ -395,13 +395,13 @@ export class MarkpilotSettingTab extends PluginSettingTab {
 
       .setName('Ignored files')
       .setDesc(
-        'Set the list of files to ignore inline completions. The completions will not be triggered in these files.',
+        'Set the list of files to ignore inline completions line by line. The completions will not be triggered in these files. You can use glob patterns in Bash.',
       )
       .addTextArea((text) =>
         text
           .setDisabled(!settings.completions.enabled)
           .setValue(settings.completions.ignoredFiles.join('\n'))
-          .setPlaceholder('myFile.md\nmyDirectory/**/*.md')
+          .setPlaceholder('Private.md\nPrivate/**/*.md')
           .onChange(async (value) => {
             settings.completions.ignoredFiles = value.split('\n');
             await plugin.saveSettings();
@@ -411,13 +411,13 @@ export class MarkpilotSettingTab extends PluginSettingTab {
     new Setting(containerEl)
       .setName('Ignored tags')
       .setDesc(
-        'Set the list of tags to ignore inline completions. The completions will not be triggered in these tags.',
+        "Set the list of tags to ignore inline completions line by line. The completions will not be triggered in these tags. You can use Regex for this, but make sure to add '#' in front and avoid using '.' as this will match whitespace characters too",
       )
       .addTextArea((text) =>
         text
           .setDisabled(!settings.completions.enabled)
           .setValue(settings.completions.ignoredTags.join('\n'))
-          .setPlaceholder('#myTag\n#myTag2')
+          .setPlaceholder('#Private\n#Private\\S*\n#Draft[0-9]+')
           .onChange(async (value) => {
             settings.completions.ignoredTags = value.split('\n');
             await plugin.saveSettings();
