@@ -6,6 +6,7 @@ import { Model } from './api/providers/models';
 
 export interface MarkpilotSettings1_2_0 {
   version: string;
+  backups: Record<string, object>; // e.g. '1.1.0' to { ... }
   providers: {
     openai: {
       apiKey: string | undefined;

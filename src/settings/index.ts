@@ -14,6 +14,7 @@ import { getDaysInCurrentMonth } from '../utils';
 
 export interface MarkpilotSettings {
   version: string;
+  backups: Record<string, object>; // e.g. '1.1.0' to { ... }
   providers: {
     openai: {
       apiKey: string | undefined;
@@ -59,6 +60,7 @@ export interface MarkpilotSettings {
 
 export const DEFAULT_SETTINGS: MarkpilotSettings = {
   version: '1.2.0',
+  backups: {},
   providers: {
     openai: {
       apiKey: undefined,

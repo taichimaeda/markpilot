@@ -12,6 +12,9 @@ export const migrateVersion1_1_0_toVersion1_2_0: SettingsMigrator<
 > = (settings) => {
   const newSettings: MarkpilotSettings1_2_0 = {
     version: '1.2.0',
+    backups: {
+      '1.1.0': structuredClone(settings),
+    },
     providers: {
       openai: {
         apiKey: settings.apiKey,
