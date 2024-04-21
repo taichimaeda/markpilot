@@ -1,23 +1,35 @@
 # 🤖 Markpilot: AI-powered inline completions and chat view for Obsidian
 
 ![workflow](https://github.com/taichimaeda/markpilot/actions/workflows/ci.yaml/badge.svg)
-![semver](https://img.shields.io/badge/semver-1.1.0-blue)
+![semver](https://img.shields.io/badge/semver-1.2.0-blue)
 
-Markpilot is an Obsidian plugin that offers _inline completions_ features and _chat view_ in the sidebar. It is powered by the OpenAI API and aims to provide a similar experience to [GitHub Copilot](https://github.com/features/copilot) in Obsidian.
+Markpilot is an Obsidian plugin that offers _inline completions_ features and _chat view_ in the sidebar. It aims to provide a similar experience to [GitHub Copilot](https://github.com/features/copilot) in Obsidian.
 
-There are well-known plugins that provide similar features, such as [Obsidian Companion](https://github.com/rizerphe/obsidian-companion) for AI-powered auto-completions, and [Obsidian Copilot](https://github.com/logancyang/obsidian-copilot) for chat UI. However, Markpilot is designed to be a _GitHub Copilot-flavored_ alternative that provides _both features_ in one plugin, with more sophisticated UI/UX, including:
+Currently the plugin supports models provided by OpenAI API, OpenRouter API and **local models** by Ollama. We are planning to support more providers in the future, such as Gemini Pro API.
 
-- Context-aware completions
-  - Detects the language of a Markdown code block.
-  - Feeds only the content within a code block to generate relevant completions.
-- Better handling of inline completions
+There are plugins that provide similar features, such as [Obsidian Companion](https://github.com/rizerphe/obsidian-companion) and [Obsidian Copilot Autocompletion](https://github.com/j0rd1smit/obsidian-copilot-auto-completion) for AI-powered auto-completions, and [Obsidian Copilot](https://github.com/logancyang/obsidian-copilot) for chat UI.
+
+However, Markpilot is designed to be a _GitHub Copilot-flavored_ alternative that provides _both features_ in one plugin, with more sophisticated UI/UX, including:
+
+- Context-aware inline completions.
+  - Detects the context of a Markdown content, and uses an optimised system prompt for each.
+    - e.g. List, heading, code block
+  - Detects the language of a Markdown code block, and enforces the model to use the same language.
+    - e.g. Python, JavaScript
+- Advanced prompting techniques (Beta)
+  - Context-aware system prompts.
+  - Context-aware few-shot examples to guide the model to generate more accurate completions.
+- Carefully-designed user experience.
   - Force completions before waiting time by hitting `Tab` twice.
   - Reject completions by hitting `Esc` key.
+  - Send a chat message by hitting `Enter`, add a new line by hitting `Shift + Enter`.
+- Usage limit feature to manage costs.
 - Fast in-memory caching to save costs.
+- Disable inline completions features by filename and tags.
 
 Markpilot also comes with a bar chart visualization of usage similar to [OpenAI API Platform](https://platform.openai.com/usage), and the fact that Markpilot offers both features in one plugin makes it a more convenient choice for users who want to manage their API usage in one place.
 
-As mentioned, Markpilot's chat view UI is heavily inspired by [GitHub Copilot for VSCode](https://code.visualstudio.com/docs/copilot/overview). Also, I took some inspirations from [codemirror-copilot](https://github.com/asadm/codemirror-copilot) for the implementation of the CodeMirror extension used for Markpilot's inline completions.
+Markpilot's chat view UI is heavily inspired by [GitHub Copilot for VSCode](https://code.visualstudio.com/docs/copilot/overview), and the CodeMirror extension by [codemirror-copilot](https://github.com/asadm/codemirror-copilot). Also I took inspirations from [Obsidian Copilot Autocompletion](https://github.com/j0rd1smit/obsidian-copilot-auto-completion) to implement the few-shot prompts feature.
 
 ## Demo
 
@@ -31,61 +43,89 @@ As mentioned, Markpilot's chat view UI is heavily inspired by [GitHub Copilot fo
 
 ## Getting Started
 
-Markpilot requires an OpenAI API key to work, which you can obtain from [OpenAI API](https://platform.openai.com/docs/guides/authentication).
+Markpilot currently supports OpenAI API, OpenRouter API and Ollama as providers for inline completions and chat view.
+
+### Using OpenAI API
+
+First, you need to obtain the API key from [OpenAI API](https://platform.openai.com/docs/guides/authentication).
 
 1. Install the plugin from the Obsidian community plugins.
-2. Under the plugin settings, go to **Community Plugins** > **Markpilot** > **OpenAI** > **OpenAI API Key** and enter your OpenAI API key.
-3. Optionally customize the plugin settings to your preference, and enable caching if you want to save usage costs.
-4. You're all set - enjoy using Markpilot!
+2. Navigate to the plugin settings:
+   1. Under **Providers** > **OpenAI API Key**, enter your OpenAI API key.
+   2. Under **Inline completions** > **Provider**, select **OpenAI**.
+   3. Under **Inline completions** > **Model**, select the model you want to use (Recommended: `gpt-3.5-turbo`).
+   4. Repeat the same steps for the chat view settings under **Chat view**.
+3. You're all set! Enjoy using Markpilot.
+
+### Using OpenRouter API
+
+First, you need to obtain the API key from [OpenRouter API](https://openrouter.ai/keys).
+
+1. Install the plugin from the Obsidian community plugins.
+2. Navigate to the plugin settings:
+   1. Under **Providers** > **OpenRouter API Key**, enter your OpenRouter API key.
+   2. Under **Inline completions** > **Provider**, select **OpenRouter**.
+   3. Under **Inline completions** > **Model**, select the model you want to use (Recommended: `gpt-3.5-turbo`).
+   4. Repeat the same steps for the chat view settings under **Chat view**.
+3. You're all set! Enjoy using Markpilot.
+
+### Using Ollama (MacOS, Linux, Windows - Preview)
+
+First, download [Ollama](https://ollama.com/download) and follow the instructions to install it.
+
+Now you need to pull the local model of your choice from Ollama (Recommended: `llama2`).
+
+```console
+$ ollama pull --model llama2
+```
+
+This will take some time. Once the model is downloaded, you can start the Ollama server:
+
+```console
+$ ollama serve
+```
+
+If you are on MacOS, the server should start automatically when you login.
+If you are on Linux, you may need to configure the startup service manually: [Ollama on Linux](https://github.com/ollama/ollama/blob/main/docs/linux.md)
+
+Now you can install Markpilot and set it up to use Ollama:
+
+1. Install the plugin from the Obsidian community plugins.
+2. Navigate to the plugin settings:
+   1. Under **Providers**, click **Test Ollama Connection** and see if the Ollama server is running correctly.
+   2. Under **Inline completions** > **Provider**, select **Ollama**.
+   3. Under **Inline completions** > **Model**, select the model you want to use (Recommended: `llama2`).
+      - Make sure to only select the same model you pulled from Ollama.
+   4. Repeat the same steps for the chat view settings under **Chat view**.
+3. You're all set! Enjoy using Markpilot.
 
 ## Caveats
 
-This plugin sends your content to the OpenAI API to generate completions.
+If you use the OpenAI API or OpenRouter API, this plugin will send your content to the OpenAI API to generate completions.
 
 You should be cautious about sending sensitive information to the API, and be aware of the costs associated with using the API. The plugin provides a usage limit feature to help you manage your costs, but it is your responsibility to monitor your usage and costs.
 
 ## Features
 
+- Providers
+  - Support for OpenAI API, OpenRouter API and **local** models available on Ollama.
+  - Providers and models are customisable independently for inline completions and chat view.
 - Inline completions
-  - Context-aware completions as you type.
-  - Force completions before waiting time by hitting `Tab` twice.
-  - Reject completions by hitting `Esc` key.
-  - Enable/disable completions from the command palette.
+  - Context-aware system prompts.
+  - Context-aware few-shot examples to guide the model to generate more accurate completions.
 - Chat view
   - Open chat view from the sidebar.
-  - Send message by hitting `Enter`, add a new line by hitting `Shift + Enter`.
   - Clear chat history from the command palette.
+  - Stop chat response by clicking the stop button.
 - Caching
-  - In-memory cache to save costs
-  - Completions are lost after reloading the plugin or Obsidian.
+  - In-memory cache to save costs (will be cleared when Obsidian restarts).
+- Filtering
+  - Disable inline completions features by filename (glob) and tags (regex).
 - Usage
   - Set a monthly usage limit to automatically disable features when the limit is reached.
   - Monitor costs in a graph from the settings tab.
-  - These costs are estimated based on the number of tokens used for completions.
-
-## Customization
-
-You can customize most of the plugin settings from the settings tab.
-
-Some of the settings you will likely want to customize:
-
-- Model
-  - Changing the model to GPT-4 may give you better completions, but this will cost more.
-  - You can select any of the models provided by [OpenAI's Node API](https://github.com/openai/openai-node), but some of the less common models may not work as expected or give you incorrect cost estimates.
-- Temperature
-  - The higher the temperature, the more creative completions you get.
-  - The lower the temperature, the more conservative completions you get.
-- Window size
-  - The window size determines the number of _characters_ fed into the model to generate inline completions.
-  - The longer the window size, the more context-aware completions you get, but it will take longer to generate completions and result in hitting the cache less often.
-- Wait time
-  - The time in milliseconds to wait before sending the content to the model to generate completions.
 
 ## Frequently Asked Questions
-
-### How do I get an OpenAI API key?
-
-You can obtain an OpenAI API key from [OpenAI API](https://platform.openai.com/docs/guides/authentication).
 
 ### I can't accept completions by hitting `Tab`.
 
