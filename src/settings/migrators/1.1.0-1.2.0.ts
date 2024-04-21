@@ -48,14 +48,16 @@ export const migrateVersion1_1_0_toVersion1_2_0: SettingsMigrator<
   // Update if OpenAI models selected by the user are no longer available.
   // Version 1.1.0 only supported OpenAI but included models
   // that are aliased, deprecated or only preview models.
-  newSettings.completions.model =
-    settings.completions.model in OPENAI_MODELS
-      ? (settings.completions.model as OpenAIModel)
-      : 'gpt-3.5-turbo';
-  newSettings.chat.model =
-    settings.chat.model in OPENAI_MODELS
-      ? (settings.chat.model as OpenAIModel)
-      : 'gpt-3.5-turbo';
+  if ((OPENAI_MODELS as string[]).includes(settings.completions.model)) {
+    newSettings.completions.model = settings.completions.model as OpenAIModel;
+  } else {
+    newSettings.completions.model = 'gpt-3.5-turbo';
+  }
+  if ((OPENAI_MODELS as string[]).includes(settings.chat.model)) {
+    newSettings.chat.model = settings.chat.model as OpenAIModel;
+  } else {
+    newSettings.chat.model = 'gpt-3.5-turbo';
+  }
   // Update if default temperature is still selected.
   if (settings.chat.temperature === 0.1) {
     newSettings.chat.temperature = 1;

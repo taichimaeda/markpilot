@@ -19,7 +19,7 @@ const version1_1_0: MarkpilotSettings1_1_0 = {
   },
   chat: {
     enabled: true,
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4',
     maxTokens: 10,
     temperature: 0.1,
     history: {
@@ -43,6 +43,9 @@ const version1_1_0: MarkpilotSettings1_1_0 = {
 
 const version1_2_0: MarkpilotSettings1_2_0 = {
   version: '1.2.0',
+  backups: {
+    '1.1.0': structuredClone(version1_1_0),
+  },
   providers: {
     openai: {
       apiKey: 'test',
@@ -58,7 +61,7 @@ const version1_2_0: MarkpilotSettings1_2_0 = {
     enabled: true,
     provider: 'openai',
     model: 'gpt-3.5-turbo',
-    fewShot: true,
+    fewShot: false,
     maxTokens: 10,
     temperature: 0.5,
     waitTime: 10,
@@ -71,7 +74,7 @@ const version1_2_0: MarkpilotSettings1_2_0 = {
   chat: {
     enabled: true,
     provider: 'openai',
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4',
     maxTokens: 10,
     temperature: 1,
     history: {
