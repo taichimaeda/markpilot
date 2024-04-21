@@ -1,7 +1,10 @@
 import { SettingsMigrator } from '.';
 import { MarkpilotSettings1_1_0 } from '../versions/1.1.0';
 import { MarkpilotSettings1_2_0 } from '../versions/1.2.0';
-import { OPENAI_MODELS } from '../versions/1.2.0/api/providers/models';
+import {
+  OPENAI_MODELS,
+  OpenAIModel,
+} from '../versions/1.2.0/api/providers/models';
 
 export const migrateVersion1_1_0_toVersion1_2_0: SettingsMigrator<
   MarkpilotSettings1_1_0,
@@ -24,7 +27,8 @@ export const migrateVersion1_1_0_toVersion1_2_0: SettingsMigrator<
       ...settings.completions,
       provider: 'openai',
       model: 'gpt-3.5-turbo',
-      fewShot: true,
+      // Few-shot prompts are still in beta
+      fewShot: false,
       ignoredFiles: [],
       ignoredTags: [],
     },
@@ -41,12 +45,14 @@ export const migrateVersion1_1_0_toVersion1_2_0: SettingsMigrator<
   // Update if OpenAI models selected by the user are no longer available.
   // Version 1.1.0 only supported OpenAI but included models
   // that are aliased, deprecated or only preview models.
-  if (!(settings.completions.model in OPENAI_MODELS)) {
-    newSettings.completions.model = 'gpt-3.5-turbo';
-  }
-  if (!(settings.chat.model in OPENAI_MODELS)) {
-    newSettings.chat.model = 'gpt-3.5-turbo';
-  }
+  newSettings.completions.model =
+    settings.completions.model in OPENAI_MODELS
+      ? (settings.completions.model as OpenAIModel)
+      : 'gpt-3.5-turbo';
+  newSettings.chat.model =
+    settings.chat.model in OPENAI_MODELS
+      ? (settings.chat.model as OpenAIModel)
+      : 'gpt-3.5-turbo';
   // Update if default temperature is still selected.
   if (settings.chat.temperature === 0.1) {
     newSettings.chat.temperature = 1;

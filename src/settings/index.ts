@@ -74,7 +74,8 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
     enabled: true,
     provider: DEFAULT_PROVIDER,
     model: DEFAULT_MODELS[DEFAULT_PROVIDER],
-    fewShot: true,
+    // Few-shot prompts are still in beta
+    fewShot: false,
     maxTokens: 64,
     temperature: 0,
     waitTime: 500,
