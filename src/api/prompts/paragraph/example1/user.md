@@ -1,5 +1,3 @@
-# Passé Composé
+# Pigeonhole Principle
 
-The passé composé is formed by using the auxiliary verb "avoir" or "etre" and the past participle of the main verb. The auxiliary verb is conjugated in the present tense, while the past participle remains unchanged.
-
-For example, the passé composé of "Je vais à la gare" (I go to the station) is <MASK>
+The pigeonhole principle states that if you have more pigeons than pigeonholes, then <MASK>. This principle is often used in combinatorics to prove that a certain number of objects must be placed in a certain number of containers.

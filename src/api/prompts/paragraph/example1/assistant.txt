@@ -1,7 +1,6 @@
 <LANGUAGE>
-English, French
+English
 <THOUGHT>
-This paragraph explains the passé composé.
-It shows "Je vais à la gare" (I go to the station) as an example of the present tense. The corresponding passé composé should be "Je suis allé à la gare" (I went to the station).
+This paragraph explains about the pigeonhole principle. If there are more pigeons than pigeonholes, then at least one pigeonhole must contain at least two pigeons
 <INSERT>
-"Je suis allé à la gare" (I went to the station).
+at least one pigeonhole must contain at least two pigeons
