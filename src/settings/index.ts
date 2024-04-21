@@ -296,6 +296,7 @@ export class MarkpilotSettingTab extends PluginSettingTab {
       .setDesc('Set the max tokens for inline completions.')
       .addText((text) =>
         text
+          .setDisabled(!settings.completions.enabled)
           .setValue(settings.completions.maxTokens.toString())
           .onChange(async (value) => {
             const amount = parseInt(value);
@@ -443,7 +444,11 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         toggle.setValue(settings.chat.enabled).onChange(async (value) => {
           settings.chat.enabled = value;
           await plugin.saveSettings();
-          plugin.updateChatView();
+          if (settings.chat.enabled) {
+            await plugin.activateView();
+          } else {
+            await plugin.deactivateView();
+          }
           this.display(); // Re-render settings tab
         }),
       );

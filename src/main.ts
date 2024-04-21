@@ -46,7 +46,7 @@ export default class Markpilot extends Plugin {
       return this.chatView;
     });
 
-    this.registerCustomIcons(); // Call before `registerRibbonActions()`.
+    this.registerCustomIcons(); // Must be called before `registerRibbonActions()`.
     this.registerRibbonActions();
     this.registerCommands();
   }
@@ -260,17 +260,6 @@ export default class Markpilot extends Plugin {
       this.activateView();
     }
     return view;
-  }
-
-  updateChatView() {
-    // TODO:
-    // This does not fully update the chat view.
-    // For example if anything becomes stale in the fetcher closure, it will not be updated.
-    if (this.settings.chat.enabled) {
-      this.activateView();
-    } else {
-      this.deactivateView();
-    }
   }
 
   async loadSettings() {
