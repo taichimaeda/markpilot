@@ -66,9 +66,8 @@ export function debounceAsyncGenerator<T>(
   let lastId = 0;
 
   async function* debounced(...args: any[]): AsyncGenerator<T | undefined> {
-    const id = ++lastId;
-
     previous.cancel();
+    const id = lastId; // Must be after `previous.cancel()`.
     try {
       await new Promise<void>((resolve, reject) => {
         const timer = setTimeout(() => resolve(), wait);
@@ -78,7 +77,6 @@ export function debounceAsyncGenerator<T>(
           reject();
         };
         previous.force = () => {
-          ++lastId;
           clearTimeout(timer);
           resolve();
         };
@@ -86,8 +84,8 @@ export function debounceAsyncGenerator<T>(
     } catch (error) {
       return;
     }
-
     for await (const chunk of func(...args)) {
+      console.log('id', id, 'lastId', lastId);
       if (id !== lastId) break;
       yield chunk;
     }
