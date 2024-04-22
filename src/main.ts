@@ -61,13 +61,13 @@ export default class Markpilot extends Plugin {
     const toggleCompletionsItem = this.addRibbonIcon(
       settings.completions.enabled ? 'bot' : 'bot-off',
       'Toggle inline completions',
-      () => {
+      async () => {
         this.settings.completions.enabled = !this.settings.completions.enabled;
-        this.saveSettings();
         setIcon(
           toggleCompletionsItem,
           this.settings.completions.enabled ? 'bot' : 'bot-off',
         );
+        await this.saveSettings();
         new Notice(
           `Inline completions ${this.settings.completions.enabled ? 'enabled' : 'disabled'}.`,
         );
@@ -79,9 +79,9 @@ export default class Markpilot extends Plugin {
     this.addCommand({
       id: 'enable-completions',
       name: 'Enable inline completions',
-      callback: () => {
+      callback: async () => {
         this.settings.completions.enabled = true;
-        this.saveSettings();
+        await this.saveSettings();
         new Notice('Inline completions enabled.');
       },
     });
@@ -89,9 +89,9 @@ export default class Markpilot extends Plugin {
     this.addCommand({
       id: 'disable-completions',
       name: 'Disable inline completions',
-      callback: () => {
+      callback: async () => {
         this.settings.completions.enabled = false;
-        this.saveSettings();
+        await this.saveSettings();
         new Notice('Inline completions disabled.');
       },
     });
@@ -99,9 +99,9 @@ export default class Markpilot extends Plugin {
     this.addCommand({
       id: 'toggle-completions',
       name: 'Toggle inline completions',
-      callback: () => {
+      callback: async () => {
         this.settings.completions.enabled = !this.settings.completions.enabled;
-        this.saveSettings();
+        await this.saveSettings();
         new Notice(
           `Inline completions ${this.settings.completions.enabled ? 'enabled' : 'disabled'}.`,
         );
@@ -111,10 +111,10 @@ export default class Markpilot extends Plugin {
     this.addCommand({
       id: 'enable-chat-view',
       name: 'Enable chat view',
-      callback: () => {
+      callback: async () => {
         this.settings.chat.enabled = true;
-        this.saveSettings();
-        this.activateView();
+        await this.saveSettings();
+        await this.activateView();
         new Notice('Chat view enabled.');
       },
     });
@@ -122,10 +122,10 @@ export default class Markpilot extends Plugin {
     this.addCommand({
       id: 'disable-chat-view',
       name: 'Disable chat view',
-      callback: () => {
+      callback: async () => {
         this.settings.chat.enabled = false;
-        this.saveSettings();
-        this.deactivateView();
+        await this.saveSettings();
+        await this.deactivateView();
         new Notice('Chat view disabled.');
       },
     });
@@ -133,10 +133,10 @@ export default class Markpilot extends Plugin {
     this.addCommand({
       id: 'toggle-chat-view',
       name: 'Toggle chat view',
-      callback: () => {
+      callback: async () => {
         this.settings.chat.enabled = !this.settings.chat.enabled;
-        this.saveSettings();
-        this.deactivateView();
+        await this.saveSettings();
+        await this.deactivateView();
         new Notice(
           `Chat view ${this.settings.completions.enabled ? 'enabled' : 'disabled'}.`,
         );
@@ -146,12 +146,12 @@ export default class Markpilot extends Plugin {
     this.addCommand({
       id: 'clear-chat-history',
       name: 'Clear chat history',
-      callback: () => {
+      callback: async () => {
         this.settings.chat.history = {
           messages: [],
           response: '',
         };
-        this.saveSettings();
+        await this.saveSettings();
         this.chatView.clear?.();
         new Notice('Chat history cleared.');
       },
@@ -160,9 +160,9 @@ export default class Markpilot extends Plugin {
     this.addCommand({
       id: 'enable-cache',
       name: 'Enable cache',
-      callback: () => {
+      callback: async () => {
         this.settings.cache.enabled = true;
-        this.saveSettings();
+        await this.saveSettings();
         new Notice('Cache enabled.');
       },
     });
@@ -170,9 +170,9 @@ export default class Markpilot extends Plugin {
     this.addCommand({
       id: 'disable-cache',
       name: 'Disable cache',
-      callback: () => {
+      callback: async () => {
         this.settings.cache.enabled = false;
-        this.saveSettings();
+        await this.saveSettings();
         new Notice('Cache disabled.');
       },
     });
@@ -180,9 +180,9 @@ export default class Markpilot extends Plugin {
     this.addCommand({
       id: 'toggle-cache',
       name: 'Toggle cache',
-      callback: () => {
+      callback: async () => {
         this.settings.cache.enabled = !this.settings.cache.enabled;
-        this.saveSettings();
+        await this.saveSettings();
         new Notice(
           `Cache ${this.settings.completions.enabled ? 'enabled' : 'disabled'}.`,
         );
@@ -255,11 +255,7 @@ export default class Markpilot extends Plugin {
     };
     const { debounced, cancel } = debounceAsyncGenerator(fetcher, 0);
 
-    const view = new ChatView(leaf, debounced, cancel, this);
-    if (this.settings.chat.enabled) {
-      this.activateView();
-    }
-    return view;
+    return new ChatView(leaf, debounced, cancel, this);
   }
 
   async loadSettings() {

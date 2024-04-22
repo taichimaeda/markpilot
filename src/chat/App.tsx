@@ -8,7 +8,7 @@ import { ChatFetcher, ChatView } from './view';
 const SYSTEM_PROMPT = `
 Welcome, I'm your Markpilot and I'm here to help you get things done faster. You can also start an inline chat session.
 
-I'm powered by AI, so surprises and mistakes are possible. Make sure to verify any generated code or suggestions, and share feedback so that we can learn and improve. Check out the Copilot documentation to learn more.
+I'm powered by AI, so surprises and mistakes are possible. Make sure to verify any generated code or suggestions, and share feedback so that we can learn and improve. Check out the Markpilot documentation to learn more.
 `;
 
 const defaultHistory: ChatHistory = {
