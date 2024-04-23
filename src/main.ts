@@ -27,13 +27,13 @@ export default class Markpilot extends Plugin {
   extensions: Extension[];
   completionsClient: APIClient;
   chatClient: APIClient;
-  chatView: ChatView;
 
   async onload() {
     await this.loadSettings();
     this.addSettingTab(new MarkpilotSettingTab(this.app, this));
 
     const { settings } = this;
+
     this.completionsClient = this.createAPIClient(
       settings.completions.provider,
     );
@@ -41,14 +41,19 @@ export default class Markpilot extends Plugin {
 
     this.extensions = this.createEditorExtension();
     this.registerEditorExtension(this.extensions);
-    this.registerView(CHAT_VIEW_TYPE, (leaf) => {
-      this.chatView = this.createChatView(leaf);
-      return this.chatView;
-    });
+    this.registerView(CHAT_VIEW_TYPE, (leaf) => this.createChatView(leaf));
 
     this.registerCustomIcons(); // Must be called before `registerRibbonActions()`.
     this.registerRibbonActions();
     this.registerCommands();
+
+    // NOTE:
+    // Activating the chat view on launch seems to be problematic.
+    // This is a temporary workaround to ensure that the chat view is activated:
+    await sleep(1000);
+    if (settings.chat.enabled) {
+      await this.activateChatView();
+    }
   }
 
   registerCustomIcons() {
@@ -76,6 +81,8 @@ export default class Markpilot extends Plugin {
   }
 
   registerCommands() {
+    const { workspace } = this.app;
+
     this.addCommand({
       id: 'enable-completions',
       name: 'Enable inline completions',
@@ -114,7 +121,7 @@ export default class Markpilot extends Plugin {
       callback: async () => {
         this.settings.chat.enabled = true;
         await this.saveSettings();
-        await this.activateView();
+        await this.activateChatView();
         new Notice('Chat view enabled.');
       },
     });
@@ -125,7 +132,7 @@ export default class Markpilot extends Plugin {
       callback: async () => {
         this.settings.chat.enabled = false;
         await this.saveSettings();
-        await this.deactivateView();
+        await this.deactivateChatView();
         new Notice('Chat view disabled.');
       },
     });
@@ -136,7 +143,7 @@ export default class Markpilot extends Plugin {
       callback: async () => {
         this.settings.chat.enabled = !this.settings.chat.enabled;
         await this.saveSettings();
-        await this.deactivateView();
+        await this.deactivateChatView();
         new Notice(
           `Chat view ${this.settings.completions.enabled ? 'enabled' : 'disabled'}.`,
         );
@@ -152,7 +159,15 @@ export default class Markpilot extends Plugin {
           response: '',
         };
         await this.saveSettings();
-        this.chatView.clear?.();
+        // We should avoid managing references to the views directly
+        // and use `getLeavesOfType()` instead:
+        // https://docs.obsidian.md/Plugins/User+interface/Views
+        const leaves = workspace.getLeavesOfType(CHAT_VIEW_TYPE);
+        for (const leaf of leaves) {
+          if (leaf.view instanceof ChatView) {
+            leaf.view.clear?.();
+          }
+        }
         new Notice('Chat history cleared.');
       },
     });
@@ -258,6 +273,27 @@ export default class Markpilot extends Plugin {
     return new ChatView(leaf, debounced, cancel, this);
   }
 
+  async activateChatView() {
+    const { workspace } = this.app;
+
+    const leaves = workspace.getLeavesOfType(CHAT_VIEW_TYPE);
+    if (leaves.length > 0) {
+      return;
+    }
+
+    const newLeaf = workspace.getRightLeaf(false);
+    await newLeaf?.setViewState({ type: CHAT_VIEW_TYPE, active: true });
+  }
+
+  async deactivateChatView() {
+    const { workspace } = this.app;
+
+    const leaves = workspace.getLeavesOfType(CHAT_VIEW_TYPE);
+    for (const leaf of leaves) {
+      leaf.detach();
+    }
+  }
+
   async loadSettings() {
     const data = await this.loadData();
     if (data === null) {
@@ -272,26 +308,5 @@ export default class Markpilot extends Plugin {
 
   async saveSettings() {
     await this.saveData(this.settings);
-  }
-
-  async activateView() {
-    const { workspace } = this.app;
-
-    const leaves = workspace.getLeavesOfType(CHAT_VIEW_TYPE);
-    if (leaves.length > 0) {
-      return;
-    }
-
-    const newLeaf = workspace.getRightLeaf(false);
-    await newLeaf?.setViewState({ type: CHAT_VIEW_TYPE, active: true });
-  }
-
-  async deactivateView() {
-    const { workspace } = this.app;
-
-    const leaves = workspace.getLeavesOfType(CHAT_VIEW_TYPE);
-    for (const leaf of leaves) {
-      leaf.detach();
-    }
   }
 }

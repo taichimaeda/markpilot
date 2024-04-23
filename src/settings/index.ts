@@ -445,9 +445,9 @@ export class MarkpilotSettingTab extends PluginSettingTab {
           settings.chat.enabled = value;
           await plugin.saveSettings();
           if (settings.chat.enabled) {
-            await plugin.activateView();
+            await plugin.activateChatView();
           } else {
-            await plugin.deactivateView();
+            await plugin.deactivateChatView();
           }
           this.display(); // Re-render settings tab
         }),
