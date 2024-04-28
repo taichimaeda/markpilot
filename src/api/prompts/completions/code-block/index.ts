@@ -8,19 +8,19 @@ import example3User from './example3/user.md';
 import system from './system.txt';
 
 export const CODE_BLOCK_PROMPT: FewShotPrompt = {
-  system,
-  examples: [
-    {
-      user: example1User,
-      assistant: example1Assistant,
-    },
-    {
-      user: example2User,
-      assistant: example2Assistant,
-    },
-    {
-      user: example3User,
-      assistant: example3Assistant,
-    },
-  ],
+	system,
+	examples: [
+		{
+			user: example1User,
+			assistant: example1Assistant,
+		},
+		{
+			user: example2User,
+			assistant: example2Assistant,
+		},
+		{
+			user: example3User,
+			assistant: example3Assistant,
+		},
+	],
 };

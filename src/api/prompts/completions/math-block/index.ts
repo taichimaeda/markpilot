@@ -6,15 +6,15 @@ import example2User from './example2/user.md';
 import system from './system.txt';
 
 export const MATH_BLOCK_PROMPT: FewShotPrompt = {
-  system,
-  examples: [
-    {
-      user: example1User,
-      assistant: example1Assistant,
-    },
-    {
-      user: example2User,
-      assistant: example2Assistant,
-    },
-  ],
+	system,
+	examples: [
+		{
+			user: example1User,
+			assistant: example1Assistant,
+		},
+		{
+			user: example2User,
+			assistant: example2Assistant,
+		},
+	],
 };

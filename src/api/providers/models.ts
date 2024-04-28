@@ -15,13 +15,13 @@ export const OPENROUTER_MODELS = getObjectKeys(OpenRouterModelsJSON);
 export const OLLAMA_MODELS = getObjectKeys(OllamaModelsJSON);
 
 export const MODELS = {
-  openai: OPENAI_MODELS,
-  openrouter: OPENROUTER_MODELS,
-  ollama: OLLAMA_MODELS,
+	openai: OPENAI_MODELS,
+	openrouter: OPENROUTER_MODELS,
+	ollama: OLLAMA_MODELS,
 };
 
 export const DEFAULT_MODELS: Record<Provider, Model> = {
-  openai: 'gpt-3.5-turbo',
-  openrouter: 'openai/gpt-3.5-turbo',
-  ollama: 'llama2',
+	openai: 'gpt-3.5-turbo',
+	openrouter: 'openai/gpt-3.5-turbo',
+	ollama: 'llama2',
 };

@@ -12,104 +12,104 @@ I'm powered by AI, so surprises and mistakes are possible. Make sure to verify a
 `;
 
 const defaultHistory: ChatHistory = {
-  messages: [{ role: 'system', content: SYSTEM_PROMPT }],
-  response: '',
+	messages: [{ role: 'system', content: SYSTEM_PROMPT }],
+	response: '',
 };
 
 export function App({
-  view,
-  fetcher,
-  cancel,
-  plugin,
+	view,
+	fetcher,
+	cancel,
+	plugin,
 }: {
-  view: ChatView;
-  fetcher: ChatFetcher;
-  cancel: () => void;
-  plugin: Markpilot;
+	view: ChatView;
+	fetcher: ChatFetcher;
+	cancel: () => void;
+	plugin: Markpilot;
 }) {
-  const { settings } = plugin;
+	const { settings } = plugin;
 
-  const [turn, setTurn] = useState<ChatRole>('user');
-  const [history, setHistory] = useState<ChatHistory>(
-    settings.chat.history.messages.length > 1
-      ? settings.chat.history
-      : defaultHistory,
-  );
+	const [turn, setTurn] = useState<ChatRole>('user');
+	const [history, setHistory] = useState<ChatHistory>(
+		settings.chat.history.messages.length > 1
+			? settings.chat.history
+			: defaultHistory,
+	);
 
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
+	const inputRef = useRef<HTMLTextAreaElement>(null);
+	const bottomRef = useRef<HTMLDivElement>(null);
 
-  // Expose the method to clear history to the view
-  // so that the plugin command can call it.
-  useEffect(() => {
-    view.clear = () => setHistory(defaultHistory);
-  }, []);
+	// Expose the method to clear history to the view
+	// so that the plugin command can call it.
+	useEffect(() => {
+		view.clear = () => setHistory(defaultHistory);
+	}, []);
 
-  // Scroll to the bottom when chat history changes.
-  useLayoutEffect(() => {
-    bottomRef?.current?.scrollIntoView();
-  }, [history]);
+	// Scroll to the bottom when chat history changes.
+	useLayoutEffect(() => {
+		bottomRef?.current?.scrollIntoView();
+	}, [history]);
 
-  // Save chat history to settings when it changes.
-  // There may be a better way to store chat history, but this works for now.
-  useEffect(() => {
-    settings.chat.history = history;
-    // TODO:
-    // Only save settings before unload.
-    plugin.saveSettings();
-  }, [history]);
+	// Save chat history to settings when it changes.
+	// There may be a better way to store chat history, but this works for now.
+	useEffect(() => {
+		settings.chat.history = history;
+		// TODO:
+		// Only save settings before unload.
+		plugin.saveSettings();
+	}, [history]);
 
-  useEffect(() => {
-    if (turn === 'assistant') {
-      (async () => {
-        // Ignores the first message which is the system prompt.
-        const messages = history.messages.slice(1);
-        for await (const chunk of fetcher(messages)) {
-          setHistory((history) => ({
-            ...history,
-            response: history.response + chunk,
-          }));
-        }
+	useEffect(() => {
+		if (turn === 'assistant') {
+			(async () => {
+				// Ignores the first message which is the system prompt.
+				const messages = history.messages.slice(1);
+				for await (const chunk of fetcher(messages)) {
+					setHistory((history) => ({
+						...history,
+						response: history.response + chunk,
+					}));
+				}
 
-        setHistory((history) => ({
-          messages: [
-            ...history.messages,
-            { role: 'assistant', content: history.response },
-          ],
-          response: '',
-        }));
-        setTurn('user');
-      })();
-    } else if (turn === 'user') {
-      inputRef.current?.focus();
-    }
-  }, [turn]);
+				setHistory((history) => ({
+					messages: [
+						...history.messages,
+						{ role: 'assistant', content: history.response },
+					],
+					response: '',
+				}));
+				setTurn('user');
+			})();
+		} else if (turn === 'user') {
+			inputRef.current?.focus();
+		}
+	}, [turn]);
 
-  function submit(content: string) {
-    setHistory({
-      ...history,
-      messages: [...history.messages, { role: 'user', content }],
-    });
-    setTurn('assistant');
-  }
+	function submit(content: string) {
+		setHistory({
+			...history,
+			messages: [...history.messages, { role: 'user', content }],
+		});
+		setTurn('assistant');
+	}
 
-  return (
-    <div className="markpilot-chat-root">
-      <div className="items-container">
-        {history.messages.map((message, index) => (
-          <ChatItem key={index} message={message} />
-        ))}
-        {turn === 'assistant' && (
-          <ChatItem
-            active
-            message={{ role: 'assistant', content: history.response }}
-          />
-        )}
-        <div ref={bottomRef} />
-      </div>
-      <div className="input-container">
-        <ChatInput ref={inputRef} turn={turn} cancel={cancel} submit={submit} />
-      </div>
-    </div>
-  );
+	return (
+		<div className="markpilot-chat-root">
+			<div className="items-container">
+				{history.messages.map((message, index) => (
+					<ChatItem key={index} message={message} />
+				))}
+				{turn === 'assistant' && (
+					<ChatItem
+						active
+						message={{ role: 'assistant', content: history.response }}
+					/>
+				)}
+				<div ref={bottomRef} />
+			</div>
+			<div className="input-container">
+				<ChatInput ref={inputRef} turn={turn} cancel={cancel} submit={submit} />
+			</div>
+		</div>
+	);
 }

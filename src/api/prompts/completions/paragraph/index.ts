@@ -4,11 +4,11 @@ import example1User from './example1/user.md';
 import system from './system.txt';
 
 export const PARAGRAPH_PROMPT: FewShotPrompt = {
-  system,
-  examples: [
-    {
-      user: example1User,
-      assistant: example1Assistant,
-    },
-  ],
+	system,
+	examples: [
+		{
+			user: example1User,
+			assistant: example1Assistant,
+		},
+	],
 };

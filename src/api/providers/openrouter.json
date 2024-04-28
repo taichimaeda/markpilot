@@ -1,502 +1,502 @@
 {
-  "nousresearch/nous-capybara-7b:free": {
-    "inputCost": 0,
-    "outputCost": 0
-  },
-  "mistralai/mistral-7b-instruct:free": {
-    "inputCost": 0,
-    "outputCost": 0
-  },
-  "openchat/openchat-7b:free": {
-    "inputCost": 0,
-    "outputCost": 0
-  },
-  "gryphe/mythomist-7b:free": {
-    "inputCost": 0,
-    "outputCost": 0
-  },
-  "undi95/toppy-m-7b:free": {
-    "inputCost": 0,
-    "outputCost": 0
-  },
-  "openrouter/cinematika-7b:free": {
-    "inputCost": 0,
-    "outputCost": 0
-  },
-  "google/gemma-7b-it:free": {
-    "inputCost": 0,
-    "outputCost": 0
-  },
-  "jebcarter/psyfighter-13b": {
-    "inputCost": 0.001,
-    "outputCost": 0.001
-  },
-  "koboldai/psyfighter-13b-2": {
-    "inputCost": 0.001,
-    "outputCost": 0.001
-  },
-  "intel/neural-chat-7b": {
-    "inputCost": 0.005,
-    "outputCost": 0.005
-  },
-  "haotian-liu/llava-13b": {
-    "inputCost": 0.005,
-    "outputCost": 0.005
-  },
-  "nousresearch/nous-hermes-2-vision-7b": {
-    "inputCost": 0.005,
-    "outputCost": 0.005
-  },
-  "meta-llama/llama-2-13b-chat": {
-    "inputCost": 0.0001206,
-    "outputCost": 0.0001206
-  },
-  "pygmalionai/mythalion-13b": {
-    "inputCost": 0.001125,
-    "outputCost": 0.001125
-  },
-  "xwin-lm/xwin-lm-70b": {
-    "inputCost": 0.00375,
-    "outputCost": 0.00375
-  },
-  "alpindale/goliath-120b": {
-    "inputCost": 0.009375,
-    "outputCost": 0.009375
-  },
-  "neversleep/noromaid-20b": {
-    "inputCost": 0.00225,
-    "outputCost": 0.00225
-  },
-  "gryphe/mythomist-7b": {
-    "inputCost": 0.000375,
-    "outputCost": 0.000375
-  },
-  "sophosympatheia/midnight-rose-70b": {
-    "inputCost": 0.009,
-    "outputCost": 0.009
-  },
-  "undi95/remm-slerp-l2-13b:extended": {
-    "inputCost": 0.001125,
-    "outputCost": 0.001125
-  },
-  "mancer/weaver": {
-    "inputCost": 0.003375,
-    "outputCost": 0.003375
-  },
-  "mistralai/mixtral-8x7b-instruct": {
-    "inputCost": 0.00025,
-    "outputCost": 0.0004167
-  },
-  "nousresearch/nous-hermes-llama2-13b": {
-    "inputCost": 0.00027,
-    "outputCost": 0.00027
-  },
-  "nousresearch/nous-capybara-7b": {
-    "inputCost": 0.00018,
-    "outputCost": 0.00018
-  },
-  "meta-llama/codellama-34b-instruct": {
-    "inputCost": 0.00072,
-    "outputCost": 0.00072
-  },
-  "codellama/codellama-70b-instruct": {
-    "inputCost": 0.00081,
-    "outputCost": 0.00081
-  },
-  "phind/phind-codellama-34b": {
-    "inputCost": 0.00072,
-    "outputCost": 0.00072
-  },
-  "teknium/openhermes-2-mistral-7b": {
-    "inputCost": 0.00018,
-    "outputCost": 0.00018
-  },
-  "teknium/openhermes-2.5-mistral-7b": {
-    "inputCost": 0.00018,
-    "outputCost": 0.00018
-  },
-  "undi95/remm-slerp-l2-13b": {
-    "inputCost": 0.00027,
-    "outputCost": 0.00027
-  },
-  "openrouter/cinematika-7b": {
-    "inputCost": 0.00018,
-    "outputCost": 0.00018
-  },
-  "01-ai/yi-34b-chat": {
-    "inputCost": 0.00072,
-    "outputCost": 0.00072
-  },
-  "01-ai/yi-34b": {
-    "inputCost": 0.00072,
-    "outputCost": 0.00072
-  },
-  "01-ai/yi-6b": {
-    "inputCost": 0.000126,
-    "outputCost": 0.000126
-  },
-  "togethercomputer/stripedhyena-nous-7b": {
-    "inputCost": 0.00018,
-    "outputCost": 0.00018
-  },
-  "togethercomputer/stripedhyena-hessian-7b": {
-    "inputCost": 0.00018,
-    "outputCost": 0.00018
-  },
-  "mistralai/mixtral-8x7b": {
-    "inputCost": 0.00054,
-    "outputCost": 0.00054
-  },
-  "nousresearch/nous-hermes-yi-34b": {
-    "inputCost": 0.00072,
-    "outputCost": 0.00072
-  },
-  "nousresearch/nous-hermes-2-mixtral-8x7b-sft": {
-    "inputCost": 0.00054,
-    "outputCost": 0.00054
-  },
-  "nousresearch/nous-hermes-2-mistral-7b-dpo": {
-    "inputCost": 0.00018,
-    "outputCost": 0.00018
-  },
-  "open-orca/mistral-7b-openorca": {
-    "inputCost": 0.0001425,
-    "outputCost": 0.0001425
-  },
-  "huggingfaceh4/zephyr-7b-beta": {
-    "inputCost": 0.0001425,
-    "outputCost": 0.0001425
-  },
-  "openai/gpt-3.5-turbo": {
-    "inputCost": 0.0005,
-    "outputCost": 0.0015
-  },
-  "openai/gpt-3.5-turbo-0125": {
-    "inputCost": 0.0005,
-    "outputCost": 0.0015
-  },
-  "openai/gpt-3.5-turbo-16k": {
-    "inputCost": 0.003,
-    "outputCost": 0.004
-  },
-  "openai/gpt-4-turbo": {
-    "inputCost": 0.01,
-    "outputCost": 0.03
-  },
-  "openai/gpt-4-turbo-preview": {
-    "inputCost": 0.01,
-    "outputCost": 0.03
-  },
-  "openai/gpt-4": {
-    "inputCost": 0.03,
-    "outputCost": 0.06
-  },
-  "openai/gpt-4-32k": {
-    "inputCost": 0.06,
-    "outputCost": 0.12
-  },
-  "openai/gpt-4-vision-preview": {
-    "inputCost": 0.01,
-    "outputCost": 0.03
-  },
-  "openai/gpt-3.5-turbo-instruct": {
-    "inputCost": 0.0015,
-    "outputCost": 0.002
-  },
-  "google/palm-2-chat-bison": {
-    "inputCost": 0.00025,
-    "outputCost": 0.0005
-  },
-  "google/palm-2-codechat-bison": {
-    "inputCost": 0.00025,
-    "outputCost": 0.0005
-  },
-  "google/palm-2-chat-bison-32k": {
-    "inputCost": 0.00025,
-    "outputCost": 0.0005
-  },
-  "google/palm-2-codechat-bison-32k": {
-    "inputCost": 0.00025,
-    "outputCost": 0.0005
-  },
-  "google/gemini-pro": {
-    "inputCost": 0.000125,
-    "outputCost": 0.000375
-  },
-  "google/gemini-pro-vision": {
-    "inputCost": 0.000125,
-    "outputCost": 0.000375
-  },
-  "google/gemini-pro-1.5": {
-    "inputCost": 0.0025,
-    "outputCost": 0.0075
-  },
-  "perplexity/pplx-70b-online": {
-    "inputCost": 0.001,
-    "outputCost": 0.001
-  },
-  "perplexity/pplx-7b-online": {
-    "inputCost": 0.0002,
-    "outputCost": 0.0002
-  },
-  "perplexity/pplx-7b-chat": {
-    "inputCost": 0.0002,
-    "outputCost": 0.0002
-  },
-  "perplexity/pplx-70b-chat": {
-    "inputCost": 0.001,
-    "outputCost": 0.001
-  },
-  "perplexity/sonar-small-chat": {
-    "inputCost": 0.0002,
-    "outputCost": 0.0002
-  },
-  "perplexity/sonar-medium-chat": {
-    "inputCost": 0.0006,
-    "outputCost": 0.0006
-  },
-  "perplexity/sonar-small-online": {
-    "inputCost": 0.0002,
-    "outputCost": 0.0002
-  },
-  "perplexity/sonar-medium-online": {
-    "inputCost": 0.0006,
-    "outputCost": 0.0006
-  },
-  "anthropic/claude-3-opus": {
-    "inputCost": 0.015,
-    "outputCost": 0.075
-  },
-  "anthropic/claude-3-sonnet": {
-    "inputCost": 0.003,
-    "outputCost": 0.015
-  },
-  "anthropic/claude-3-haiku": {
-    "inputCost": 0.00025,
-    "outputCost": 0.00125
-  },
-  "anthropic/claude-3-opus:beta": {
-    "inputCost": 0.015,
-    "outputCost": 0.075
-  },
-  "anthropic/claude-3-sonnet:beta": {
-    "inputCost": 0.003,
-    "outputCost": 0.015
-  },
-  "anthropic/claude-3-haiku:beta": {
-    "inputCost": 0.00025,
-    "outputCost": 0.00125
-  },
-  "meta-llama/llama-2-70b-chat": {
-    "inputCost": 0.0006,
-    "outputCost": 0.0019
-  },
-  "nousresearch/nous-capybara-34b": {
-    "inputCost": 0.0009,
-    "outputCost": 0.0009
-  },
-  "jondurbin/airoboros-l2-70b": {
-    "inputCost": 0.0007,
-    "outputCost": 0.0009
-  },
-  "jondurbin/bagel-34b": {
-    "inputCost": 0.00575,
-    "outputCost": 0.00575
-  },
-  "austism/chronos-hermes-13b": {
-    "inputCost": 0.00018,
-    "outputCost": 0.00018
-  },
-  "mistralai/mistral-7b-instruct": {
-    "inputCost": 0.0001,
-    "outputCost": 0.00025
-  },
-  "gryphe/mythomax-l2-13b": {
-    "inputCost": 0.00018,
-    "outputCost": 0.00018
-  },
-  "openchat/openchat-7b": {
-    "inputCost": 0.00013,
-    "outputCost": 0.00013
-  },
-  "undi95/toppy-m-7b": {
-    "inputCost": 0.00015,
-    "outputCost": 0.00015
-  },
-  "lizpreciatior/lzlv-70b-fp16-hf": {
-    "inputCost": 0.0007,
-    "outputCost": 0.0009
-  },
-  "cognitivecomputations/dolphin-mixtral-8x7b": {
-    "inputCost": 0.0005,
-    "outputCost": 0.0005
-  },
-  "neversleep/noromaid-mixtral-8x7b-instruct": {
-    "inputCost": 0.008,
-    "outputCost": 0.008
-  },
-  "nousresearch/nous-hermes-2-mixtral-8x7b-dpo": {
-    "inputCost": 0.0003,
-    "outputCost": 0.0005
-  },
-  "rwkv/rwkv-5-world-3b": {
-    "inputCost": 0,
-    "outputCost": 0
-  },
-  "recursal/rwkv-5-3b-ai-town": {
-    "inputCost": 0,
-    "outputCost": 0
-  },
-  "recursal/eagle-7b": {
-    "inputCost": 0,
-    "outputCost": 0
-  },
-  "google/gemma-7b-it": {
-    "inputCost": 0.0001,
-    "outputCost": 0.0001
-  },
-  "databricks/dbrx-instruct": {
-    "inputCost": 0.0006,
-    "outputCost": 0.0006
-  },
-  "huggingfaceh4/zephyr-orpo-141b-a35b": {
-    "inputCost": 0.00065,
-    "outputCost": 0.00065
-  },
-  "meta-llama/llama-3-8b-instruct": {
-    "inputCost": 0.0001,
-    "outputCost": 0.0001
-  },
-  "meta-llama/llama-3-70b-instruct": {
-    "inputCost": 0.0008,
-    "outputCost": 0.0008
-  },
-  "microsoft/wizardlm-2-8x22b": {
-    "inputCost": 0.00065,
-    "outputCost": 0.00065
-  },
-  "microsoft/wizardlm-2-7b": {
-    "inputCost": 0.0001,
-    "outputCost": 0.0001
-  },
-  "mistralai/mixtral-8x22b": {
-    "inputCost": 0.0009,
-    "outputCost": 0.0009
-  },
-  "mistralai/mixtral-8x22b-instruct": {
-    "inputCost": 0.00065,
-    "outputCost": 0.00065
-  },
-  "anthropic/claude-2": {
-    "inputCost": 0.008,
-    "outputCost": 0.024
-  },
-  "anthropic/claude-2.1": {
-    "inputCost": 0.008,
-    "outputCost": 0.024
-  },
-  "anthropic/claude-2.0": {
-    "inputCost": 0.008,
-    "outputCost": 0.024
-  },
-  "anthropic/claude-instant-1": {
-    "inputCost": 0.0008,
-    "outputCost": 0.0024
-  },
-  "anthropic/claude-instant-1.2": {
-    "inputCost": 0.0008,
-    "outputCost": 0.0024
-  },
-  "anthropic/claude-2:beta": {
-    "inputCost": 0.008,
-    "outputCost": 0.024
-  },
-  "anthropic/claude-2.1:beta": {
-    "inputCost": 0.008,
-    "outputCost": 0.024
-  },
-  "anthropic/claude-2.0:beta": {
-    "inputCost": 0.008,
-    "outputCost": 0.024
-  },
-  "anthropic/claude-instant-1:beta": {
-    "inputCost": 0.0008,
-    "outputCost": 0.0024
-  },
-  "huggingfaceh4/zephyr-7b-beta:free": {
-    "inputCost": 0,
-    "outputCost": 0
-  },
-  "mistralai/mixtral-8x7b-instruct:nitro": {
-    "inputCost": 0.0005,
-    "outputCost": 0.0005
-  },
-  "meta-llama/llama-2-70b-chat:nitro": {
-    "inputCost": 0.0009,
-    "outputCost": 0.0009
-  },
-  "gryphe/mythomax-l2-13b:nitro": {
-    "inputCost": 0.0002,
-    "outputCost": 0.0002
-  },
-  "mistralai/mistral-7b-instruct:nitro": {
-    "inputCost": 0.0002,
-    "outputCost": 0.0002
-  },
-  "google/gemma-7b-it:nitro": {
-    "inputCost": 0.0002,
-    "outputCost": 0.0002
-  },
-  "databricks/dbrx-instruct:nitro": {
-    "inputCost": 0.0009,
-    "outputCost": 0.0009
-  },
-  "undi95/toppy-m-7b:nitro": {
-    "inputCost": 0.00015,
-    "outputCost": 0.00015
-  },
-  "microsoft/wizardlm-2-8x22b:nitro": {
-    "inputCost": 0.001,
-    "outputCost": 0.001
-  },
-  "meta-llama/llama-3-8b-instruct:nitro": {
-    "inputCost": 0.0002,
-    "outputCost": 0.0002
-  },
-  "meta-llama/llama-3-70b-instruct:nitro": {
-    "inputCost": 0.0009,
-    "outputCost": 0.0009
-  },
-  "gryphe/mythomax-l2-13b:extended": {
-    "inputCost": 0.0003,
-    "outputCost": 0.0003
-  },
-  "mistralai/mistral-tiny": {
-    "inputCost": 0.00025,
-    "outputCost": 0.00025
-  },
-  "mistralai/mistral-small": {
-    "inputCost": 0.002,
-    "outputCost": 0.006
-  },
-  "mistralai/mistral-medium": {
-    "inputCost": 0.0027,
-    "outputCost": 0.0081
-  },
-  "mistralai/mistral-large": {
-    "inputCost": 0.008,
-    "outputCost": 0.024
-  },
-  "cohere/command": {
-    "inputCost": 0.001,
-    "outputCost": 0.002
-  },
-  "cohere/command-r": {
-    "inputCost": 0.0005,
-    "outputCost": 0.0015
-  },
-  "cohere/command-r-plus": {
-    "inputCost": 0.003,
-    "outputCost": 0.015
-  }
+	"nousresearch/nous-capybara-7b:free": {
+		"inputCost": 0,
+		"outputCost": 0
+	},
+	"mistralai/mistral-7b-instruct:free": {
+		"inputCost": 0,
+		"outputCost": 0
+	},
+	"openchat/openchat-7b:free": {
+		"inputCost": 0,
+		"outputCost": 0
+	},
+	"gryphe/mythomist-7b:free": {
+		"inputCost": 0,
+		"outputCost": 0
+	},
+	"undi95/toppy-m-7b:free": {
+		"inputCost": 0,
+		"outputCost": 0
+	},
+	"openrouter/cinematika-7b:free": {
+		"inputCost": 0,
+		"outputCost": 0
+	},
+	"google/gemma-7b-it:free": {
+		"inputCost": 0,
+		"outputCost": 0
+	},
+	"jebcarter/psyfighter-13b": {
+		"inputCost": 0.001,
+		"outputCost": 0.001
+	},
+	"koboldai/psyfighter-13b-2": {
+		"inputCost": 0.001,
+		"outputCost": 0.001
+	},
+	"intel/neural-chat-7b": {
+		"inputCost": 0.005,
+		"outputCost": 0.005
+	},
+	"haotian-liu/llava-13b": {
+		"inputCost": 0.005,
+		"outputCost": 0.005
+	},
+	"nousresearch/nous-hermes-2-vision-7b": {
+		"inputCost": 0.005,
+		"outputCost": 0.005
+	},
+	"meta-llama/llama-2-13b-chat": {
+		"inputCost": 0.0001206,
+		"outputCost": 0.0001206
+	},
+	"pygmalionai/mythalion-13b": {
+		"inputCost": 0.001125,
+		"outputCost": 0.001125
+	},
+	"xwin-lm/xwin-lm-70b": {
+		"inputCost": 0.00375,
+		"outputCost": 0.00375
+	},
+	"alpindale/goliath-120b": {
+		"inputCost": 0.009375,
+		"outputCost": 0.009375
+	},
+	"neversleep/noromaid-20b": {
+		"inputCost": 0.00225,
+		"outputCost": 0.00225
+	},
+	"gryphe/mythomist-7b": {
+		"inputCost": 0.000375,
+		"outputCost": 0.000375
+	},
+	"sophosympatheia/midnight-rose-70b": {
+		"inputCost": 0.009,
+		"outputCost": 0.009
+	},
+	"undi95/remm-slerp-l2-13b:extended": {
+		"inputCost": 0.001125,
+		"outputCost": 0.001125
+	},
+	"mancer/weaver": {
+		"inputCost": 0.003375,
+		"outputCost": 0.003375
+	},
+	"mistralai/mixtral-8x7b-instruct": {
+		"inputCost": 0.00025,
+		"outputCost": 0.0004167
+	},
+	"nousresearch/nous-hermes-llama2-13b": {
+		"inputCost": 0.00027,
+		"outputCost": 0.00027
+	},
+	"nousresearch/nous-capybara-7b": {
+		"inputCost": 0.00018,
+		"outputCost": 0.00018
+	},
+	"meta-llama/codellama-34b-instruct": {
+		"inputCost": 0.00072,
+		"outputCost": 0.00072
+	},
+	"codellama/codellama-70b-instruct": {
+		"inputCost": 0.00081,
+		"outputCost": 0.00081
+	},
+	"phind/phind-codellama-34b": {
+		"inputCost": 0.00072,
+		"outputCost": 0.00072
+	},
+	"teknium/openhermes-2-mistral-7b": {
+		"inputCost": 0.00018,
+		"outputCost": 0.00018
+	},
+	"teknium/openhermes-2.5-mistral-7b": {
+		"inputCost": 0.00018,
+		"outputCost": 0.00018
+	},
+	"undi95/remm-slerp-l2-13b": {
+		"inputCost": 0.00027,
+		"outputCost": 0.00027
+	},
+	"openrouter/cinematika-7b": {
+		"inputCost": 0.00018,
+		"outputCost": 0.00018
+	},
+	"01-ai/yi-34b-chat": {
+		"inputCost": 0.00072,
+		"outputCost": 0.00072
+	},
+	"01-ai/yi-34b": {
+		"inputCost": 0.00072,
+		"outputCost": 0.00072
+	},
+	"01-ai/yi-6b": {
+		"inputCost": 0.000126,
+		"outputCost": 0.000126
+	},
+	"togethercomputer/stripedhyena-nous-7b": {
+		"inputCost": 0.00018,
+		"outputCost": 0.00018
+	},
+	"togethercomputer/stripedhyena-hessian-7b": {
+		"inputCost": 0.00018,
+		"outputCost": 0.00018
+	},
+	"mistralai/mixtral-8x7b": {
+		"inputCost": 0.00054,
+		"outputCost": 0.00054
+	},
+	"nousresearch/nous-hermes-yi-34b": {
+		"inputCost": 0.00072,
+		"outputCost": 0.00072
+	},
+	"nousresearch/nous-hermes-2-mixtral-8x7b-sft": {
+		"inputCost": 0.00054,
+		"outputCost": 0.00054
+	},
+	"nousresearch/nous-hermes-2-mistral-7b-dpo": {
+		"inputCost": 0.00018,
+		"outputCost": 0.00018
+	},
+	"open-orca/mistral-7b-openorca": {
+		"inputCost": 0.0001425,
+		"outputCost": 0.0001425
+	},
+	"huggingfaceh4/zephyr-7b-beta": {
+		"inputCost": 0.0001425,
+		"outputCost": 0.0001425
+	},
+	"openai/gpt-3.5-turbo": {
+		"inputCost": 0.0005,
+		"outputCost": 0.0015
+	},
+	"openai/gpt-3.5-turbo-0125": {
+		"inputCost": 0.0005,
+		"outputCost": 0.0015
+	},
+	"openai/gpt-3.5-turbo-16k": {
+		"inputCost": 0.003,
+		"outputCost": 0.004
+	},
+	"openai/gpt-4-turbo": {
+		"inputCost": 0.01,
+		"outputCost": 0.03
+	},
+	"openai/gpt-4-turbo-preview": {
+		"inputCost": 0.01,
+		"outputCost": 0.03
+	},
+	"openai/gpt-4": {
+		"inputCost": 0.03,
+		"outputCost": 0.06
+	},
+	"openai/gpt-4-32k": {
+		"inputCost": 0.06,
+		"outputCost": 0.12
+	},
+	"openai/gpt-4-vision-preview": {
+		"inputCost": 0.01,
+		"outputCost": 0.03
+	},
+	"openai/gpt-3.5-turbo-instruct": {
+		"inputCost": 0.0015,
+		"outputCost": 0.002
+	},
+	"google/palm-2-chat-bison": {
+		"inputCost": 0.00025,
+		"outputCost": 0.0005
+	},
+	"google/palm-2-codechat-bison": {
+		"inputCost": 0.00025,
+		"outputCost": 0.0005
+	},
+	"google/palm-2-chat-bison-32k": {
+		"inputCost": 0.00025,
+		"outputCost": 0.0005
+	},
+	"google/palm-2-codechat-bison-32k": {
+		"inputCost": 0.00025,
+		"outputCost": 0.0005
+	},
+	"google/gemini-pro": {
+		"inputCost": 0.000125,
+		"outputCost": 0.000375
+	},
+	"google/gemini-pro-vision": {
+		"inputCost": 0.000125,
+		"outputCost": 0.000375
+	},
+	"google/gemini-pro-1.5": {
+		"inputCost": 0.0025,
+		"outputCost": 0.0075
+	},
+	"perplexity/pplx-70b-online": {
+		"inputCost": 0.001,
+		"outputCost": 0.001
+	},
+	"perplexity/pplx-7b-online": {
+		"inputCost": 0.0002,
+		"outputCost": 0.0002
+	},
+	"perplexity/pplx-7b-chat": {
+		"inputCost": 0.0002,
+		"outputCost": 0.0002
+	},
+	"perplexity/pplx-70b-chat": {
+		"inputCost": 0.001,
+		"outputCost": 0.001
+	},
+	"perplexity/sonar-small-chat": {
+		"inputCost": 0.0002,
+		"outputCost": 0.0002
+	},
+	"perplexity/sonar-medium-chat": {
+		"inputCost": 0.0006,
+		"outputCost": 0.0006
+	},
+	"perplexity/sonar-small-online": {
+		"inputCost": 0.0002,
+		"outputCost": 0.0002
+	},
+	"perplexity/sonar-medium-online": {
+		"inputCost": 0.0006,
+		"outputCost": 0.0006
+	},
+	"anthropic/claude-3-opus": {
+		"inputCost": 0.015,
+		"outputCost": 0.075
+	},
+	"anthropic/claude-3-sonnet": {
+		"inputCost": 0.003,
+		"outputCost": 0.015
+	},
+	"anthropic/claude-3-haiku": {
+		"inputCost": 0.00025,
+		"outputCost": 0.00125
+	},
+	"anthropic/claude-3-opus:beta": {
+		"inputCost": 0.015,
+		"outputCost": 0.075
+	},
+	"anthropic/claude-3-sonnet:beta": {
+		"inputCost": 0.003,
+		"outputCost": 0.015
+	},
+	"anthropic/claude-3-haiku:beta": {
+		"inputCost": 0.00025,
+		"outputCost": 0.00125
+	},
+	"meta-llama/llama-2-70b-chat": {
+		"inputCost": 0.0006,
+		"outputCost": 0.0019
+	},
+	"nousresearch/nous-capybara-34b": {
+		"inputCost": 0.0009,
+		"outputCost": 0.0009
+	},
+	"jondurbin/airoboros-l2-70b": {
+		"inputCost": 0.0007,
+		"outputCost": 0.0009
+	},
+	"jondurbin/bagel-34b": {
+		"inputCost": 0.00575,
+		"outputCost": 0.00575
+	},
+	"austism/chronos-hermes-13b": {
+		"inputCost": 0.00018,
+		"outputCost": 0.00018
+	},
+	"mistralai/mistral-7b-instruct": {
+		"inputCost": 0.0001,
+		"outputCost": 0.00025
+	},
+	"gryphe/mythomax-l2-13b": {
+		"inputCost": 0.00018,
+		"outputCost": 0.00018
+	},
+	"openchat/openchat-7b": {
+		"inputCost": 0.00013,
+		"outputCost": 0.00013
+	},
+	"undi95/toppy-m-7b": {
+		"inputCost": 0.00015,
+		"outputCost": 0.00015
+	},
+	"lizpreciatior/lzlv-70b-fp16-hf": {
+		"inputCost": 0.0007,
+		"outputCost": 0.0009
+	},
+	"cognitivecomputations/dolphin-mixtral-8x7b": {
+		"inputCost": 0.0005,
+		"outputCost": 0.0005
+	},
+	"neversleep/noromaid-mixtral-8x7b-instruct": {
+		"inputCost": 0.008,
+		"outputCost": 0.008
+	},
+	"nousresearch/nous-hermes-2-mixtral-8x7b-dpo": {
+		"inputCost": 0.0003,
+		"outputCost": 0.0005
+	},
+	"rwkv/rwkv-5-world-3b": {
+		"inputCost": 0,
+		"outputCost": 0
+	},
+	"recursal/rwkv-5-3b-ai-town": {
+		"inputCost": 0,
+		"outputCost": 0
+	},
+	"recursal/eagle-7b": {
+		"inputCost": 0,
+		"outputCost": 0
+	},
+	"google/gemma-7b-it": {
+		"inputCost": 0.0001,
+		"outputCost": 0.0001
+	},
+	"databricks/dbrx-instruct": {
+		"inputCost": 0.0006,
+		"outputCost": 0.0006
+	},
+	"huggingfaceh4/zephyr-orpo-141b-a35b": {
+		"inputCost": 0.00065,
+		"outputCost": 0.00065
+	},
+	"meta-llama/llama-3-8b-instruct": {
+		"inputCost": 0.0001,
+		"outputCost": 0.0001
+	},
+	"meta-llama/llama-3-70b-instruct": {
+		"inputCost": 0.0008,
+		"outputCost": 0.0008
+	},
+	"microsoft/wizardlm-2-8x22b": {
+		"inputCost": 0.00065,
+		"outputCost": 0.00065
+	},
+	"microsoft/wizardlm-2-7b": {
+		"inputCost": 0.0001,
+		"outputCost": 0.0001
+	},
+	"mistralai/mixtral-8x22b": {
+		"inputCost": 0.0009,
+		"outputCost": 0.0009
+	},
+	"mistralai/mixtral-8x22b-instruct": {
+		"inputCost": 0.00065,
+		"outputCost": 0.00065
+	},
+	"anthropic/claude-2": {
+		"inputCost": 0.008,
+		"outputCost": 0.024
+	},
+	"anthropic/claude-2.1": {
+		"inputCost": 0.008,
+		"outputCost": 0.024
+	},
+	"anthropic/claude-2.0": {
+		"inputCost": 0.008,
+		"outputCost": 0.024
+	},
+	"anthropic/claude-instant-1": {
+		"inputCost": 0.0008,
+		"outputCost": 0.0024
+	},
+	"anthropic/claude-instant-1.2": {
+		"inputCost": 0.0008,
+		"outputCost": 0.0024
+	},
+	"anthropic/claude-2:beta": {
+		"inputCost": 0.008,
+		"outputCost": 0.024
+	},
+	"anthropic/claude-2.1:beta": {
+		"inputCost": 0.008,
+		"outputCost": 0.024
+	},
+	"anthropic/claude-2.0:beta": {
+		"inputCost": 0.008,
+		"outputCost": 0.024
+	},
+	"anthropic/claude-instant-1:beta": {
+		"inputCost": 0.0008,
+		"outputCost": 0.0024
+	},
+	"huggingfaceh4/zephyr-7b-beta:free": {
+		"inputCost": 0,
+		"outputCost": 0
+	},
+	"mistralai/mixtral-8x7b-instruct:nitro": {
+		"inputCost": 0.0005,
+		"outputCost": 0.0005
+	},
+	"meta-llama/llama-2-70b-chat:nitro": {
+		"inputCost": 0.0009,
+		"outputCost": 0.0009
+	},
+	"gryphe/mythomax-l2-13b:nitro": {
+		"inputCost": 0.0002,
+		"outputCost": 0.0002
+	},
+	"mistralai/mistral-7b-instruct:nitro": {
+		"inputCost": 0.0002,
+		"outputCost": 0.0002
+	},
+	"google/gemma-7b-it:nitro": {
+		"inputCost": 0.0002,
+		"outputCost": 0.0002
+	},
+	"databricks/dbrx-instruct:nitro": {
+		"inputCost": 0.0009,
+		"outputCost": 0.0009
+	},
+	"undi95/toppy-m-7b:nitro": {
+		"inputCost": 0.00015,
+		"outputCost": 0.00015
+	},
+	"microsoft/wizardlm-2-8x22b:nitro": {
+		"inputCost": 0.001,
+		"outputCost": 0.001
+	},
+	"meta-llama/llama-3-8b-instruct:nitro": {
+		"inputCost": 0.0002,
+		"outputCost": 0.0002
+	},
+	"meta-llama/llama-3-70b-instruct:nitro": {
+		"inputCost": 0.0009,
+		"outputCost": 0.0009
+	},
+	"gryphe/mythomax-l2-13b:extended": {
+		"inputCost": 0.0003,
+		"outputCost": 0.0003
+	},
+	"mistralai/mistral-tiny": {
+		"inputCost": 0.00025,
+		"outputCost": 0.00025
+	},
+	"mistralai/mistral-small": {
+		"inputCost": 0.002,
+		"outputCost": 0.006
+	},
+	"mistralai/mistral-medium": {
+		"inputCost": 0.0027,
+		"outputCost": 0.0081
+	},
+	"mistralai/mistral-large": {
+		"inputCost": 0.008,
+		"outputCost": 0.024
+	},
+	"cohere/command": {
+		"inputCost": 0.001,
+		"outputCost": 0.002
+	},
+	"cohere/command-r": {
+		"inputCost": 0.0005,
+		"outputCost": 0.0015
+	},
+	"cohere/command-r-plus": {
+		"inputCost": 0.003,
+		"outputCost": 0.015
+	}
 }
