@@ -11,6 +11,9 @@ function showCompletions(fetcher: CompletionsFetcher) {
   return async (update: ViewUpdate) => {
     const { state, view } = update;
 
+    // TODO:
+    // Stop re-fetching the completions when the suggestions match the typed text.
+
     // If the document has not changed and the head has not moved, keep the completions.
     const previousHead = lastHead;
     const currentHead = state.selection.main.head;

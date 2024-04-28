@@ -54,6 +54,8 @@ export function App({
   // There may be a better way to store chat history, but this works for now.
   useEffect(() => {
     settings.chat.history = history;
+    // TODO:
+    // Only save settings before unload.
     plugin.saveSettings();
   }, [history]);
 

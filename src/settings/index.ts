@@ -604,6 +604,9 @@ export class MarkpilotSettingTab extends PluginSettingTab {
         data[index].cost = cost;
       }
     }
+    // TODO:
+    // Replace with "Text Colors":
+    // https://docs.obsidian.md/Reference/CSS+variables/Foundations/Colors#Text+colors
     // Get the accent color from the theme
     // using CSS variables provided by Obsidian:
     // https://docs.obsidian.md/Reference/CSS+variables/Foundations/Colors#Accent+color

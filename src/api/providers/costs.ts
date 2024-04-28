@@ -39,6 +39,8 @@ export class CostsTracker {
     settings.usage.dailyCosts[today] += cost;
     settings.usage.monthlyCosts[thisMonth] += cost;
 
+    // TODO:
+    // Only save settings before unload.
     await this.plugin.saveSettings();
   }
 }
