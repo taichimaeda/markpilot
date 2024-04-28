@@ -18,8 +18,8 @@ export function acceptCompletionsOnKeydown(
     }
 
     // If there are no completions displayed, do nothing.
-    const field = state.field(completionsStateField);
-    if (field === undefined) {
+    const completionsState = state.field(completionsStateField);
+    if (completionsState === undefined) {
       return false;
     }
 
@@ -30,7 +30,7 @@ export function acceptCompletionsOnKeydown(
 
     // Insert completions to the current cursor position.
     const head = state.selection.main.head;
-    const newHead = head + field.completions.length;
+    const newHead = head + completionsState.completions.length;
 
     view.dispatch({
       selection: {
@@ -41,7 +41,7 @@ export function acceptCompletionsOnKeydown(
         state.changes({
           from: head,
           to: head,
-          insert: field.completions,
+          insert: completionsState.completions,
         }),
       ],
     });
@@ -66,6 +66,8 @@ export function rejectCompletionsOnKeydown(
   cancel: CompletionsCancel,
   plugin: Markpilot,
 ) {
+  const { settings } = plugin;
+
   function run(view: EditorView) {
     const { state } = view;
 
@@ -74,8 +76,8 @@ export function rejectCompletionsOnKeydown(
     }
 
     // If there are no completions displayed, do nothing.
-    const field = state.field(completionsStateField);
-    if (field === undefined) {
+    const completionsState = state.field(completionsStateField);
+    if (completionsState === undefined) {
       return false;
     }
 
@@ -86,6 +88,6 @@ export function rejectCompletionsOnKeydown(
     return true;
   }
 
-  const key = plugin.settings.completions.rejectKey;
+  const key = settings.completions.rejectKey;
   return Prec.highest(keymap.of([{ key, run }]));
 }

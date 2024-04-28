@@ -33,14 +33,14 @@ class CompletionsRenderPluginValue implements PluginValue {
   update(update: ViewUpdate) {
     const { state } = update;
 
-    const field = state.field(completionsStateField);
-    if (field === undefined) {
+    const completionsState = state.field(completionsStateField);
+    if (completionsState === undefined) {
       this.decorations = Decoration.none;
       return;
     }
 
     const decoration = Decoration.widget({
-      widget: new CompletionsWidget(field.completions),
+      widget: new CompletionsWidget(completionsState.completions),
       side: 1,
     });
     this.decorations = Decoration.set([

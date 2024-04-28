@@ -20,8 +20,7 @@ export const completionsStateField = StateField.define<
     for (const effect of transaction.effects) {
       if (effect.is(setCompletionsEffect)) {
         return { completions: effect.value.completions };
-      }
-      if (effect.is(unsetCompletionsEffect)) {
+      } else if (effect.is(unsetCompletionsEffect)) {
         return undefined;
       }
     }
