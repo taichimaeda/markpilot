@@ -5,6 +5,7 @@ export const COMPLETIONS_MODELS = [
 ] as const;
 
 export const CHAT_COMPLETIONS_MODELS = [
+	'gpt-4o',
 	'gpt-4-0125-preview',
 	'gpt-4-turbo-preview',
 	'gpt-4-1106-preview',
@@ -32,6 +33,7 @@ export const MODEL_INPUT_COSTS: Record<
 	'gpt-3.5-turbo-instruct': 1.5,
 	'davinci-002': 12.0,
 	'babbage-002': 1.6,
+	'gpt-4o': 5.0,
 	'gpt-4-0125-preview': 10.0,
 	'gpt-4-turbo-preview': 10.0,
 	'gpt-4-1106-preview': 10.0,
@@ -59,6 +61,7 @@ export const MODEL_OUTPUT_COSTS: Record<
 	'gpt-3.5-turbo-instruct': 2.0,
 	'davinci-002': 12.0,
 	'babbage-002': 1.6,
+	'gpt-4o': 15,
 	'gpt-4-0125-preview': 30,
 	'gpt-4-turbo-preview': 30,
 	'gpt-4-1106-preview': 30,

@@ -18,5 +18,9 @@
 	"gpt-3.5-turbo-instruct": {
 		"inputCost": 1.5,
 		"outputCost": 2
+	},
+	"gpt-4o": {
+		"inputCost": 5,
+		"outputCost": 15
 	}
 }
