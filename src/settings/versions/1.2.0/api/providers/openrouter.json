@@ -179,6 +179,10 @@
 		"inputCost": 0.003,
 		"outputCost": 0.004
 	},
+	"openai/gpt-4o": {
+		"inputCost": 0.005,
+		"outputCost": 0.015
+	},
 	"openai/gpt-4-turbo": {
 		"inputCost": 0.01,
 		"outputCost": 0.03

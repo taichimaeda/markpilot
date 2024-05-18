@@ -1,4 +1,8 @@
 {
+	"gpt-4o": {
+		"inputCost": 5,
+		"outputCost": 15
+	},
 	"gpt-4-turbo": {
 		"inputCost": 10,
 		"outputCost": 30
