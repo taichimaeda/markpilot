@@ -1,0 +1,26 @@
+{
+	"gpt-4-turbo": {
+		"inputCost": 10,
+		"outputCost": 30
+	},
+	"gpt-4": {
+		"inputCost": 30,
+		"outputCost": 60
+	},
+	"gpt-4-32k": {
+		"inputCost": 60,
+		"outputCost": 120
+	},
+	"gpt-3.5-turbo": {
+		"inputCost": 0.5,
+		"outputCost": 1.5
+	},
+	"gpt-3.5-turbo-instruct": {
+		"inputCost": 1.5,
+		"outputCost": 2
+	},
+	"gpt-4o": {
+		"inputCost": 5,
+		"outputCost": 15
+	}
+}

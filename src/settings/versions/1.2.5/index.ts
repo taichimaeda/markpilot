@@ -1,8 +1,12 @@
+// Check the settings type in this version matches the current settings type.
+
+import { MarkpilotSettings } from 'src/settings';
+import { Equal, Expect } from 'src/settings/utils';
 import { ChatHistory } from './api';
 import { Provider } from './api/providers';
 import { Model } from './api/providers/models';
 
-export interface MarkpilotSettings1_2_0 {
+export interface MarkpilotSettings1_2_5 {
 	version: string;
 	backups: Record<string, object>; // e.g. '1.1.0' to { ... }
 	providers: {
@@ -20,6 +24,7 @@ export interface MarkpilotSettings1_2_0 {
 		enabled: boolean;
 		provider: Provider;
 		model: Model;
+		modelTag: string | undefined; // For Ollama models
 		fewShot: boolean;
 		maxTokens: number;
 		temperature: number;
@@ -34,6 +39,7 @@ export interface MarkpilotSettings1_2_0 {
 		enabled: boolean;
 		provider: Provider;
 		model: Model;
+		modelTag: string | undefined; // For Ollama models
 		fewShot: boolean;
 		maxTokens: number;
 		temperature: number;
@@ -48,3 +54,8 @@ export interface MarkpilotSettings1_2_0 {
 		monthlyLimit: number;
 	};
 }
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type AssertEqualCurrentSettings = Expect<
+	Equal<MarkpilotSettings1_2_5, MarkpilotSettings>
+>;

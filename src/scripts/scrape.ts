@@ -3,15 +3,15 @@ import * as cheerio from 'cheerio';
 import { program } from 'commander';
 import * as fs from 'fs';
 
-const MODELS_PATH = 'src/api/models';
+const MODELS_PATH = 'src/api/providers';
 const OPENAI_MODELS_PATH = `${MODELS_PATH}/openai.json`;
 const OPEN_ROUTER_MODELS_PATH = `${MODELS_PATH}/openrouter.json`;
 const OLLAMA_MODELS_PATH = `${MODELS_PATH}/ollama.json`;
 
 async function scrapeOpenRouterModels() {
-	const response = await axios.get('https://openrouter.ai/docs');
+	const response = await axios.get('https://openrouter.ai/docs/models');
 	const selector = cheerio.load(response.data);
-	const rows = selector('#models > div > table > tbody > tr');
+	const rows = selector('table:first-of-type tr');
 	const data: Record<string, object> = {};
 	for (const row of rows) {
 		const model = selector(row)
@@ -34,12 +34,11 @@ async function scrapeOpenRouterModels() {
 			.trim()
 			.replace('$', '');
 		data[model] = {
-			// Normalise to per 1k token to 1M token.
-			inputCost: parseFloat(inputCost) * 1_000,
-			outputCost: parseFloat(outputCost) * 1_000,
+			inputCost: parseFloat(inputCost),
+			outputCost: parseFloat(outputCost),
 		};
 	}
-	const json = JSON.stringify(data, null, 2);
+	const json = JSON.stringify(data, null, 4);
 	fs.writeFileSync(OPEN_ROUTER_MODELS_PATH, json);
 }
 
@@ -57,7 +56,7 @@ async function scrapeOllamaModels() {
 			outputCost,
 		};
 	}
-	const json = JSON.stringify(data, null, 2);
+	const json = JSON.stringify(data, null, 4);
 	fs.writeFileSync(OLLAMA_MODELS_PATH, json);
 }
 

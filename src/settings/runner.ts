@@ -1,10 +1,12 @@
 import Markpilot from '../main';
 import { SettingsMigrator } from './migrators';
 import { migrateVersion1_1_0_toVersion1_2_0 } from './migrators/1.1.0-1.2.0';
+import { migrateVersion1_2_0_toVersion1_2_5 } from './migrators/1.2.0-1.2.5';
 
 export class SettingsMigrationsRunner {
 	migrators: Record<string, SettingsMigrator<object, object>> = {
 		'1.1.0': migrateVersion1_1_0_toVersion1_2_0,
+		'1.2.0': migrateVersion1_2_0_toVersion1_2_5,
 	};
 
 	constructor(private plugin: Markpilot) {}
