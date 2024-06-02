@@ -29,7 +29,10 @@ export abstract class OpenAICompatibleAPIClient implements APIClient {
 			const prompt = this.generator.generateChatPrompt(messages);
 			const stream = await this.openai.chat.completions.create({
 				messages: prompt,
-				model: settings.chat.model,
+				model:
+					settings.chat.model + settings.chat.modelTag
+						? `:${settings.chat.modelTag}`
+						: '',
 				max_tokens: settings.chat.maxTokens,
 				temperature: settings.chat.temperature,
 				top_p: 1,
@@ -76,7 +79,10 @@ export abstract class OpenAICompatibleAPIClient implements APIClient {
 			const prompt = this.generator.generateCompletionsPrompt(prefix, suffix);
 			const completions = await this.openai.chat.completions.create({
 				messages: prompt,
-				model: settings.completions.model,
+				model:
+					settings.completions.model + settings.completions.modelTag
+						? `:${settings.completions.modelTag}`
+						: '',
 				max_tokens: settings.completions.maxTokens,
 				temperature: settings.completions.temperature,
 				top_p: 1,

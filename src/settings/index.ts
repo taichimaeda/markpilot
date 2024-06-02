@@ -30,6 +30,7 @@ export interface MarkpilotSettings {
 		enabled: boolean;
 		provider: Provider;
 		model: Model;
+		modelTag: string | undefined; // For Ollama models
 		fewShot: boolean;
 		maxTokens: number;
 		temperature: number;
@@ -44,6 +45,7 @@ export interface MarkpilotSettings {
 		enabled: boolean;
 		provider: Provider;
 		model: Model;
+		modelTag: string | undefined; // For Ollama models
 		fewShot: boolean;
 		maxTokens: number;
 		temperature: number;
@@ -77,6 +79,7 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
 		enabled: true,
 		provider: DEFAULT_PROVIDER,
 		model: DEFAULT_MODELS[DEFAULT_PROVIDER],
+		modelTag: undefined,
 		// Few-shot prompts are still in beta
 		fewShot: false,
 		maxTokens: 64,
@@ -92,6 +95,7 @@ export const DEFAULT_SETTINGS: MarkpilotSettings = {
 		enabled: true,
 		provider: DEFAULT_PROVIDER,
 		model: DEFAULT_MODELS[DEFAULT_PROVIDER],
+		modelTag: undefined,
 		// Few-shot prompts are still in beta
 		fewShot: false,
 		maxTokens: 4096,
@@ -275,6 +279,22 @@ export class MarkpilotSettingTab extends PluginSettingTab {
 						await plugin.saveSettings();
 					});
 			});
+
+		new Setting(containerEl)
+			.setName('Model tag')
+			.setDesc('Enter the model tag for Ollama models. This is optional.')
+			.addText((text) =>
+				text
+					.setDisabled(
+						!settings.completions.enabled ||
+							settings.completions.provider !== 'ollama',
+					)
+					.setValue(settings.completions.modelTag ?? '')
+					.onChange(async (value) => {
+						settings.completions.modelTag = value;
+						await plugin.saveSettings();
+					}),
+			);
 
 		new Setting(containerEl)
 			.setName('Few-shot prompts (Beta)')
@@ -487,6 +507,21 @@ export class MarkpilotSettingTab extends PluginSettingTab {
 						await plugin.saveSettings();
 					});
 			});
+
+		new Setting(containerEl)
+			.setName('Model tag')
+			.setDesc('Enter the model tag for Ollama models. This is optional.')
+			.addText((text) =>
+				text
+					.setDisabled(
+						!settings.chat.enabled || settings.chat.provider !== 'ollama',
+					)
+					.setValue(settings.chat.modelTag ?? '')
+					.onChange(async (value) => {
+						settings.chat.modelTag = value;
+						await plugin.saveSettings();
+					}),
+			);
 
 		new Setting(containerEl)
 			.setName('Few-shot prompts (Beta)')
