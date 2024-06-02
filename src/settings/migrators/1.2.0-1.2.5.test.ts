@@ -60,7 +60,7 @@ const version1_2_0: MarkpilotSettings1_2_0 = {
 };
 
 const version1_2_5: MarkpilotSettings1_2_5 = {
-	version: '1.2.0',
+	version: '1.2.5',
 	backups: {
 		'1.2.0': structuredClone(version1_2_0),
 	},
@@ -117,7 +117,7 @@ const version1_2_5: MarkpilotSettings1_2_5 = {
 	},
 };
 
-test('Migration from version 1.1.0 to 1.2.0', () => {
+test('Migration from version 1.2.0 to 1.2.5', () => {
 	const migrated = migrateVersion1_2_0_toVersion1_2_5(version1_2_0);
 	expect(migrated).toStrictEqual(version1_2_5);
 });
